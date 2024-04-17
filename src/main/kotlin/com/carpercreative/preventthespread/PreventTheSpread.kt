@@ -41,5 +41,20 @@ object PreventTheSpread : ModInitializer {
 		Registry.register(Registries.ITEM, Identifier(MOD_ID, "cancer_block"), CANCER_BLOCK_ITEM)
 
 		Registry.register(Registries.ITEM_GROUP, Identifier(MOD_ID, "default"), ITEM_GROUP)
+
+		// TODO: store cancer core associated with cancer block at a given position (important: pistons!)
+		// TODO: implement cancer spread (random tick)
+		// TODO: implement sampling tool
+		// TODO: implement surgery tool
+		// TODO: add surgery tool crafting recipe
+		// TODO: make cancer blocks mine-able only using appropriate tools
+		// TODO: implement chemotherapy (uhhh, TNT?)
+		// TODO: implement targeted drug therapy (syringe item/block)
+		// TODO: implement radiation therapy gun (laser gun, pew pew)
+		// TODO: create research table block
+		// TODO: create research GUI
+		// TODO: create research state store (per player?)
+		// TODO: implement different types of cancer blocks (logs, dirt, stone)?
+		// TODO: implement towers/beacons
 	}
 }
