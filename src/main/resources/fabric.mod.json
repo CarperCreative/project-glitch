@@ -28,7 +28,7 @@
 		],
 		"fabric-datagen": [
 			{
-				"value": "com.carpercreative.preventthespread.PreventTheSpreadDataGenerator",
+				"value": "com.carpercreative.preventthespread.datagen.PreventTheSpreadDataGenerator",
 				"adapter": "kotlin"
 			}
 		]
