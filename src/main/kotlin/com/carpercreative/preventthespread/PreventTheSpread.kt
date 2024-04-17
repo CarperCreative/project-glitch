@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory
 object PreventTheSpread : ModInitializer {
 	val MOD_ID = "preventthespread"
 
+	fun identifier(path: String) = Identifier(MOD_ID, path)
+
 	private val logger = LoggerFactory.getLogger(MOD_ID)
 
 	val CANCER_BLOCK = CancerBlock(FabricBlockSettings.create().strength(4.0f).ticksRandomly().mapColor(MapColor.DARK_CRIMSON).pistonBehavior(PistonBehavior.BLOCK))
@@ -37,10 +39,10 @@ object PreventTheSpread : ModInitializer {
 		// Proceed with mild caution.
 		logger.info("Hello Fabric world!")
 
-		Registry.register(Registries.BLOCK, Identifier(MOD_ID, "cancer_block"), CANCER_BLOCK)
-		Registry.register(Registries.ITEM, Identifier(MOD_ID, "cancer_block"), CANCER_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, identifier("cancer_block"), CANCER_BLOCK)
+		Registry.register(Registries.ITEM, identifier("cancer_block"), CANCER_BLOCK_ITEM)
 
-		Registry.register(Registries.ITEM_GROUP, Identifier(MOD_ID, "default"), ITEM_GROUP)
+		Registry.register(Registries.ITEM_GROUP, identifier("default"), ITEM_GROUP)
 
 		// TODO: store cancer core associated with cancer block at a given position (important: pistons!)
 		// TODO: implement cancer spread (random tick)
