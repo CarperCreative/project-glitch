@@ -1,7 +1,7 @@
 plugins {
 	id 'fabric-loom' version '1.6-SNAPSHOT'
 	id 'maven-publish'
-  id "org.jetbrains.kotlin.jvm" version "1.9.23"
+	id "org.jetbrains.kotlin.jvm" version "1.9.23"
 }
 
 version = project.mod_version
@@ -20,7 +20,7 @@ repositories {
 }
 
 loom {
-    splitEnvironmentSourceSets()
+	splitEnvironmentSourceSets()
 
 	mods {
 		"preventthespread" {
