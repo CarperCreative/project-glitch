@@ -1,12 +1,14 @@
 package com.carpercreative.preventthespread.block
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.random.Random
+import net.minecraft.world.World
 
 class CancerBlock(
 	settings: Settings,
@@ -32,7 +34,15 @@ class CancerBlock(
 			.count { world.getBlockState(it).isCancerous() }
 		if (random.nextFloat() <= 0.5f - (cancerousNeighborCountOfTarget / 6f * 0.5f)) return
 
-		world.setBlockState(spreadPosition, PreventTheSpread.CANCER_BLOCK.defaultState)
+		spreadCancer(world, pos, spreadPosition)
+	}
+
+	override fun onStateReplaced(state: BlockState?, world: World, pos: BlockPos, newState: BlockState?, moved: Boolean) {
+		if (!world.isClient()) {
+			(world as ServerWorld).getBlobMembershipPersistentState().removeMembership(pos)
+		}
+
+		super.onStateReplaced(state, world, pos, newState, moved)
 	}
 
 	private fun BlockState.isCancerous(): Boolean {
@@ -49,5 +59,16 @@ class CancerBlock(
 			Direction.WEST, Direction.EAST, Direction.NORTH, Direction.SOUTH,
 			Direction.DOWN, Direction.UP,
 		)
+
+		fun spreadCancer(world: ServerWorld, fromPos: BlockPos, toPos: BlockPos) {
+			val blobMembershipPersistentState = world.getBlobMembershipPersistentState()
+
+			world.setBlockState(toPos, PreventTheSpread.CANCER_BLOCK.defaultState)
+
+			val blobId = blobMembershipPersistentState.getMembershipOrNull(fromPos)
+			if (blobId != null) {
+				blobMembershipPersistentState.setMembership(toPos, blobId)
+			}
+		}
 	}
 }
