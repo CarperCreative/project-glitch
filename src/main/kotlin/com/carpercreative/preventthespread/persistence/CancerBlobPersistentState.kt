@@ -25,7 +25,7 @@ class CancerBlobPersistentState : PersistentState() {
 			?: throw IllegalArgumentException("Requested cancer blob with id $id, which does not exist.")
 	}
 
-	fun createCancerBlob(callback: (id: BlobIdentifier) -> CancerBlob?): CancerBlob? {
+	fun <T : CancerBlob?> createCancerBlob(callback: (id: BlobIdentifier) -> T): T {
 		val id = getNextId()
 		val cancerBlob = callback(id)
 		cancerBlob?.also {
