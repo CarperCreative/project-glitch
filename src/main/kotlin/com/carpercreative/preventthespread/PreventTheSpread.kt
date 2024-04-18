@@ -18,7 +18,7 @@ import net.minecraft.util.Identifier
 import org.slf4j.LoggerFactory
 
 object PreventTheSpread : ModInitializer {
-	val MOD_ID = "preventthespread"
+	const val MOD_ID = "preventthespread"
 
 	fun identifier(path: String) = Identifier(MOD_ID, path)
 
