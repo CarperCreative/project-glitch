@@ -90,7 +90,7 @@ class BlobMembershipPersistentState : PersistentState() {
 		}
 
 		fun ServerWorld.getBlobMembershipPersistentState(): BlobMembershipPersistentState {
-			return persistentStateManager.getOrCreate(type, PreventTheSpread.MOD_ID)
+			return persistentStateManager.getOrCreate(type, "${PreventTheSpread.MOD_ID}_blobMembership")
 		}
 	}
 }

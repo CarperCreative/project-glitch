@@ -89,7 +89,7 @@ class CancerBlobPersistentState : PersistentState() {
 		}
 
 		fun ServerWorld.getCancerBlobPersistentState(): CancerBlobPersistentState {
-			return server.getWorld(World.OVERWORLD)!!.persistentStateManager.getOrCreate(type, PreventTheSpread.MOD_ID)
+			return server.getWorld(World.OVERWORLD)!!.persistentStateManager.getOrCreate(type, "${PreventTheSpread.MOD_ID}_cancerBlob")
 		}
 	}
 }
