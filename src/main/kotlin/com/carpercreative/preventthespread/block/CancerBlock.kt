@@ -1,7 +1,10 @@
 package com.carpercreative.preventthespread.block
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.cancer.CancerBlob
+import com.carpercreative.preventthespread.cancer.CancerType
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
+import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.server.world.ServerWorld
@@ -58,6 +61,18 @@ class CancerBlock(
 
 		fun BlockState.isCancerSpreadable(): Boolean {
 			return !isCancerous() && !hasBlockEntity() && (isSolid || isAir)
+		}
+
+		fun createCancerBlob(world: ServerWorld, pos: BlockPos, cancerType: CancerType): CancerBlob? {
+			val blobMembershipPersistentState = world.getBlobMembershipPersistentState()
+
+			if (world.getBlockState(pos).isCancerous() || blobMembershipPersistentState.getMembershipOrNull(pos) != null) return null
+
+			val cancerBlob = world.getCancerBlobPersistentState().createCancerBlob { CancerBlob(it, cancerType) }
+			world.setBlockState(pos, PreventTheSpread.CANCER_BLOCK.defaultState)
+			blobMembershipPersistentState.setMembership(pos, cancerBlob)
+
+			return cancerBlob
 		}
 
 		fun spreadCancer(world: ServerWorld, fromPos: BlockPos, toPos: BlockPos) {
