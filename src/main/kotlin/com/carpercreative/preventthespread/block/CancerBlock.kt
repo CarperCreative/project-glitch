@@ -45,20 +45,20 @@ class CancerBlock(
 		super.onStateReplaced(state, world, pos, newState, moved)
 	}
 
-	private fun BlockState.isCancerous(): Boolean {
-		return isOf(PreventTheSpread.CANCER_BLOCK)
-	}
-
-	private fun BlockState.isCancerSpreadable(): Boolean {
-		return !isCancerous() && !hasBlockEntity() && (isSolid || isAir)
-	}
-
 	companion object {
 		private val WEIGHTED_DIRECTIONS = arrayOf(
 			Direction.WEST, Direction.EAST, Direction.NORTH, Direction.SOUTH,
 			Direction.WEST, Direction.EAST, Direction.NORTH, Direction.SOUTH,
 			Direction.DOWN, Direction.UP,
 		)
+
+		fun BlockState.isCancerous(): Boolean {
+			return isOf(PreventTheSpread.CANCER_BLOCK)
+		}
+
+		fun BlockState.isCancerSpreadable(): Boolean {
+			return !isCancerous() && !hasBlockEntity() && (isSolid || isAir)
+		}
 
 		fun spreadCancer(world: ServerWorld, fromPos: BlockPos, toPos: BlockPos) {
 			val blobMembershipPersistentState = world.getBlobMembershipPersistentState()
