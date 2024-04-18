@@ -18,7 +18,7 @@ class CancerBlock(
 		// Favor horizontal spread.
 		val spreadDirection = WEIGHTED_DIRECTIONS[random.nextBetweenExclusive(0, WEIGHTED_DIRECTIONS.size)]
 		val spreadPosition = pos.offset(spreadDirection)
-		val targetCurrentBlockState = getNeighbor(world, spreadPosition, spreadDirection)
+		val targetCurrentBlockState = world.getBlockState(spreadPosition)
 
 		if (!targetCurrentBlockState.isCancerSpreadable()) return
 
@@ -33,10 +33,6 @@ class CancerBlock(
 		if (random.nextFloat() <= 0.5f - (cancerousNeighborCountOfTarget / 6f * 0.5f)) return
 
 		world.setBlockState(spreadPosition, PreventTheSpread.CANCER_BLOCK.defaultState)
-	}
-
-	private fun getNeighbor(world: ServerWorld, blockPos: BlockPos, direction: Direction): BlockState {
-		return world.getBlockState(blockPos.offset(direction))
 	}
 
 	private fun BlockState.isCancerous(): Boolean {
