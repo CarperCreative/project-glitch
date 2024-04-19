@@ -8,12 +8,12 @@ import net.minecraft.util.Identifier
 
 object PreventTheSpreadClient : ClientModInitializer {
 	override fun onInitializeClient() {
-		ModelPredicateProviderRegistry.register(PreventTheSpread.DEBUG_TOOL_ITEM, Identifier("mode")) { itemStack, clientWorld, livingEntity, seed ->
-			DebugToolItem.getDebugMode(itemStack).ordinal.toFloat()
+		ModelPredicateProviderRegistry.register(PreventTheSpread.DEBUG_TOOL_ITEM, Identifier("mode")) { stack, clientWorld, livingEntity, seed ->
+			DebugToolItem.getDebugMode(stack).ordinal.toFloat()
 		}
 
-		ModelPredicateProviderRegistry.register(PreventTheSpread.PROBE_ITEM, Identifier("sample")) { itemStack, clientWorld, livingEntity, seed ->
-			if (ProbeItem.containsSample(itemStack)) 1f else 0f
+		ModelPredicateProviderRegistry.register(PreventTheSpread.PROBE_ITEM, Identifier("sample")) { stack, clientWorld, livingEntity, seed ->
+			if (ProbeItem.containsSample(stack)) 1f else 0f
 		}
 	}
 }
