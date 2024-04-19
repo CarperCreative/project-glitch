@@ -3,7 +3,9 @@ package com.carpercreative.preventthespread
 import com.carpercreative.preventthespread.block.CancerBlock
 import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
+import com.carpercreative.preventthespread.item.RadiationStaffItem
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -32,6 +34,7 @@ object PreventTheSpread : ModInitializer {
 
 	val DEBUG_TOOL_ITEM = DebugToolItem(FabricItemSettings().maxCount(1).rarity(Rarity.EPIC))
 	val PROBE_ITEM = ProbeItem(FabricItemSettings().maxCount(1))
+	val RADIATION_STAFF_ITEM = RadiationStaffItem(FabricItemSettings().maxCount(1).maxDamage(60).customDamage(RadiationStaffItem.RadiationBeamGunDamageHandler))
 
 	val CANCER_SPREADABLE_BLOCK_TAG = TagKey.of(RegistryKeys.BLOCK, identifier("cancer_spreadable"))
 
@@ -41,6 +44,7 @@ object PreventTheSpread : ModInitializer {
 		.entries { context, entries ->
 			entries.add(CANCER_BLOCK_ITEM)
 			entries.add(PROBE_ITEM)
+			entries.add(RADIATION_STAFF_ITEM)
 			entries.add(DEBUG_TOOL_ITEM)
 		}
 		.build()
@@ -56,19 +60,24 @@ object PreventTheSpread : ModInitializer {
 
 		Registry.register(Registries.ITEM, identifier("debug_tool"), DEBUG_TOOL_ITEM)
 		Registry.register(Registries.ITEM, identifier("probe"), PROBE_ITEM)
+		Registry.register(Registries.ITEM, identifier("radiation_staff"), RADIATION_STAFF_ITEM)
 
 		Registry.register(Registries.ITEM_GROUP, identifier("default"), ITEM_GROUP)
+
+		ServerTickEvents.END_WORLD_TICK.register { world ->
+			RadiationStaffItem.doCooldown(world)
+		}
 
 		// TODO: implement surgery tool
 		// TODO: add surgery tool crafting recipe
 		// TODO: make cancer blocks mine-able only using appropriate tools
 		// TODO: implement chemotherapy (uhhh, TNT?)
 		// TODO: implement targeted drug therapy (syringe item/block)
-		// TODO: implement radiation therapy gun (laser gun, pew pew)
 		// TODO: create research table block
 		// TODO: create research GUI
 		// TODO: create research state store (per player?)
 		// TODO: implement different types of cancer blocks (logs, dirt, stone)?
 		// TODO: implement towers/beacons
+		// TODO: implement radiation staff recharge rate and/or heat capacity research
 	}
 }
