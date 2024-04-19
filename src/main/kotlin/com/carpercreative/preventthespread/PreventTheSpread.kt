@@ -59,9 +59,6 @@ object PreventTheSpread : ModInitializer {
 
 		Registry.register(Registries.ITEM_GROUP, identifier("default"), ITEM_GROUP)
 
-		// TODO: store cancer core associated with cancer block at a given position (important: pistons!)
-		// TODO: implement cancer spread (random tick)
-		// TODO: implement sampling tool
 		// TODO: implement surgery tool
 		// TODO: add surgery tool crafting recipe
 		// TODO: make cancer blocks mine-able only using appropriate tools
