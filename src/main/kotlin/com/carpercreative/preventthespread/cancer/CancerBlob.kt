@@ -11,7 +11,7 @@ class CancerBlob(
 	fun toNbt() = NbtCompound().apply {
 		putInt(KEY_VERSION, 1)
 		putInt(KEY_ID, id)
-		putString(KEY_TYPE, type.toString())
+		putString(KEY_TYPE, this@CancerBlob.type.name)
 	}
 
 	companion object {
