@@ -2,6 +2,7 @@ package com.carpercreative.preventthespread
 
 import com.carpercreative.preventthespread.block.CancerBlock
 import com.carpercreative.preventthespread.item.DebugToolItem
+import com.carpercreative.preventthespread.item.ProbeItem
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
@@ -30,6 +31,7 @@ object PreventTheSpread : ModInitializer {
 	val CANCER_BLOCK_ITEM = BlockItem(CANCER_BLOCK, FabricItemSettings())
 
 	val DEBUG_TOOL_ITEM = DebugToolItem(FabricItemSettings().maxCount(1).rarity(Rarity.EPIC))
+	val PROBE_ITEM = ProbeItem(FabricItemSettings().maxCount(1))
 
 	val CANCER_SPREADABLE_BLOCK_TAG = TagKey.of(RegistryKeys.BLOCK, identifier("cancer_spreadable"))
 
@@ -38,6 +40,7 @@ object PreventTheSpread : ModInitializer {
 		.displayName(Text.translatable("itemGroup.$MOD_ID.default"))
 		.entries { context, entries ->
 			entries.add(CANCER_BLOCK_ITEM)
+			entries.add(PROBE_ITEM)
 			entries.add(DEBUG_TOOL_ITEM)
 		}
 		.build()
@@ -52,6 +55,7 @@ object PreventTheSpread : ModInitializer {
 		Registry.register(Registries.ITEM, identifier("cancer_block"), CANCER_BLOCK_ITEM)
 
 		Registry.register(Registries.ITEM, identifier("debug_tool"), DEBUG_TOOL_ITEM)
+		Registry.register(Registries.ITEM, identifier("probe"), PROBE_ITEM)
 
 		Registry.register(Registries.ITEM_GROUP, identifier("default"), ITEM_GROUP)
 

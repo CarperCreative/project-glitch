@@ -1,5 +1,10 @@
 {
 	"block.preventthespread.cancer_block": "Cancer Block",
+	"item.preventthespread.probe.empty": "Empty Probe",
+	"item.preventthespread.probe.full": "Probe with Sample",
+	"item.preventthespread.probe.tooltip.empty": "Use on a Cancer Block to take a sample.",
+	"item.preventthespread.probe.tooltip.full": "Put in the Analyzer, or use while sneaking to empty.",
+	"item.preventthespread.probe.tooltip.blobIdentifier": "Blob identifier: %s",
 	"itemGroup.preventthespread.default": "Prevent the Spread",
 	"dummy.endOfFile": ""
 }
