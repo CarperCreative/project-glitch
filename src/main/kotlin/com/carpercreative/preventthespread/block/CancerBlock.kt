@@ -5,6 +5,7 @@ import com.carpercreative.preventthespread.cancer.CancerBlob
 import com.carpercreative.preventthespread.cancer.CancerType
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
+import com.carpercreative.preventthespread.util.nextOfArray
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.server.world.ServerWorld
@@ -21,7 +22,7 @@ class CancerBlock(
 		if (random.nextFloat() <= 0.5f) return
 
 		// Favor horizontal spread.
-		val spreadDirection = WEIGHTED_DIRECTIONS[random.nextBetweenExclusive(0, WEIGHTED_DIRECTIONS.size)]
+		val spreadDirection = random.nextOfArray(WEIGHTED_DIRECTIONS)
 		val spreadPosition = pos.offset(spreadDirection)
 		val targetCurrentBlockState = world.getBlockState(spreadPosition)
 
