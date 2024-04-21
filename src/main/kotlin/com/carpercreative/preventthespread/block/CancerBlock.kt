@@ -24,7 +24,7 @@ class CancerBlock(
 		attemptSpread(world, pos, random)
 	}
 
-	fun attemptSpread(world: ServerWorld, pos: BlockPos, random: Random) {
+	fun attemptSpread(world: ServerWorld, pos: BlockPos, random: Random, bypassThrottling: Boolean = false) {
 		// Favor horizontal spread.
 		val spreadDirection = random.nextOfArray(WEIGHTED_DIRECTIONS)
 		val spreadPosition = pos.offset(spreadDirection)
@@ -33,14 +33,14 @@ class CancerBlock(
 		if (!targetCurrentBlockState.isCancerSpreadable() || targetCurrentBlockState.isCancerous()) return
 
 		// Prefer spreading to existing blocks over growing out into empty space.
-		if (targetCurrentBlockState.isAir && random.nextFloat() <= 0.8f) return
+		if (!bypassThrottling && targetCurrentBlockState.isAir && random.nextFloat() <= 0.8f) return
 
 		// Spread to blocks which already have a bunch of cancerous neighbors with a higher likelihood.
 		val cancerousNeighborCountOfTarget = DIRECTIONS
 			.asSequence()
 			.map { spreadPosition.offset(it) }
 			.count { world.getBlockState(it).isCancerous() }
-		if (random.nextFloat() <= 0.5f - (cancerousNeighborCountOfTarget / 6f * 0.5f)) return
+		if (!bypassThrottling && random.nextFloat() <= 0.5f - (cancerousNeighborCountOfTarget / 6f * 0.5f)) return
 
 		spreadCancer(world, pos, spreadPosition)
 	}
