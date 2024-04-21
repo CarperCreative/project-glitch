@@ -24,6 +24,7 @@ class DebugToolItem(
 	) {
 		INSPECT("inspect"),
 		CREATE_CANCER("createCancer"),
+		HASTEN_SPREAD("hastenSpread"),
 	}
 
 	override fun getTranslationKey(stack: ItemStack): String {
@@ -75,6 +76,10 @@ class DebugToolItem(
 				} else {
 					ActionResult.SUCCESS
 				}
+			}
+			DebugMode.HASTEN_SPREAD -> {
+				CancerBlock.hastenSpread(world, context.blockPos, world.random)
+				ActionResult.SUCCESS
 			}
 		}
 	}
