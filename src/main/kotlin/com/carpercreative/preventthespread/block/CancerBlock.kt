@@ -5,10 +5,13 @@ import com.carpercreative.preventthespread.cancer.CancerBlob
 import com.carpercreative.preventthespread.cancer.CancerType
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
+import com.carpercreative.preventthespread.util.contentsSequence
 import com.carpercreative.preventthespread.util.nextOfArray
+import com.carpercreative.preventthespread.util.nextOfList
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.util.math.BlockBox
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.random.Random
@@ -22,6 +25,11 @@ class CancerBlock(
 		if (random.nextFloat() <= 0.5f) return
 
 		attemptSpread(world, pos, random)
+	}
+
+	override fun scheduledTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: Random) {
+		// Always attempt spread when the tick has been scheduled to ensure adequate incentives. :)
+		attemptSpread(world, pos, random, bypassThrottling = true)
 	}
 
 	fun attemptSpread(world: ServerWorld, pos: BlockPos, random: Random, bypassThrottling: Boolean = false) {
@@ -88,6 +96,24 @@ class CancerBlock(
 			val blobId = blobMembershipPersistentState.getMembershipOrNull(fromPos)
 			if (blobId != null) {
 				blobMembershipPersistentState.setMembership(toPos, blobId)
+			}
+		}
+
+		fun hastenSpread(world: ServerWorld, pos: BlockPos, random: Random, distance: Int = 3) {
+			val box = BlockBox(pos).expand(distance)
+
+			val cancerBlockPositions = box.contentsSequence()
+				.filter { world.getBlockState(it).isCancerous() }
+				.map { it.toImmutable() }
+				.toList()
+
+			for (index in 0..10) {
+				val blockPos = random.nextOfList(cancerBlockPositions) ?: break
+				world.scheduleBlockTick(blockPos, world.getBlockState(blockPos).block, index)
+			}
+			for (index in 0..8) {
+				val blockPos = cancerBlockPositions.randomOrNull(kotlin.random.Random) ?: break
+				world.scheduleBlockTick(blockPos, world.getBlockState(blockPos).block, 20 + index * 20)
 			}
 		}
 	}
