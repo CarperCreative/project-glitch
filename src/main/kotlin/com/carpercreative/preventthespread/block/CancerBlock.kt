@@ -21,6 +21,10 @@ class CancerBlock(
 		// Prevent spreading on every random tick to keep it manageable.
 		if (random.nextFloat() <= 0.5f) return
 
+		attemptSpread(world, pos, random)
+	}
+
+	fun attemptSpread(world: ServerWorld, pos: BlockPos, random: Random) {
 		// Favor horizontal spread.
 		val spreadDirection = random.nextOfArray(WEIGHTED_DIRECTIONS)
 		val spreadPosition = pos.offset(spreadDirection)
