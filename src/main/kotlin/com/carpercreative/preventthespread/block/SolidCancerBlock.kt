@@ -18,7 +18,7 @@ class SolidCancerBlock(
 		CancerousBlock.scheduledTick(state, world, pos, random)
 	}
 
-	override fun onStateReplaced(state: BlockState?, world: World, pos: BlockPos, newState: BlockState?, moved: Boolean) {
+	override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
 		CancerousBlock.onStateReplaced(state,  world, pos, newState, moved)
 	}
 }

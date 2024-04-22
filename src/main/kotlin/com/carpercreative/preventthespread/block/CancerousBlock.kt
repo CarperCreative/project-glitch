@@ -24,7 +24,7 @@ object CancerousBlock {
 		CancerLogic.attemptSpread(world, pos, random, bypassThrottling = true)
 	}
 
-	fun onStateReplaced(state: BlockState?, world: World, pos: BlockPos, newState: BlockState?, moved: Boolean) {
+	fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
 		if (!world.isClient()) {
 			(world as ServerWorld).getBlobMembershipPersistentState().removeMembership(pos)
 		}
