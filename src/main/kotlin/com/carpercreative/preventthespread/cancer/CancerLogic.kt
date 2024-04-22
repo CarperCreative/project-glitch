@@ -34,6 +34,8 @@ object CancerLogic {
 			// Spreading to block entities could have unintended consequences, like dropping the entire contents of a chest.
 			&& !hasBlockEntity()
 			&& (isSolid || isAir)
+			// Prevent spreading to unbreakable blocks like bedrock.
+			&& block.hardness >= 0f
 	}
 
 	fun createCancerBlob(world: ServerWorld, pos: BlockPos, cancerType: CancerType): CancerBlob? {
