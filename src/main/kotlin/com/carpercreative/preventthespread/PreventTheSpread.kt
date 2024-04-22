@@ -27,6 +27,7 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
 import org.slf4j.LoggerFactory
 
+@Suppress("MemberVisibilityCanBePrivate")
 object PreventTheSpread : ModInitializer {
 	const val MOD_ID = "preventthespread"
 
