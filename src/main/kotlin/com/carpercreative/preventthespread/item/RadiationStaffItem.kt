@@ -38,6 +38,10 @@ class RadiationStaffItem(
 			return TypedActionResult.fail(stack)
 		}
 
+		// Prevent repeatedly shooting by spamming use right after the action point.
+		// This does nothing in creative due to the game resetting the damage back to its pre-use value.
+		stack.damage += 9 - ((stack.damage + 9) % 10)
+
 		user.setCurrentHand(hand)
 		return TypedActionResult.consume(stack)
 	}
