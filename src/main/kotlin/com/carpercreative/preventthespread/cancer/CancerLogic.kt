@@ -24,6 +24,10 @@ object CancerLogic {
 		return isOf(PreventTheSpread.CANCER_BLOCK)
 	}
 
+	/**
+	 * @return `true` for blocks which are valid targets for cancer to spread to.
+	 * This excludes all cancer blocks and block entities.
+	 */
 	fun BlockState.isCancerSpreadable(): Boolean {
 		return !isCancerous() && !hasBlockEntity() && (isSolid || isAir)
 	}
