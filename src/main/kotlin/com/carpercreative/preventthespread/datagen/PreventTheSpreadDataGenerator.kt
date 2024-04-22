@@ -8,6 +8,7 @@ object PreventTheSpreadDataGenerator : DataGeneratorEntrypoint {
 		// Data pack generator
 		fabricDataGenerator.createPack().apply {
 			addProvider(::BlockTagGenerator)
+			addProvider(::ItemTagGenerator)
 		}
 	}
 }
