@@ -50,7 +50,7 @@ object CancerLogic {
 		val spreadPosition = pos.offset(spreadDirection)
 		val targetCurrentBlockState = world.getBlockState(spreadPosition)
 
-		if (!targetCurrentBlockState.isCancerSpreadable() || targetCurrentBlockState.isCancerous()) return
+		if (!targetCurrentBlockState.isCancerSpreadable()) return
 
 		// Prefer spreading to existing blocks over growing out into empty space.
 		if (!bypassThrottling && targetCurrentBlockState.isAir && random.nextFloat() <= 0.8f) return
