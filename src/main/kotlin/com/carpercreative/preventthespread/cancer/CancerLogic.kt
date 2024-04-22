@@ -21,7 +21,7 @@ object CancerLogic {
 	)
 
 	fun BlockState.isCancerous(): Boolean {
-		return isOf(PreventTheSpread.CANCER_BLOCK)
+		return isIn(PreventTheSpread.CANCEROUS_BLOCK_TAG)
 	}
 
 	/**
