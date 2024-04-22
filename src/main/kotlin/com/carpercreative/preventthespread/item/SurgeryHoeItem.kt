@@ -20,7 +20,7 @@ class SurgeryHoeItem(
 	}
 
 	override fun isSuitableFor(state: BlockState): Boolean {
-		return if (state.isIn(PreventTheSpread.CANCEROUS_BLOCK_TAG))
+		return if (state.isIn(PreventTheSpread.SURGERY_HOE_MINEABLE_BLOCK_TAG))
 			true
 		else
 			super.isSuitableFor(state)

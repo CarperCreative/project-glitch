@@ -20,7 +20,7 @@ class SurgeryAxeItem(
 	}
 
 	override fun isSuitableFor(state: BlockState): Boolean {
-		return if (state.isIn(PreventTheSpread.CANCEROUS_BLOCK_TAG))
+		return if (state.isIn(PreventTheSpread.SURGERY_AXE_MINEABLE_BLOCK_TAG))
 			true
 		else
 			super.isSuitableFor(state)
