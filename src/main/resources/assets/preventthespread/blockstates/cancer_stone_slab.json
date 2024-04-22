@@ -1,0 +1,13 @@
+{
+	"variants": {
+		"type=bottom": {
+			"model": "preventthespread:block/cancer_stone_slab"
+		},
+		"type=double": {
+			"model": "preventthespread:block/cancer_stone"
+		},
+		"type=top": {
+			"model": "preventthespread:block/cancer_stone_slab_top"
+		}
+	}
+}

@@ -21,11 +21,25 @@ class BlockTagGenerator(
 			.forceAddTag(BlockTags.WOOL)
 
 		getOrCreateTagBuilder(PreventTheSpread.CANCEROUS_BLOCK_TAG)
-			.add(PreventTheSpread.CANCER_BLOCK)
+			.addTag(PreventTheSpread.SURGERY_AXE_MINEABLE_BLOCK_TAG)
+			.addTag(PreventTheSpread.SURGERY_HOE_MINEABLE_BLOCK_TAG)
+			.addTag(PreventTheSpread.SURGERY_PICKAXE_MINEABLE_BLOCK_TAG)
+			.addTag(PreventTheSpread.SURGERY_SHOVEL_MINEABLE_BLOCK_TAG)
 
+		getOrCreateTagBuilder(PreventTheSpread.SURGERY_AXE_MINEABLE_BLOCK_TAG)
+			.add(PreventTheSpread.CANCER_LOG_BLOCK)
+			.add(PreventTheSpread.CANCER_PLANKS_BLOCK)
+			.add(PreventTheSpread.CANCER_PLANKS_SLAB_BLOCK)
+			.add(PreventTheSpread.CANCER_PLANKS_STAIRS_BLOCK)
+		getOrCreateTagBuilder(PreventTheSpread.SURGERY_HOE_MINEABLE_BLOCK_TAG)
+			.add(PreventTheSpread.CANCER_LEAVES_BLOCK)
 		getOrCreateTagBuilder(PreventTheSpread.SURGERY_PICKAXE_MINEABLE_BLOCK_TAG)
-			.addTag(PreventTheSpread.CANCEROUS_BLOCK_TAG)
-
-		// TODO: add the other tag contents
+			.add(PreventTheSpread.CANCER_STONE_BLOCK)
+			.add(PreventTheSpread.CANCER_STONE_SLAB_BLOCK)
+			.add(PreventTheSpread.CANCER_STONE_STAIRS_BLOCK)
+		getOrCreateTagBuilder(PreventTheSpread.SURGERY_SHOVEL_MINEABLE_BLOCK_TAG)
+			.add(PreventTheSpread.CANCER_DIRT_BLOCK)
+			.add(PreventTheSpread.CANCER_DIRT_SLAB_BLOCK)
+			.add(PreventTheSpread.CANCER_DIRT_STAIRS_BLOCK)
 	}
 }

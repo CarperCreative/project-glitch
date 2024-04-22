@@ -44,7 +44,7 @@ object CancerLogic {
 		if (world.getBlockState(pos).isCancerous() || blobMembershipPersistentState.getMembershipOrNull(pos) != null) return null
 
 		val cancerBlob = world.getCancerBlobPersistentState().createCancerBlob { CancerBlob(it, cancerType) }
-		world.setBlockState(pos, PreventTheSpread.CANCER_BLOCK.defaultState)
+		world.setBlockState(pos, PreventTheSpread.CANCER_STONE_BLOCK.defaultState)
 		blobMembershipPersistentState.setMembership(pos, cancerBlob)
 
 		return cancerBlob
@@ -74,7 +74,7 @@ object CancerLogic {
 	fun spreadCancer(world: ServerWorld, fromPos: BlockPos, toPos: BlockPos) {
 		val blobMembershipPersistentState = world.getBlobMembershipPersistentState()
 
-		world.setBlockState(toPos, PreventTheSpread.CANCER_BLOCK.defaultState)
+		world.setBlockState(toPos, PreventTheSpread.CANCER_STONE_BLOCK.defaultState)
 
 		val blobId = blobMembershipPersistentState.getMembershipOrNull(fromPos)
 		if (blobId != null) {
