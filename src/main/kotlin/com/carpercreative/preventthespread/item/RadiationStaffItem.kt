@@ -40,7 +40,7 @@ class RadiationStaffItem(
 
 		// Prevent repeatedly shooting by spamming use right after the action point.
 		// This does nothing in creative due to the game resetting the damage back to its pre-use value.
-		stack.damage += 9 - ((stack.damage + 9) % 10)
+		stack.damage += (TRIGGER_FREQUENCY - 1) - ((stack.damage + (TRIGGER_FREQUENCY - 1)) % TRIGGER_FREQUENCY)
 
 		user.setCurrentHand(hand)
 		return TypedActionResult.consume(stack)
@@ -61,7 +61,7 @@ class RadiationStaffItem(
 			return
 		}
 
-		if (stack.damage % 10 == 0) {
+		if (stack.damage % TRIGGER_FREQUENCY == 0) {
 			doHit(world, user, stack)
 		}
 	}
@@ -118,6 +118,11 @@ class RadiationStaffItem(
 	}
 
 	companion object {
+		/**
+		 * How often the staff will trigger its action while being used, in ticks.
+		 */
+		private const val TRIGGER_FREQUENCY = 10
+
 		private const val KEY_OVERHEATED = "${PreventTheSpread.MOD_ID}:overheated"
 
 		fun isOverheated(stack: ItemStack): Boolean {
