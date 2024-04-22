@@ -53,6 +53,8 @@ object PreventTheSpread : ModInitializer {
 	val SURGERY_PICKAXE_MINEABLE_BLOCK_TAG = TagKey.of(RegistryKeys.BLOCK, identifier("mineable/surgery_pickaxe"))
 	val SURGERY_SHOVEL_MINEABLE_BLOCK_TAG = TagKey.of(RegistryKeys.BLOCK, identifier("mineable/surgery_shovel"))
 
+	val SURGERY_TOOL_ITEM_TAG = TagKey.of(RegistryKeys.ITEM, identifier("surgery_tool"))
+
 	private val ITEM_GROUP = FabricItemGroup.builder()
 		.icon { ItemStack(CANCER_BLOCK_ITEM) }
 		.displayName(Text.translatable("itemGroup.$MOD_ID.default"))
