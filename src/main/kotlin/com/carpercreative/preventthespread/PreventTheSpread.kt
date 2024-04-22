@@ -13,9 +13,11 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.minecraft.block.Block
 import net.minecraft.block.MapColor
 import net.minecraft.block.piston.PistonBehavior
 import net.minecraft.item.BlockItem
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ToolMaterials
 import net.minecraft.registry.Registries
@@ -46,14 +48,14 @@ object PreventTheSpread : ModInitializer {
 	val SURGERY_PICKAXE_ITEM = SurgeryPickaxeItem(ToolMaterials.IRON, 1, -2.8f, FabricItemSettings().maxDamage(800))
 	val SURGERY_SHOVEL_ITEM = SurgeryShovelItem(ToolMaterials.IRON, 1.5f, -3.0f, FabricItemSettings().maxDamage(800))
 
-	val CANCEROUS_BLOCK_TAG = TagKey.of(RegistryKeys.BLOCK, identifier("cancerous"))
-	val CANCER_SPREADABLE_BLOCK_TAG = TagKey.of(RegistryKeys.BLOCK, identifier("cancer_spreadable"))
-	val SURGERY_AXE_MINEABLE_BLOCK_TAG = TagKey.of(RegistryKeys.BLOCK, identifier("mineable/surgery_axe"))
-	val SURGERY_HOE_MINEABLE_BLOCK_TAG = TagKey.of(RegistryKeys.BLOCK, identifier("mineable/surgery_hoe"))
-	val SURGERY_PICKAXE_MINEABLE_BLOCK_TAG = TagKey.of(RegistryKeys.BLOCK, identifier("mineable/surgery_pickaxe"))
-	val SURGERY_SHOVEL_MINEABLE_BLOCK_TAG = TagKey.of(RegistryKeys.BLOCK, identifier("mineable/surgery_shovel"))
+	val CANCEROUS_BLOCK_TAG: TagKey<Block> = TagKey.of(RegistryKeys.BLOCK, identifier("cancerous"))
+	val CANCER_SPREADABLE_BLOCK_TAG: TagKey<Block> = TagKey.of(RegistryKeys.BLOCK, identifier("cancer_spreadable"))
+	val SURGERY_AXE_MINEABLE_BLOCK_TAG: TagKey<Block> = TagKey.of(RegistryKeys.BLOCK, identifier("mineable/surgery_axe"))
+	val SURGERY_HOE_MINEABLE_BLOCK_TAG: TagKey<Block> = TagKey.of(RegistryKeys.BLOCK, identifier("mineable/surgery_hoe"))
+	val SURGERY_PICKAXE_MINEABLE_BLOCK_TAG: TagKey<Block> = TagKey.of(RegistryKeys.BLOCK, identifier("mineable/surgery_pickaxe"))
+	val SURGERY_SHOVEL_MINEABLE_BLOCK_TAG: TagKey<Block> = TagKey.of(RegistryKeys.BLOCK, identifier("mineable/surgery_shovel"))
 
-	val SURGERY_TOOL_ITEM_TAG = TagKey.of(RegistryKeys.ITEM, identifier("surgery_tool"))
+	val SURGERY_TOOL_ITEM_TAG: TagKey<Item> = TagKey.of(RegistryKeys.ITEM, identifier("surgery_tool"))
 
 	private val ITEM_GROUP = FabricItemGroup.builder()
 		.icon { ItemStack(CANCER_BLOCK_ITEM) }
