@@ -29,7 +29,11 @@ object CancerLogic {
 	 * This excludes all cancer blocks and block entities.
 	 */
 	fun BlockState.isCancerSpreadable(): Boolean {
-		return !isCancerous() && !hasBlockEntity() && (isSolid || isAir)
+		// No point spreading to already cancer infested blocks.
+		return !isCancerous()
+			// Spreading to block entities could have unintended consequences, like dropping the entire contents of a chest.
+			&& !hasBlockEntity()
+			&& (isSolid || isAir)
 	}
 
 	fun createCancerBlob(world: ServerWorld, pos: BlockPos, cancerType: CancerType): CancerBlob? {
