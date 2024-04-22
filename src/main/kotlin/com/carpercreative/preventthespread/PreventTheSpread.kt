@@ -1,6 +1,6 @@
 package com.carpercreative.preventthespread
 
-import com.carpercreative.preventthespread.block.CancerBlock
+import com.carpercreative.preventthespread.block.SolidCancerBlock
 import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
 import com.carpercreative.preventthespread.item.RadiationStaffItem
@@ -37,7 +37,7 @@ object PreventTheSpread : ModInitializer {
 
 	private val logger = LoggerFactory.getLogger(MOD_ID)
 
-	val CANCER_BLOCK = CancerBlock(FabricBlockSettings.create().strength(4.0f).ticksRandomly().mapColor(MapColor.DARK_CRIMSON).pistonBehavior(PistonBehavior.BLOCK))
+	val CANCER_BLOCK = SolidCancerBlock(FabricBlockSettings.create().strength(4.0f).ticksRandomly().mapColor(MapColor.DARK_CRIMSON).pistonBehavior(PistonBehavior.BLOCK))
 	val CANCER_BLOCK_ITEM = BlockItem(CANCER_BLOCK, FabricItemSettings())
 
 	val DEBUG_TOOL_ITEM = DebugToolItem(FabricItemSettings().maxCount(1).rarity(Rarity.EPIC))

@@ -1,7 +1,7 @@
 package com.carpercreative.preventthespread.item
 
 import com.carpercreative.preventthespread.PreventTheSpread
-import com.carpercreative.preventthespread.block.CancerBlock.Companion.isCancerous
+import com.carpercreative.preventthespread.block.CancerBlock.isCancerous
 import com.carpercreative.preventthespread.cancer.BlobIdentifier
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
 import net.minecraft.client.item.TooltipContext
