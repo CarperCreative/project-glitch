@@ -11,14 +11,14 @@ class SolidCancerBlock(
 	settings: Settings,
 ) : Block(settings) {
 	override fun randomTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: Random) {
-		CancerBlock.cancerousRandomTick(state, world, pos, random)
+		CancerousBlock.randomTick(state, world, pos, random)
 	}
 
 	override fun scheduledTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: Random) {
-		CancerBlock.cancerousScheduledTick(state, world, pos, random)
+		CancerousBlock.scheduledTick(state, world, pos, random)
 	}
 
 	override fun onStateReplaced(state: BlockState?, world: World, pos: BlockPos, newState: BlockState?, moved: Boolean) {
-		CancerBlock.onCancerousStateReplaced(state,  world, pos, newState, moved)
+		CancerousBlock.onStateReplaced(state,  world, pos, newState, moved)
 	}
 }

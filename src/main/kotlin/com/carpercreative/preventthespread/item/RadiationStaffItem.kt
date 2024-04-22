@@ -1,7 +1,7 @@
 package com.carpercreative.preventthespread.item
 
 import com.carpercreative.preventthespread.PreventTheSpread
-import com.carpercreative.preventthespread.block.CancerBlock.isCancerous
+import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
 import java.util.function.Consumer
 import net.fabricmc.fabric.api.item.v1.CustomDamageHandler
 import net.minecraft.entity.LivingEntity
