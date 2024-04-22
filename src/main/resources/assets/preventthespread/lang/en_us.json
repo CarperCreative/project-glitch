@@ -6,6 +6,10 @@
 	"item.preventthespread.probe.tooltip.full": "Put in the Analyzer, or use while sneaking to empty.",
 	"item.preventthespread.probe.tooltip.blobIdentifier": "Blob identifier: %s",
 	"item.preventthespread.radiation_staff": "Radiation Staff",
+	"item.preventthespread.surgery_axe": "Surgery Axe",
+	"item.preventthespread.surgery_hoe": "Surgery Hoe",
+	"item.preventthespread.surgery_pickaxe": "Surgery Pickaxe",
+	"item.preventthespread.surgery_shovel": "Surgery Shovel",
 	"itemGroup.preventthespread.default": "Prevent the Spread",
 	"dummy.endOfFile": ""
 }

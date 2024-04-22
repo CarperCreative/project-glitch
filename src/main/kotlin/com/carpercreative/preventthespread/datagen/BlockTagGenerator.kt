@@ -22,5 +22,10 @@ class BlockTagGenerator(
 
 		getOrCreateTagBuilder(PreventTheSpread.CANCEROUS_BLOCK_TAG)
 			.add(PreventTheSpread.CANCER_BLOCK)
+
+		getOrCreateTagBuilder(PreventTheSpread.SURGERY_PICKAXE_MINEABLE_BLOCK_TAG)
+			.addTag(PreventTheSpread.CANCEROUS_BLOCK_TAG)
+
+		// TODO: add the other tag contents
 	}
 }
