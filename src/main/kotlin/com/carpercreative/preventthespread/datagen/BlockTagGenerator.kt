@@ -19,5 +19,8 @@ class BlockTagGenerator(
 			.forceAddTag(BlockTags.LOGS)
 			.forceAddTag(BlockTags.TERRACOTTA)
 			.forceAddTag(BlockTags.WOOL)
+
+		getOrCreateTagBuilder(PreventTheSpread.CANCEROUS_BLOCK_TAG)
+			.add(PreventTheSpread.CANCER_BLOCK)
 	}
 }

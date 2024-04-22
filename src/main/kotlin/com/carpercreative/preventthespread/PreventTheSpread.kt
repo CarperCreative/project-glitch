@@ -36,6 +36,7 @@ object PreventTheSpread : ModInitializer {
 	val PROBE_ITEM = ProbeItem(FabricItemSettings().maxCount(1))
 	val RADIATION_STAFF_ITEM = RadiationStaffItem(FabricItemSettings().maxCount(1).maxDamage(60).customDamage(RadiationStaffItem.RadiationBeamGunDamageHandler))
 
+	val CANCEROUS_BLOCK_TAG = TagKey.of(RegistryKeys.BLOCK, identifier("cancerous"))
 	val CANCER_SPREADABLE_BLOCK_TAG = TagKey.of(RegistryKeys.BLOCK, identifier("cancer_spreadable"))
 
 	private val ITEM_GROUP = FabricItemGroup.builder()
