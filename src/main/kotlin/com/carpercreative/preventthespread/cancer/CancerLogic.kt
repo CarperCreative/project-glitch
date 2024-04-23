@@ -6,7 +6,11 @@ import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState
 import com.carpercreative.preventthespread.util.contentsSequence
 import com.carpercreative.preventthespread.util.nextOfArray
 import com.carpercreative.preventthespread.util.nextOfList
+import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.SlabBlock
+import net.minecraft.block.StairsBlock
+import net.minecraft.registry.tag.BlockTags
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockBox
 import net.minecraft.util.math.BlockPos
@@ -44,7 +48,7 @@ object CancerLogic {
 		if (world.getBlockState(pos).isCancerous() || blobMembershipPersistentState.getMembershipOrNull(pos) != null) return null
 
 		val cancerBlob = world.getCancerBlobPersistentState().createCancerBlob { CancerBlob(it, cancerType) }
-		world.setBlockState(pos, PreventTheSpread.CANCER_STONE_BLOCK.defaultState)
+		convertToCancer(world, pos)
 		blobMembershipPersistentState.setMembership(pos, cancerBlob)
 
 		return cancerBlob
@@ -74,7 +78,7 @@ object CancerLogic {
 	fun spreadCancer(world: ServerWorld, fromPos: BlockPos, toPos: BlockPos) {
 		val blobMembershipPersistentState = world.getBlobMembershipPersistentState()
 
-		world.setBlockState(toPos, PreventTheSpread.CANCER_STONE_BLOCK.defaultState)
+		convertToCancer(world, toPos)
 
 		val blobId = blobMembershipPersistentState.getMembershipOrNull(fromPos)
 		if (blobId != null) {
@@ -98,5 +102,53 @@ object CancerLogic {
 			val blockPos = cancerBlockPositions.randomOrNull(kotlin.random.Random) ?: break
 			world.scheduleBlockTick(blockPos, world.getBlockState(blockPos).block, 20 + index * 20)
 		}
+	}
+
+	fun getDefaultCancerBlockState(): BlockState {
+		return PreventTheSpread.CANCER_STONE_BLOCK.defaultState
+	}
+
+	fun convertToCancer(world: ServerWorld, pos: BlockPos, variantForAir: BlockState = getDefaultCancerBlockState()) {
+		val cancerBlockState = convertBlockStateToCancer(world.getBlockState(pos), variantForAir)
+		world.setBlockState(pos, cancerBlockState)
+	}
+
+	fun convertBlockStateToCancer(state: BlockState, variantForAir: BlockState = getDefaultCancerBlockState()): BlockState {
+		return when {
+			// Do not convert block states which are already cancerous.
+			state.isIn(PreventTheSpread.CANCEROUS_BLOCK_TAG) -> state
+			// Use random blocks when spreading to air
+			state.isAir -> variantForAir
+			state.isIn(BlockTags.LEAVES) -> PreventTheSpread.CANCER_LEAVES_BLOCK.getStateWithProperties(state)
+			state.isIn(BlockTags.LOGS) -> PreventTheSpread.CANCER_LOG_BLOCK.getStateWithProperties(state)
+			state.isIn(BlockTags.DIRT) -> convertBlockStateToCancer(
+				state,
+				PreventTheSpread.CANCER_DIRT_BLOCK,
+				PreventTheSpread.CANCER_DIRT_SLAB_BLOCK,
+				PreventTheSpread.CANCER_DIRT_STAIRS_BLOCK,
+			)
+			state.isIn(BlockTags.PLANKS) -> convertBlockStateToCancer(
+				state,
+				PreventTheSpread.CANCER_STONE_BLOCK,
+				PreventTheSpread.CANCER_STONE_SLAB_BLOCK,
+				PreventTheSpread.CANCER_STONE_STAIRS_BLOCK,
+			)
+			state.run { isIn(BlockTags.BASE_STONE_OVERWORLD) || isIn(BlockTags.BASE_STONE_NETHER) } -> convertBlockStateToCancer(
+				state,
+				PreventTheSpread.CANCER_STONE_BLOCK,
+				PreventTheSpread.CANCER_STONE_SLAB_BLOCK,
+				PreventTheSpread.CANCER_STONE_STAIRS_BLOCK,
+			)
+			// Fallback.
+			else -> PreventTheSpread.CANCER_STONE_BLOCK.defaultState
+		}
+	}
+
+	private fun convertBlockStateToCancer(state: BlockState, solid: Block, slabs: Block, stairs: Block): BlockState {
+		return when (state.block) {
+			is SlabBlock -> slabs
+			is StairsBlock -> stairs
+			else -> solid
+		}.getStateWithProperties(state)
 	}
 }
