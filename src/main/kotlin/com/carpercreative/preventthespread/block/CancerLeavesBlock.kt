@@ -20,7 +20,8 @@ class CancerLeavesBlock(
 		// Update the leaves' distance property.
 		super.scheduledTick(state, world, pos, random)
 
-		CancerousBlock.scheduledTick(world.getBlockState(pos), world, pos, random)
+		// FIXME: distance property updates of leaves cause rapid cancer growth
+		// CancerousBlock.scheduledTick(world.getBlockState(pos), world, pos, random)
 	}
 
 	override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
