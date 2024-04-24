@@ -5,7 +5,9 @@ import com.carpercreative.preventthespread.block.CancerPillarBlock
 import com.carpercreative.preventthespread.block.CancerSlabBlock
 import com.carpercreative.preventthespread.block.CancerStairsBlock
 import com.carpercreative.preventthespread.block.CancerousBlock
+import com.carpercreative.preventthespread.block.ChemotherapeuticDrugBlock
 import com.carpercreative.preventthespread.block.SolidCancerBlock
+import com.carpercreative.preventthespread.entity.ChemotherapeuticDrugEntity
 import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
 import com.carpercreative.preventthespread.item.RadiationStaffItem
@@ -20,7 +22,10 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
+import net.minecraft.block.MapColor
 import net.minecraft.block.piston.PistonBehavior
+import net.minecraft.entity.EntityType
+import net.minecraft.entity.SpawnGroup
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -29,6 +34,7 @@ import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.registry.tag.TagKey
+import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
@@ -76,6 +82,9 @@ object PreventTheSpread : ModInitializer {
 	)
 	val CANCER_LEAVES_BLOCK_ITEM = BlockItem(CANCER_LEAVES_BLOCK, FabricItemSettings())
 
+	val CHEMOTHERAPEUTIC_DRUG_BLOCK = ChemotherapeuticDrugBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_BLUE).breakInstantly().sounds(BlockSoundGroup.GRASS).solidBlock(Blocks::never))
+	val CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM = BlockItem(CHEMOTHERAPEUTIC_DRUG_BLOCK, FabricItemSettings())
+
 	val DEBUG_TOOL_ITEM = DebugToolItem(FabricItemSettings().maxCount(1).rarity(Rarity.EPIC))
 	val PROBE_ITEM = ProbeItem(FabricItemSettings().maxCount(1))
 	val RADIATION_STAFF_ITEM = RadiationStaffItem(FabricItemSettings().maxCount(1).maxDamage(60).customDamage(RadiationStaffItem.RadiationBeamGunDamageHandler))
@@ -93,11 +102,14 @@ object PreventTheSpread : ModInitializer {
 
 	val SURGERY_TOOL_ITEM_TAG: TagKey<Item> = TagKey.of(RegistryKeys.ITEM, identifier("surgery_tool"))
 
+	val CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE: EntityType<ChemotherapeuticDrugEntity> = EntityType.Builder.create({ entityType, world -> ChemotherapeuticDrugEntity(entityType, world) }, SpawnGroup.MISC).makeFireImmune().setDimensions(0.98f, 0.98f).maxTrackingRange(10).trackingTickInterval(10).build()
+
 	private val ITEM_GROUP = FabricItemGroup.builder()
 		.icon { ItemStack(CANCER_DIRT_BLOCK_ITEM) }
 		.displayName(Text.translatable("itemGroup.$MOD_ID.default"))
 		.entries { context, entries ->
 			entries.add(PROBE_ITEM)
+			entries.add(CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM)
 			entries.add(RADIATION_STAFF_ITEM)
 			entries.add(SURGERY_AXE_ITEM)
 			entries.add(SURGERY_HOE_ITEM)
@@ -144,6 +156,9 @@ object PreventTheSpread : ModInitializer {
 		Registry.register(Registries.BLOCK, identifier("cancer_leaves"), CANCER_LEAVES_BLOCK)
 		Registry.register(Registries.ITEM, identifier("cancer_leaves"), CANCER_LEAVES_BLOCK_ITEM)
 
+		Registry.register(Registries.BLOCK, identifier("chemotherapeutic_drug"), CHEMOTHERAPEUTIC_DRUG_BLOCK)
+		Registry.register(Registries.ITEM, identifier("chemotherapeutic_drug"), CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM)
+
 		Registry.register(Registries.ITEM, identifier("debug_tool"), DEBUG_TOOL_ITEM)
 		Registry.register(Registries.ITEM, identifier("probe"), PROBE_ITEM)
 		Registry.register(Registries.ITEM, identifier("radiation_staff"), RADIATION_STAFF_ITEM)
@@ -154,6 +169,8 @@ object PreventTheSpread : ModInitializer {
 
 		Registry.register(Registries.ITEM_GROUP, identifier("default"), ITEM_GROUP)
 
+		Registry.register(Registries.ENTITY_TYPE, identifier("chemotherapeutic_drug"), CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE)
+
 		ServerTickEvents.END_WORLD_TICK.register { world ->
 			RadiationStaffItem.doCooldown(world)
 		}
@@ -161,7 +178,7 @@ object PreventTheSpread : ModInitializer {
 		// TODO: replace cancer block textures
 		// TODO: add surgery tool crafting recipe
 		// TODO: make cancer blocks mine-able only using appropriate tools
-		// TODO: implement chemotherapy (uhhh, TNT?)
+		// TODO: replace chemotherapeutic drug textures/model
 		// TODO: implement targeted drug therapy (syringe item/block)
 		// TODO: create research table block
 		// TODO: create research GUI

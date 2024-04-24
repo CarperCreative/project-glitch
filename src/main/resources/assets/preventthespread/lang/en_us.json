@@ -10,6 +10,7 @@
 	"block.preventthespread.cancer_stone": "Cancer Stone",
 	"block.preventthespread.cancer_stone_stairs": "Cancer Stone Stairs",
 	"block.preventthespread.cancer_stone_slab": "Cancer Stone Slab",
+	"block.preventthespread.chemotherapeutic_drug": "Chemotherapeutic Drug",
 	"item.preventthespread.probe.empty": "Empty Probe",
 	"item.preventthespread.probe.full": "Probe with Sample",
 	"item.preventthespread.probe.tooltip.empty": "Use on a Cancer Block to take a sample.",

@@ -4,7 +4,9 @@ import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
 import com.carpercreative.preventthespread.item.RadiationStaffItem
 import net.fabricmc.api.ClientModInitializer
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.minecraft.client.item.ModelPredicateProviderRegistry
+import net.minecraft.client.render.entity.TntEntityRenderer
 import net.minecraft.util.Identifier
 
 object PreventTheSpreadClient : ClientModInitializer {
@@ -23,5 +25,7 @@ object PreventTheSpreadClient : ClientModInitializer {
 		ModelPredicateProviderRegistry.register(PreventTheSpread.RADIATION_STAFF_ITEM, Identifier("overheated")) { stack, clientWorld, livingEntity, seed ->
 			if (RadiationStaffItem.isOverheated(stack)) 1f else 0f
 		}
+
+		EntityRendererRegistry.register(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE) { context -> TntEntityRenderer(context) }
 	}
 }
