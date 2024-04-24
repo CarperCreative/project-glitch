@@ -4,6 +4,7 @@ import com.carpercreative.preventthespread.PreventTheSpread
 import java.util.concurrent.CompletableFuture
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider.BlockTagProvider
+import net.minecraft.block.Blocks
 import net.minecraft.registry.RegistryWrapper.WrapperLookup
 import net.minecraft.registry.tag.BlockTags
 
@@ -13,8 +14,10 @@ class BlockTagGenerator(
 ) : BlockTagProvider(output, completableFuture) {
 	override fun configure(arg: WrapperLookup) {
 		getOrCreateTagBuilder(PreventTheSpread.CANCER_SPREADABLE_BLOCK_TAG)
+			.add(Blocks.AIR)
 			.forceAddTag(BlockTags.BASE_STONE_NETHER)
 			.forceAddTag(BlockTags.BASE_STONE_OVERWORLD)
+			.add(Blocks.CAVE_AIR)
 			.forceAddTag(BlockTags.DIRT)
 			.forceAddTag(BlockTags.LOGS)
 			.forceAddTag(BlockTags.SLABS)

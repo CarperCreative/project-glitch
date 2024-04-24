@@ -37,7 +37,8 @@ object CancerLogic {
 		return !isCancerous()
 			// Spreading to block entities could have unintended consequences, like dropping the entire contents of a chest.
 			&& !hasBlockEntity()
-			&& (isSolid || isAir)
+			// Allow spreading only to explicitly whitelisted blocks.
+			&& isIn(PreventTheSpread.CANCER_SPREADABLE_BLOCK_TAG)
 			// Prevent spreading to unbreakable blocks like bedrock.
 			&& block.hardness >= 0f
 	}
