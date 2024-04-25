@@ -190,7 +190,6 @@ object PreventTheSpread : ModInitializer {
 			RadiationStaffItem.doCooldown(world)
 		}
 
-		// TODO: make targeted drug injector waterloggable
 		// TODO: replace cancer block textures
 		// TODO: add surgery tool crafting recipe
 		// TODO: make cancer blocks mine-able only using appropriate tools

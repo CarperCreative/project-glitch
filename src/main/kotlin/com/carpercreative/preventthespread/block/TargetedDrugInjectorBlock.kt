@@ -4,12 +4,16 @@ import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
 import com.carpercreative.preventthespread.util.contentsSequence
 import com.mojang.serialization.MapCodec
 import kotlin.jvm.optionals.getOrNull
+import net.minecraft.block.BarrierBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.RodBlock
+import net.minecraft.block.Waterloggable
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.ai.pathing.NavigationType
+import net.minecraft.fluid.FluidState
+import net.minecraft.fluid.Fluids
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
@@ -27,7 +31,7 @@ import net.minecraft.world.WorldView
 
 class TargetedDrugInjectorBlock(
 	settings: Settings,
-) : RodBlock(settings) {
+) : RodBlock(settings), Waterloggable {
 	init {
 		defaultState = stateManager.defaultState.with(FACING, Direction.UP)
 	}
@@ -37,6 +41,7 @@ class TargetedDrugInjectorBlock(
 	override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
 		builder.add(Properties.FACING)
 		builder.add(PROGRESS)
+		builder.add(Properties.WATERLOGGED)
 	}
 
 	private fun scheduleTick(world: ServerWorld, pos: BlockPos) {
@@ -67,7 +72,10 @@ class TargetedDrugInjectorBlock(
 	}
 
 	override fun getPlacementState(ctx: ItemPlacementContext): BlockState {
-		return defaultState.with(FACING, ctx.side)
+		val fluidState = ctx.world.getFluidState(ctx.blockPos)
+		return defaultState
+			.with(FACING, ctx.side)
+			.with(Properties.WATERLOGGED, fluidState.fluid === Fluids.WATER)
 	}
 
 	override fun canPlaceAt(state: BlockState, world: WorldView, pos: BlockPos): Boolean {
@@ -90,6 +98,10 @@ class TargetedDrugInjectorBlock(
 	}
 
 	override fun getStateForNeighborUpdate(state: BlockState, direction: Direction, neighborState: BlockState?, world: WorldAccess, pos: BlockPos, neighborPos: BlockPos?): BlockState {
+		if (state.get(Properties.WATERLOGGED)) {
+			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world))
+		}
+
 		// Bail quickly if the block update came from a block other than the one this injector is attached to.
 		if (state.get(FACING).opposite != direction) return state
 
@@ -118,6 +130,13 @@ class TargetedDrugInjectorBlock(
 			}
 			false -> state.with(PROGRESS, 0)
 		}
+	}
+
+	override fun getFluidState(state: BlockState): FluidState {
+		if (state.get(BarrierBlock.WATERLOGGED)) {
+			return Fluids.WATER.getStill(false)
+		}
+		return super.getFluidState(state)
 	}
 
 	override fun getAmbientOcclusionLightLevel(state: BlockState?, world: BlockView?, pos: BlockPos?): Float {
