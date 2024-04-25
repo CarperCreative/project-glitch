@@ -9,6 +9,7 @@ object PreventTheSpreadDataGenerator : DataGeneratorEntrypoint {
 		fabricDataGenerator.createPack().apply {
 			addProvider(::BlockTagGenerator)
 			addProvider(::ItemTagGenerator)
+			addProvider(::RecipeGenerator)
 		}
 	}
 }
