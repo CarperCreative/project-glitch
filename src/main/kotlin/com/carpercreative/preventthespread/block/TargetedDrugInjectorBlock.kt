@@ -1,9 +1,10 @@
 package com.carpercreative.preventthespread.block
 
 import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
-import com.carpercreative.preventthespread.util.contentsSequence
 import com.mojang.serialization.MapCodec
+import java.util.LinkedList
 import kotlin.jvm.optionals.getOrNull
+import kotlin.math.roundToInt
 import net.minecraft.block.BarrierBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -20,7 +21,6 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.IntProperty
 import net.minecraft.state.property.Properties
-import net.minecraft.util.math.BlockBox
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.random.Random
@@ -66,9 +66,23 @@ class TargetedDrugInjectorBlock(
 		world.removeBlock(pos, false)
 
 		// Perform the injection.
-		// TODO: better algorithm
-		BlockBox(pos).expand(3).contentsSequence()
-			.forEach { world.setBlockState(it, Blocks.AIR.getStateWithProperties(state)) }
+
+		val targetPos = pos.offset(state.get(FACING).opposite)
+		val cancerousBlockPositions = BlockSearch.findBlocks(world, targetPos, INJECTED_BLOCK_COUNT)
+
+		for (cancerousBlockPos in cancerousBlockPositions) {
+			world.removeBlock(cancerousBlockPos, false)
+		}
+	}
+
+	override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: Random) {
+		val progress = state.get(PROGRESS)
+		val targetPos = pos.offset(state.get(FACING).opposite)
+		val cancerousBlockPositions = BlockSearch.findBlocks(world, targetPos, (progress / 8f * INJECTED_BLOCK_COUNT).roundToInt())
+
+		for (cancerousBlockPos in cancerousBlockPositions) {
+			world.addBlockBreakParticles(cancerousBlockPos, world.getBlockState(cancerousBlockPos))
+		}
 	}
 
 	override fun getPlacementState(ctx: ItemPlacementContext): BlockState {
@@ -164,8 +178,42 @@ class TargetedDrugInjectorBlock(
 		 */
 		val PROGRESS = IntProperty.of("progress", 0, MAX_PROGRESS)
 
+		const val INJECTED_BLOCK_COUNT = 24
+
 		fun isInjecting(blockState: BlockState): Boolean {
 			return (blockState.getOrEmpty(PROGRESS).getOrNull() ?: 0) != 0
+		}
+	}
+
+	object BlockSearch {
+		fun findBlocks(world: WorldAccess, startPos: BlockPos, limit: Int): List<BlockPos> {
+			val visited = hashSetOf<BlockPos>()
+			val cancerous = mutableListOf<BlockPos>()
+			val candidates = LinkedList<BlockPos>()
+
+			candidates.add(startPos)
+			visited.add(startPos)
+
+			while (candidates.isNotEmpty()) {
+				val pos = candidates.pop()
+
+				// All found cancerous blocks must be connected.
+				if (!world.getBlockState(pos).isCancerous()) continue
+
+				cancerous.add(pos)
+				if (cancerous.size >= limit) break
+
+				for (direction in DIRECTIONS) {
+					val offsetPos = pos.offset(direction)
+
+					if (!visited.contains(offsetPos)) {
+						visited.add(offsetPos)
+						candidates.add(offsetPos)
+					}
+				}
+			}
+
+			return cancerous
 		}
 	}
 }
