@@ -7,6 +7,7 @@ import com.carpercreative.preventthespread.block.CancerStairsBlock
 import com.carpercreative.preventthespread.block.CancerousBlock
 import com.carpercreative.preventthespread.block.ChemotherapeuticDrugBlock
 import com.carpercreative.preventthespread.block.SolidCancerBlock
+import com.carpercreative.preventthespread.block.TargetedDrugInjectorBlock
 import com.carpercreative.preventthespread.entity.ChemotherapeuticDrugEntity
 import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
@@ -84,6 +85,17 @@ object PreventTheSpread : ModInitializer {
 
 	val CHEMOTHERAPEUTIC_DRUG_BLOCK = ChemotherapeuticDrugBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_BLUE).breakInstantly().sounds(BlockSoundGroup.GRASS).solidBlock(Blocks::never))
 	val CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM = BlockItem(CHEMOTHERAPEUTIC_DRUG_BLOCK, FabricItemSettings())
+	val TARGETED_DRUG_INJECTOR_BLOCK = TargetedDrugInjectorBlock(
+		FabricBlockSettings.create()
+			.blockVision(Blocks::never)
+			.breakInstantly()
+			.nonOpaque()
+			.pistonBehavior(PistonBehavior.DESTROY)
+			.solidBlock(Blocks::never)
+			.suffocates(Blocks::never)
+			.ticksRandomly()
+	)
+	val TARGETED_DRUG_INJECTOR_BLOCK_ITEM = BlockItem(TARGETED_DRUG_INJECTOR_BLOCK, FabricItemSettings())
 
 	val DEBUG_TOOL_ITEM = DebugToolItem(FabricItemSettings().maxCount(1).rarity(Rarity.EPIC))
 	val PROBE_ITEM = ProbeItem(FabricItemSettings().maxCount(1))
@@ -115,6 +127,7 @@ object PreventTheSpread : ModInitializer {
 			entries.add(SURGERY_HOE_ITEM)
 			entries.add(SURGERY_PICKAXE_ITEM)
 			entries.add(SURGERY_SHOVEL_ITEM)
+			entries.add(TARGETED_DRUG_INJECTOR_BLOCK_ITEM)
 			entries.add(CANCER_DIRT_BLOCK_ITEM)
 			entries.add(CANCER_LOG_BLOCK_ITEM)
 			entries.add(CANCER_PLANKS_BLOCK_ITEM)
@@ -158,6 +171,8 @@ object PreventTheSpread : ModInitializer {
 
 		Registry.register(Registries.BLOCK, identifier("chemotherapeutic_drug"), CHEMOTHERAPEUTIC_DRUG_BLOCK)
 		Registry.register(Registries.ITEM, identifier("chemotherapeutic_drug"), CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, identifier("targeted_drug_injector"), TARGETED_DRUG_INJECTOR_BLOCK)
+		Registry.register(Registries.ITEM, identifier("targeted_drug_injector"), TARGETED_DRUG_INJECTOR_BLOCK_ITEM)
 
 		Registry.register(Registries.ITEM, identifier("debug_tool"), DEBUG_TOOL_ITEM)
 		Registry.register(Registries.ITEM, identifier("probe"), PROBE_ITEM)
@@ -175,11 +190,12 @@ object PreventTheSpread : ModInitializer {
 			RadiationStaffItem.doCooldown(world)
 		}
 
+		// TODO: make targeted drug injector waterloggable
 		// TODO: replace cancer block textures
 		// TODO: add surgery tool crafting recipe
 		// TODO: make cancer blocks mine-able only using appropriate tools
 		// TODO: replace chemotherapeutic drug textures/model
-		// TODO: implement targeted drug therapy (syringe item/block)
+		// TODO: replace targeted drug injector model and block state to indicate progress
 		// TODO: create research table block
 		// TODO: create research GUI
 		// TODO: create research state store (per player?)

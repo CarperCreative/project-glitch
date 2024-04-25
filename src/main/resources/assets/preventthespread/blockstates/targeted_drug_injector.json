@@ -1,0 +1,30 @@
+{
+	"variants": {
+		"facing=down": {
+			"model": "preventthespread:block/targeted_drug_injector",
+			"x": 180
+		},
+		"facing=east": {
+			"model": "preventthespread:block/targeted_drug_injector",
+			"x": 90,
+			"y": 90
+		},
+		"facing=north": {
+			"model": "preventthespread:block/targeted_drug_injector",
+			"x": 90
+		},
+		"facing=south": {
+			"model": "preventthespread:block/targeted_drug_injector",
+			"x": 90,
+			"y": 180
+		},
+		"facing=up": {
+			"model": "preventthespread:block/targeted_drug_injector"
+		},
+		"facing=west": {
+			"model": "preventthespread:block/targeted_drug_injector",
+			"x": 90,
+			"y": 270
+		}
+	}
+}

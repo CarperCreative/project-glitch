@@ -1,0 +1,152 @@
+package com.carpercreative.preventthespread.block
+
+import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
+import com.carpercreative.preventthespread.util.contentsSequence
+import com.mojang.serialization.MapCodec
+import kotlin.jvm.optionals.getOrNull
+import net.minecraft.block.Block
+import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
+import net.minecraft.block.RodBlock
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.ai.pathing.NavigationType
+import net.minecraft.item.ItemPlacementContext
+import net.minecraft.item.ItemStack
+import net.minecraft.server.world.ServerWorld
+import net.minecraft.state.StateManager
+import net.minecraft.state.property.IntProperty
+import net.minecraft.state.property.Properties
+import net.minecraft.util.math.BlockBox
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
+import net.minecraft.util.math.random.Random
+import net.minecraft.world.BlockView
+import net.minecraft.world.World
+import net.minecraft.world.WorldAccess
+import net.minecraft.world.WorldView
+
+class TargetedDrugInjectorBlock(
+	settings: Settings,
+) : RodBlock(settings) {
+	init {
+		defaultState = stateManager.defaultState.with(FACING, Direction.UP)
+	}
+
+	override fun getCodec(): MapCodec<out TargetedDrugInjectorBlock> = CODEC
+
+	override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
+		builder.add(Properties.FACING)
+		builder.add(PROGRESS)
+	}
+
+	private fun scheduleTick(world: ServerWorld, pos: BlockPos) {
+		val progressInterval = 10
+		world.scheduleBlockTick(pos, this, progressInterval)
+	}
+
+	override fun scheduledTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: Random) {
+		var injectionProgress = state.get(PROGRESS)
+
+		// Injection hasn't started - do nothing.
+		if (injectionProgress == 0) return
+
+		injectionProgress++
+		if (injectionProgress < MAX_PROGRESS) {
+			world.setBlockState(pos, state.with(PROGRESS, injectionProgress))
+			scheduleTick(world, pos)
+			return
+		}
+
+		// Destroy self to prevent the injector from ever being possible to reuse.
+		world.removeBlock(pos, false)
+
+		// Perform the injection.
+		// TODO: better algorithm
+		BlockBox(pos).expand(3).contentsSequence()
+			.forEach { world.setBlockState(it, Blocks.AIR.getStateWithProperties(state)) }
+	}
+
+	override fun getPlacementState(ctx: ItemPlacementContext): BlockState {
+		return defaultState.with(FACING, ctx.side)
+	}
+
+	override fun canPlaceAt(state: BlockState, world: WorldView, pos: BlockPos): Boolean {
+		val direction = state.get(FACING)
+		val blockPos = pos.offset(direction.opposite)
+		val blockState = world.getBlockState(blockPos)
+		return blockState.isSideSolidFullSquare(world, blockPos, direction)
+	}
+
+	override fun onPlaced(world: World, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack) {
+		val updatedState = checkInjectionTarget(state, world, pos)
+		if (state != updatedState) {
+			world.setBlockState(pos, updatedState, NOTIFY_LISTENERS)
+		}
+
+		if (world.isClient) return
+		world as ServerWorld
+
+		scheduleTick(world, pos)
+	}
+
+	override fun getStateForNeighborUpdate(state: BlockState, direction: Direction, neighborState: BlockState?, world: WorldAccess, pos: BlockPos, neighborPos: BlockPos?): BlockState {
+		// Bail quickly if the block update came from a block other than the one this injector is attached to.
+		if (state.get(FACING).opposite != direction) return state
+
+		// Drop if we can't attach to the block.
+		if (!state.canPlaceAt(world, pos)) {
+			return Blocks.AIR.defaultState
+		}
+
+		return checkInjectionTarget(state, world, pos)
+	}
+
+	/**
+	 * Returns a block state with [PROGRESS] appropriate for the block type the injector is facing.
+	 *
+	 * If attached to a non-cancerous block, the injection progress is reset to 0.
+	 * Otherwise, the injection progress is kept at its current value, or set to 1 if currently 0.
+	 */
+	private fun checkInjectionTarget(state: BlockState, world: WorldAccess, pos: BlockPos): BlockState {
+		val attachedToPosition = pos.offset(state.get(FACING).opposite)
+		val attachedToCancerous = world.getBlockState(attachedToPosition).isCancerous()
+
+		return when (attachedToCancerous) {
+			true -> when (state.get(PROGRESS) == 0) {
+				true -> state.with(PROGRESS, 1)
+				false -> state
+			}
+			false -> state.with(PROGRESS, 0)
+		}
+	}
+
+	override fun getAmbientOcclusionLightLevel(state: BlockState?, world: BlockView?, pos: BlockPos?): Float {
+		return 1f
+	}
+
+	override fun isTransparent(state: BlockState?, world: BlockView?, pos: BlockPos?): Boolean {
+		return true
+	}
+
+	override fun canPathfindThrough(state: BlockState?, world: BlockView?, pos: BlockPos?, type: NavigationType?): Boolean {
+		return false
+	}
+
+	companion object {
+		val CODEC = createCodec(::TargetedDrugInjectorBlock)
+
+		/**
+		 * Maximum value of [PROGRESS].
+		 */
+		const val MAX_PROGRESS = 8
+
+		/**
+		 * Injection progress. 0 when not facing a valid block, [1..MAX_PROGRESS] while injecting.
+		 */
+		val PROGRESS = IntProperty.of("progress", 0, MAX_PROGRESS)
+
+		fun isInjecting(blockState: BlockState): Boolean {
+			return (blockState.getOrEmpty(PROGRESS).getOrNull() ?: 0) != 0
+		}
+	}
+}

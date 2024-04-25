@@ -4,13 +4,17 @@ import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
 import com.carpercreative.preventthespread.item.RadiationStaffItem
 import net.fabricmc.api.ClientModInitializer
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.minecraft.client.item.ModelPredicateProviderRegistry
+import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.entity.TntEntityRenderer
 import net.minecraft.util.Identifier
 
 object PreventTheSpreadClient : ClientModInitializer {
 	override fun onInitializeClient() {
+		BlockRenderLayerMap.INSTANCE.putBlock(PreventTheSpread.TARGETED_DRUG_INJECTOR_BLOCK, RenderLayer.getCutout());
+
 		ModelPredicateProviderRegistry.register(PreventTheSpread.DEBUG_TOOL_ITEM, Identifier("mode")) { stack, clientWorld, livingEntity, seed ->
 			DebugToolItem.getDebugMode(stack).ordinal.toFloat()
 		}
