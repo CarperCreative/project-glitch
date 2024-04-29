@@ -6,6 +6,7 @@ import com.carpercreative.preventthespread.block.CancerSlabBlock
 import com.carpercreative.preventthespread.block.CancerStairsBlock
 import com.carpercreative.preventthespread.block.CancerousBlock
 import com.carpercreative.preventthespread.block.ChemotherapeuticDrugBlock
+import com.carpercreative.preventthespread.block.ProcessingTableBlock
 import com.carpercreative.preventthespread.block.SolidCancerBlock
 import com.carpercreative.preventthespread.block.TargetedDrugInjectorBlock
 import com.carpercreative.preventthespread.entity.ChemotherapeuticDrugEntity
@@ -85,6 +86,15 @@ object PreventTheSpread : ModInitializer {
 
 	val CHEMOTHERAPEUTIC_DRUG_BLOCK = ChemotherapeuticDrugBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_BLUE).breakInstantly().sounds(BlockSoundGroup.GRASS).solidBlock(Blocks::never))
 	val CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM = BlockItem(CHEMOTHERAPEUTIC_DRUG_BLOCK, FabricItemSettings())
+	val PROCESSING_TABLE_BLOCK = ProcessingTableBlock(
+		FabricBlockSettings.create()
+			.hardness(3.5f)
+			.mapColor(MapColor.DARK_GREEN)
+			.nonOpaque()
+			.pistonBehavior(PistonBehavior.BLOCK)
+			.sounds(BlockSoundGroup.WOOD)
+	)
+	val PROCESSING_TABLE_BLOCK_ITEM = BlockItem(PROCESSING_TABLE_BLOCK, FabricItemSettings())
 	val TARGETED_DRUG_INJECTOR_BLOCK = TargetedDrugInjectorBlock(
 		FabricBlockSettings.create()
 			.blockVision(Blocks::never)
@@ -121,6 +131,7 @@ object PreventTheSpread : ModInitializer {
 		.displayName(Text.translatable("itemGroup.$MOD_ID.default"))
 		.entries { context, entries ->
 			entries.add(PROBE_ITEM)
+			entries.add(PROCESSING_TABLE_BLOCK_ITEM)
 			entries.add(CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM)
 			entries.add(RADIATION_STAFF_ITEM)
 			entries.add(SURGERY_AXE_ITEM)
@@ -171,6 +182,8 @@ object PreventTheSpread : ModInitializer {
 
 		Registry.register(Registries.BLOCK, identifier("chemotherapeutic_drug"), CHEMOTHERAPEUTIC_DRUG_BLOCK)
 		Registry.register(Registries.ITEM, identifier("chemotherapeutic_drug"), CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, identifier("processing_table"), PROCESSING_TABLE_BLOCK)
+		Registry.register(Registries.ITEM, identifier("processing_table"), PROCESSING_TABLE_BLOCK_ITEM)
 		Registry.register(Registries.BLOCK, identifier("targeted_drug_injector"), TARGETED_DRUG_INJECTOR_BLOCK)
 		Registry.register(Registries.ITEM, identifier("targeted_drug_injector"), TARGETED_DRUG_INJECTOR_BLOCK_ITEM)
 

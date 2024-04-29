@@ -13,6 +13,7 @@ import net.minecraft.util.Identifier
 
 object PreventTheSpreadClient : ClientModInitializer {
 	override fun onInitializeClient() {
+		BlockRenderLayerMap.INSTANCE.putBlock(PreventTheSpread.PROCESSING_TABLE_BLOCK, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(PreventTheSpread.TARGETED_DRUG_INJECTOR_BLOCK, RenderLayer.getCutout());
 
 		ModelPredicateProviderRegistry.register(PreventTheSpread.DEBUG_TOOL_ITEM, Identifier("mode")) { stack, clientWorld, livingEntity, seed ->
