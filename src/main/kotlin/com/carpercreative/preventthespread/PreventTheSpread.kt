@@ -6,8 +6,10 @@ import com.carpercreative.preventthespread.block.CancerSlabBlock
 import com.carpercreative.preventthespread.block.CancerStairsBlock
 import com.carpercreative.preventthespread.block.CancerousBlock
 import com.carpercreative.preventthespread.block.ChemotherapeuticDrugBlock
+import com.carpercreative.preventthespread.block.ProcessingTableBlock
 import com.carpercreative.preventthespread.block.SolidCancerBlock
 import com.carpercreative.preventthespread.block.TargetedDrugInjectorBlock
+import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
 import com.carpercreative.preventthespread.entity.ChemotherapeuticDrugEntity
 import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
@@ -16,6 +18,7 @@ import com.carpercreative.preventthespread.item.SurgeryAxeItem
 import com.carpercreative.preventthespread.item.SurgeryHoeItem
 import com.carpercreative.preventthespread.item.SurgeryPickaxeItem
 import com.carpercreative.preventthespread.item.SurgeryShovelItem
+import com.carpercreative.preventthespread.screen.ProcessingTableAnalyzerScreenHandler
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
@@ -24,6 +27,7 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.block.MapColor
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.block.piston.PistonBehavior
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.SpawnGroup
@@ -35,6 +39,8 @@ import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.registry.tag.TagKey
+import net.minecraft.resource.featuretoggle.FeatureFlags
+import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
@@ -85,6 +91,15 @@ object PreventTheSpread : ModInitializer {
 
 	val CHEMOTHERAPEUTIC_DRUG_BLOCK = ChemotherapeuticDrugBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_BLUE).breakInstantly().sounds(BlockSoundGroup.GRASS).solidBlock(Blocks::never))
 	val CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM = BlockItem(CHEMOTHERAPEUTIC_DRUG_BLOCK, FabricItemSettings())
+	val PROCESSING_TABLE_BLOCK = ProcessingTableBlock(
+		FabricBlockSettings.create()
+			.hardness(3.5f)
+			.mapColor(MapColor.DARK_GREEN)
+			.nonOpaque()
+			.pistonBehavior(PistonBehavior.BLOCK)
+			.sounds(BlockSoundGroup.WOOD)
+	)
+	val PROCESSING_TABLE_BLOCK_ITEM = BlockItem(PROCESSING_TABLE_BLOCK, FabricItemSettings())
 	val TARGETED_DRUG_INJECTOR_BLOCK = TargetedDrugInjectorBlock(
 		FabricBlockSettings.create()
 			.blockVision(Blocks::never)
@@ -96,6 +111,8 @@ object PreventTheSpread : ModInitializer {
 			.ticksRandomly()
 	)
 	val TARGETED_DRUG_INJECTOR_BLOCK_ITEM = BlockItem(TARGETED_DRUG_INJECTOR_BLOCK, FabricItemSettings())
+
+	val PROCESSING_TABLE_BLOCK_ENTITY: BlockEntityType<ProcessingTableAnalyzerBlockEntity> = BlockEntityType.Builder.create(::ProcessingTableAnalyzerBlockEntity, PROCESSING_TABLE_BLOCK).build()
 
 	val DEBUG_TOOL_ITEM = DebugToolItem(FabricItemSettings().maxCount(1).rarity(Rarity.EPIC))
 	val PROBE_ITEM = ProbeItem(FabricItemSettings().maxCount(1))
@@ -116,11 +133,14 @@ object PreventTheSpread : ModInitializer {
 
 	val CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE: EntityType<ChemotherapeuticDrugEntity> = EntityType.Builder.create({ entityType, world -> ChemotherapeuticDrugEntity(entityType, world) }, SpawnGroup.MISC).makeFireImmune().setDimensions(0.98f, 0.98f).maxTrackingRange(10).trackingTickInterval(10).build()
 
+	val PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER = ScreenHandlerType(::ProcessingTableAnalyzerScreenHandler, FeatureFlags.VANILLA_FEATURES)
+
 	private val ITEM_GROUP = FabricItemGroup.builder()
 		.icon { ItemStack(CANCER_DIRT_BLOCK_ITEM) }
 		.displayName(Text.translatable("itemGroup.$MOD_ID.default"))
 		.entries { context, entries ->
 			entries.add(PROBE_ITEM)
+			entries.add(PROCESSING_TABLE_BLOCK_ITEM)
 			entries.add(CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM)
 			entries.add(RADIATION_STAFF_ITEM)
 			entries.add(SURGERY_AXE_ITEM)
@@ -171,8 +191,12 @@ object PreventTheSpread : ModInitializer {
 
 		Registry.register(Registries.BLOCK, identifier("chemotherapeutic_drug"), CHEMOTHERAPEUTIC_DRUG_BLOCK)
 		Registry.register(Registries.ITEM, identifier("chemotherapeutic_drug"), CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, identifier("processing_table"), PROCESSING_TABLE_BLOCK)
+		Registry.register(Registries.ITEM, identifier("processing_table"), PROCESSING_TABLE_BLOCK_ITEM)
 		Registry.register(Registries.BLOCK, identifier("targeted_drug_injector"), TARGETED_DRUG_INJECTOR_BLOCK)
 		Registry.register(Registries.ITEM, identifier("targeted_drug_injector"), TARGETED_DRUG_INJECTOR_BLOCK_ITEM)
+
+		Registry.register(Registries.BLOCK_ENTITY_TYPE, identifier("processing_table"), PROCESSING_TABLE_BLOCK_ENTITY)
 
 		Registry.register(Registries.ITEM, identifier("debug_tool"), DEBUG_TOOL_ITEM)
 		Registry.register(Registries.ITEM, identifier("probe"), PROBE_ITEM)
@@ -185,6 +209,8 @@ object PreventTheSpread : ModInitializer {
 		Registry.register(Registries.ITEM_GROUP, identifier("default"), ITEM_GROUP)
 
 		Registry.register(Registries.ENTITY_TYPE, identifier("chemotherapeutic_drug"), CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE)
+
+		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_analyzer"), PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER)
 
 		ServerTickEvents.END_WORLD_TICK.register { world ->
 			RadiationStaffItem.doCooldown(world)
