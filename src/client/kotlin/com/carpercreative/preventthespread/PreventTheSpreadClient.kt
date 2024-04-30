@@ -1,11 +1,13 @@
 package com.carpercreative.preventthespread
 
+import com.carpercreative.preventthespread.client.gui.screen.ProcessingTableAnalyzerScreen
 import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
 import com.carpercreative.preventthespread.item.RadiationStaffItem
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
+import net.minecraft.client.gui.screen.ingame.HandledScreens
 import net.minecraft.client.item.ModelPredicateProviderRegistry
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.entity.TntEntityRenderer
@@ -32,5 +34,7 @@ object PreventTheSpreadClient : ClientModInitializer {
 		}
 
 		EntityRendererRegistry.register(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE) { context -> TntEntityRenderer(context) }
+
+		HandledScreens.register(PreventTheSpread.PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER, ::ProcessingTableAnalyzerScreen)
 	}
 }

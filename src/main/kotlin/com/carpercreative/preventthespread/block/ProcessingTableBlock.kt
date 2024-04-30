@@ -1,18 +1,24 @@
 package com.carpercreative.preventthespread.block
 
+import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
 import net.minecraft.block.Block
+import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
+import net.minecraft.screen.NamedScreenHandlerFactory
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
 import net.minecraft.state.property.DirectionProperty
 import net.minecraft.state.property.EnumProperty
 import net.minecraft.state.property.Properties
+import net.minecraft.util.ActionResult
+import net.minecraft.util.Hand
 import net.minecraft.util.StringIdentifiable
+import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
@@ -21,7 +27,7 @@ import net.minecraft.world.WorldAccess
 
 class ProcessingTableBlock(
 	settings: Settings,
-) : Block(settings) {
+) : Block(settings), BlockEntityProvider {
 	init {
 		defaultState = defaultState
 			.with(PROCESSING, false)
@@ -93,6 +99,27 @@ class ProcessingTableBlock(
 		}
 
 		return super.onBreak(world, pos, state, player)
+	}
+
+	override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
+		if (world.isClient) {
+			return ActionResult.SUCCESS
+		}
+
+		val blockEntity = world.getBlockEntity(pos)
+		if (blockEntity is ProcessingTableAnalyzerBlockEntity) {
+			player.openHandledScreen(blockEntity as NamedScreenHandlerFactory)
+			// TODO: increment use stat
+		}
+
+		return ActionResult.CONSUME
+	}
+
+	override fun createBlockEntity(pos: BlockPos, state: BlockState): ProcessingTableAnalyzerBlockEntity? {
+		return when (state.get(PROCESSING_TABLE_PART)) {
+			ProcessingTablePart.LEFT -> ProcessingTableAnalyzerBlockEntity(pos, state)
+			else -> null
+		}
 	}
 
 	override fun getAmbientOcclusionLightLevel(state: BlockState?, world: BlockView?, pos: BlockPos?): Float {
