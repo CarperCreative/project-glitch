@@ -12,6 +12,7 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
+import net.minecraft.screen.PropertyDelegate
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.text.Text
 import net.minecraft.util.collection.DefaultedList
@@ -27,6 +28,26 @@ class ProcessingTableAnalyzerBlockEntity(
 	state,
 ), SidedInventory {
 	private var inventory = DefaultedList.ofSize(size(), ItemStack.EMPTY)
+
+	private var analyzingSlot = -1
+	private var analysisTime = 0
+
+	private val propertyDelegate = object : PropertyDelegate {
+		override fun get(index: Int) = when (index) {
+			ANALYZING_SLOT_PROPERTY_INDEX -> analyzingSlot
+			ANALYSIS_PROGRESS_PROPERTY_INDEX -> analysisTime
+			else -> 0
+		}
+
+		override fun set(index: Int, value: Int) {
+			when (index) {
+				ANALYZING_SLOT_PROPERTY_INDEX -> analyzingSlot = value
+				ANALYSIS_PROGRESS_PROPERTY_INDEX -> analysisTime = value
+			}
+		}
+
+		override fun size(): Int = PROPERTY_COUNT
+	}
 
 	override fun clear() {
 		inventory.clear()
@@ -99,7 +120,7 @@ class ProcessingTableAnalyzerBlockEntity(
 	}
 
 	override fun createScreenHandler(syncId: Int, playerInventory: PlayerInventory): ScreenHandler {
-		return ProcessingTableAnalyzerScreenHandler(syncId, playerInventory, this)
+		return ProcessingTableAnalyzerScreenHandler(syncId, playerInventory, this, propertyDelegate)
 	}
 
 	override fun readNbt(nbt: NbtCompound) {
@@ -122,5 +143,9 @@ class ProcessingTableAnalyzerBlockEntity(
 
 		val INPUT_SLOTS = (0..QUEUE_SLOT_COUNT).toList().toIntArray()
 		val OUTPUT_SLOTS = (QUEUE_SLOT_COUNT..(QUEUE_SLOT_COUNT * 2)).toList().toIntArray()
+
+		const val ANALYZING_SLOT_PROPERTY_INDEX = 0
+		const val ANALYSIS_PROGRESS_PROPERTY_INDEX = 1
+		const val PROPERTY_COUNT = 2
 	}
 }
