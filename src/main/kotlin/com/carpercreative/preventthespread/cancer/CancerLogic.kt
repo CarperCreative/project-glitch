@@ -5,7 +5,7 @@ import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentS
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
 import com.carpercreative.preventthespread.util.contentsSequence
 import com.carpercreative.preventthespread.util.nextOfArray
-import com.carpercreative.preventthespread.util.nextOfList
+import com.carpercreative.preventthespread.util.nextOfListOrNull
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.SlabBlock
@@ -96,7 +96,7 @@ object CancerLogic {
 			.toList()
 
 		for (index in 0..10) {
-			val blockPos = random.nextOfList(cancerBlockPositions) ?: break
+			val blockPos = random.nextOfListOrNull(cancerBlockPositions) ?: break
 			world.scheduleBlockTick(blockPos, world.getBlockState(blockPos).block, index)
 		}
 		for (index in 0..8) {
