@@ -114,34 +114,54 @@ object CancerLogic {
 		world.setBlockState(pos, cancerBlockState)
 	}
 
+	private enum class StateMaterial {
+		DIRT,
+		LEAVES,
+		LOG,
+		PLANKS,
+		STONE,
+	}
+
 	fun convertBlockStateToCancer(state: BlockState, variantForAir: BlockState = getDefaultCancerBlockState()): BlockState {
-		return when {
-			// Do not convert block states which are already cancerous.
-			state.isIn(PreventTheSpread.CANCEROUS_BLOCK_TAG) -> state
-			// Use random blocks when spreading to air
-			state.isAir -> variantForAir
-			state.isIn(BlockTags.LEAVES) -> PreventTheSpread.CANCER_LEAVES_BLOCK.getStateWithProperties(state)
-			state.isIn(BlockTags.LOGS) -> PreventTheSpread.CANCER_LOG_BLOCK.getStateWithProperties(state)
-			state.isIn(BlockTags.DIRT) -> convertBlockStateToCancer(
+		// Bail fast for air.
+		if (state.isAir) return variantForAir
+
+		// Do not convert block states which are already cancerous.
+		if (state.isIn(PreventTheSpread.CANCEROUS_BLOCK_TAG)) return state
+
+		val material = when {
+			state.isIn(BlockTags.LEAVES) -> StateMaterial.LEAVES
+			state.isIn(BlockTags.LOGS) -> StateMaterial.LOG
+			state.isIn(BlockTags.PLANKS)
+				|| state.isIn(BlockTags.WOODEN_SLABS)
+				|| state.isIn(BlockTags.WOODEN_STAIRS) -> StateMaterial.PLANKS
+			// Fallbacks.
+			state.isIn(BlockTags.AXE_MINEABLE) -> StateMaterial.PLANKS
+			state.isIn(BlockTags.SHOVEL_MINEABLE) -> StateMaterial.DIRT
+			else -> StateMaterial.STONE
+		}
+
+		return when (material) {
+			StateMaterial.DIRT -> convertBlockStateToCancer(
 				state,
 				PreventTheSpread.CANCER_DIRT_BLOCK,
 				PreventTheSpread.CANCER_DIRT_SLAB_BLOCK,
 				PreventTheSpread.CANCER_DIRT_STAIRS_BLOCK,
 			)
-			state.isIn(BlockTags.PLANKS) -> convertBlockStateToCancer(
+			StateMaterial.LEAVES -> PreventTheSpread.CANCER_LEAVES_BLOCK.getStateWithProperties(state)
+			StateMaterial.LOG -> PreventTheSpread.CANCER_LOG_BLOCK.getStateWithProperties(state)
+			StateMaterial.PLANKS -> convertBlockStateToCancer(
+				state,
+				PreventTheSpread.CANCER_PLANKS_BLOCK,
+				PreventTheSpread.CANCER_PLANKS_SLAB_BLOCK,
+				PreventTheSpread.CANCER_PLANKS_STAIRS_BLOCK,
+			)
+			StateMaterial.STONE -> convertBlockStateToCancer(
 				state,
 				PreventTheSpread.CANCER_STONE_BLOCK,
 				PreventTheSpread.CANCER_STONE_SLAB_BLOCK,
 				PreventTheSpread.CANCER_STONE_STAIRS_BLOCK,
 			)
-			state.run { isIn(BlockTags.BASE_STONE_OVERWORLD) || isIn(BlockTags.BASE_STONE_NETHER) } -> convertBlockStateToCancer(
-				state,
-				PreventTheSpread.CANCER_STONE_BLOCK,
-				PreventTheSpread.CANCER_STONE_SLAB_BLOCK,
-				PreventTheSpread.CANCER_STONE_STAIRS_BLOCK,
-			)
-			// Fallback.
-			else -> PreventTheSpread.CANCER_STONE_BLOCK.defaultState
 		}
 	}
 
