@@ -2,6 +2,7 @@ package com.carpercreative.preventthespread.screen
 
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
+import com.carpercreative.preventthespread.screen.slot.AnalyzerBookSlot
 import com.carpercreative.preventthespread.screen.slot.AnalyzerInputSlot
 import com.carpercreative.preventthespread.screen.slot.AnalyzerOutputSlot
 import net.minecraft.entity.player.PlayerEntity
@@ -37,9 +38,13 @@ class ProcessingTableAnalyzerScreenHandler(
 		addProperties(propertyDelegate)
 
 		for (queueIndex in 0 until ProcessingTableAnalyzerBlockEntity.QUEUE_SLOT_COUNT) {
-			addSlot(AnalyzerInputSlot(inventory, queueIndex, 8 + queueIndex * 18, 17))
-			addSlot(AnalyzerOutputSlot(inventory, ProcessingTableAnalyzerBlockEntity.QUEUE_SLOT_COUNT + queueIndex, 8 + queueIndex * 18, 17 + 18 + 18))
+			val x = queueIndex % 2
+			val y = queueIndex / 2
+			addSlot(AnalyzerInputSlot(inventory, ProcessingTableAnalyzerBlockEntity.getQueueInputSlotIndex(queueIndex), 8 + 18 + x * 18, 17 + y * 18))
+			addSlot(AnalyzerOutputSlot(inventory, ProcessingTableAnalyzerBlockEntity.getQueueOutputSlotIndex(queueIndex), 8 + 18 + (18 * 5) + x * 18, 17 + y * 18))
 		}
+
+		addSlot(AnalyzerBookSlot(inventory, ProcessingTableAnalyzerBlockEntity.BOOK_SLOT_INDEX, 80, 53))
 
 		for (y in 0..2) {
 			for (x in 0..8) {

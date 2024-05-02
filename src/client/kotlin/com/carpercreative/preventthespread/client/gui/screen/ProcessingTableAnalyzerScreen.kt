@@ -3,6 +3,7 @@ package com.carpercreative.preventthespread.client.gui.screen
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
 import com.carpercreative.preventthespread.screen.ProcessingTableAnalyzerScreenHandler
+import com.carpercreative.preventthespread.screen.slot.AnalyzerBookSlot
 import kotlin.math.roundToInt
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.screen.ingame.HandledScreen
@@ -27,11 +28,19 @@ class ProcessingTableAnalyzerScreen(
 			val analysisProgress = handler.propertyDelegate.get(ProcessingTableAnalyzerBlockEntity.ANALYSIS_PROGRESS_PROPERTY_INDEX)
 			val progressFill = (analysisProgress.toFloat() / ProcessingTableAnalyzerBlockEntity.ANALYSIS_DURATION * 16).roundToInt()
 
-			val progressX = x + 8 + analyzingSlot * 18
-			val progressY = y + 17 + 18
+			val progressX = x + 80
+			val progressY = y + 26
 
 			context.drawGuiTexture(EMPTY_PROGRESS_TEXTURE, 16, 16, 0, 0, progressX, progressY, 16, 16)
 			context.drawGuiTexture(FULL_PROGRESS_TEXTURE, 16, 16, 0, 16 - progressFill, progressX, progressY + 16 - progressFill, 16, progressFill)
+		}
+	}
+
+	override fun drawMouseoverTooltip(context: DrawContext, x: Int, y: Int) {
+		if (handler.cursorStack.isEmpty && (focusedSlot as? AnalyzerBookSlot)?.hasStack() == false) {
+			context.drawTooltip(textRenderer, hintTooltip, x, y)
+		} else {
+			super.drawMouseoverTooltip(context, x, y)
 		}
 	}
 
@@ -39,5 +48,10 @@ class ProcessingTableAnalyzerScreen(
 		private val TEXTURE = PreventTheSpread.identifier("textures/gui/container/processing_table_analyzer.png")
 		private val EMPTY_PROGRESS_TEXTURE = PreventTheSpread.identifier("container/processing_table_analyzer/progress_empty")
 		private val FULL_PROGRESS_TEXTURE = PreventTheSpread.identifier("container/processing_table_analyzer/progress_full")
+
+		private val hintTooltip = listOf(
+			Text.translatable("container.${PreventTheSpread.MOD_ID}.processing_table_analyzer.empty_book_tooltip.0"),
+			Text.translatable("container.${PreventTheSpread.MOD_ID}.processing_table_analyzer.empty_book_tooltip.1"),
+		)
 	}
 }

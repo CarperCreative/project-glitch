@@ -2,6 +2,7 @@ package com.carpercreative.preventthespread.blockEntity
 
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.screen.ProcessingTableAnalyzerScreenHandler
+import com.carpercreative.preventthespread.screen.slot.AnalyzerBookSlot
 import com.carpercreative.preventthespread.screen.slot.AnalyzerInputSlot
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.LockableContainerBlockEntity
@@ -88,6 +89,7 @@ class ProcessingTableAnalyzerBlockEntity(
 	override fun isValid(slot: Int, stack: ItemStack): Boolean {
 		return when (slot) {
 			in OUTPUT_SLOTS -> false
+			BOOK_SLOT_INDEX -> AnalyzerBookSlot.isValid(stack)
 			else -> AnalyzerInputSlot.isValid(stack)
 		}
 	}
@@ -137,14 +139,23 @@ class ProcessingTableAnalyzerBlockEntity(
 	}
 
 	companion object {
-		const val QUEUE_SLOT_COUNT = 9
+		const val QUEUE_SLOT_COUNT = 6
+		const val BOOK_SLOT_INDEX = QUEUE_SLOT_COUNT * 2
 
-		const val SLOT_COUNT = QUEUE_SLOT_COUNT * 2
+		const val SLOT_COUNT = QUEUE_SLOT_COUNT * 2 + 1
 
-		val INPUT_SLOTS = (0..QUEUE_SLOT_COUNT).toList().toIntArray()
-		val OUTPUT_SLOTS = (QUEUE_SLOT_COUNT..(QUEUE_SLOT_COUNT * 2)).toList().toIntArray()
+		val INPUT_SLOTS_RANGE = 0..QUEUE_SLOT_COUNT
+		val OUTPUT_SLOTS_RANGE = QUEUE_SLOT_COUNT..(QUEUE_SLOT_COUNT * 2)
+
+		val INPUT_SLOTS = INPUT_SLOTS_RANGE.toList().toIntArray()
+		val OUTPUT_SLOTS = OUTPUT_SLOTS_RANGE.toList().toIntArray()
+
+		fun getQueueInputSlotIndex(queueIndex: Int) = queueIndex
+		fun getQueueOutputSlotIndex(queueIndex: Int) = QUEUE_SLOT_COUNT + queueIndex
 
 		const val ANALYSIS_DURATION = 8 * 20
+
+		const val BOOK_AUTHOR = "Processing Table"
 
 		const val ANALYZING_SLOT_PROPERTY_INDEX = 0
 		const val ANALYSIS_PROGRESS_PROPERTY_INDEX = 1
