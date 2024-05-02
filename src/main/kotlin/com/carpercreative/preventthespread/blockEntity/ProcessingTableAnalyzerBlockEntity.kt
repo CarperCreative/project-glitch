@@ -144,6 +144,8 @@ class ProcessingTableAnalyzerBlockEntity(
 		val INPUT_SLOTS = (0..QUEUE_SLOT_COUNT).toList().toIntArray()
 		val OUTPUT_SLOTS = (QUEUE_SLOT_COUNT..(QUEUE_SLOT_COUNT * 2)).toList().toIntArray()
 
+		const val ANALYSIS_DURATION = 8 * 20
+
 		const val ANALYZING_SLOT_PROPERTY_INDEX = 0
 		const val ANALYSIS_PROGRESS_PROPERTY_INDEX = 1
 		const val PROPERTY_COUNT = 2

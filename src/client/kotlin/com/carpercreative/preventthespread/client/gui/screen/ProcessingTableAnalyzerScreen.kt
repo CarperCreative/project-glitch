@@ -25,7 +25,7 @@ class ProcessingTableAnalyzerScreen(
 		val analyzingSlot = handler.propertyDelegate.get(ProcessingTableAnalyzerBlockEntity.ANALYZING_SLOT_PROPERTY_INDEX)
 		if (analyzingSlot >= 0) {
 			val analysisProgress = handler.propertyDelegate.get(ProcessingTableAnalyzerBlockEntity.ANALYSIS_PROGRESS_PROPERTY_INDEX)
-			val progressFill = (analysisProgress.toFloat() / 16f * 16).roundToInt()
+			val progressFill = (analysisProgress.toFloat() / ProcessingTableAnalyzerBlockEntity.ANALYSIS_DURATION * 16).roundToInt()
 
 			val progressX = x + 8 + analyzingSlot * 18
 			val progressY = y + 17 + 18
