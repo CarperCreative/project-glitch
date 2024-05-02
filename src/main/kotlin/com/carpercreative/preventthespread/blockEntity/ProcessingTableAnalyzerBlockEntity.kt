@@ -1,6 +1,7 @@
 package com.carpercreative.preventthespread.blockEntity
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.block.ProcessingTableBlock
 import com.carpercreative.preventthespread.item.ProbeItem
 import com.carpercreative.preventthespread.screen.ProcessingTableAnalyzerScreenHandler
 import com.carpercreative.preventthespread.screen.slot.AnalyzerBookSlot
@@ -173,6 +174,12 @@ class ProcessingTableAnalyzerBlockEntity(
 		analyzingSlot = if (slot !in 0 until QUEUE_SLOT_COUNT) -1 else slot
 
 		analysisTime = 0
+
+		world?.also { world ->
+			val newBlockState = world.getBlockState(pos)
+				.with(ProcessingTableBlock.PROCESSING, analyzingSlot != -1)
+			world.setBlockState(pos, newBlockState)
+		}
 	}
 
 	private fun startAnalyzingNextSlot() {
