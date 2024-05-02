@@ -217,15 +217,17 @@ object PreventTheSpread : ModInitializer {
 		}
 
 		// TODO: replace cancer block textures
-		// TODO: add surgery tool crafting recipe
 		// TODO: make cancer blocks mine-able only using appropriate tools
-		// TODO: replace chemotherapeutic drug textures/model
 		// TODO: replace targeted drug injector model and block state to indicate progress
-		// TODO: create research table block
 		// TODO: create research GUI
 		// TODO: create research state store (per player?)
 		// TODO: implement towers/beacons
 		// TODO: implement radiation staff recharge rate and/or heat capacity research
 		// TODO: fix model transformations of surgery tools (on-ground is MASSIVE) .-.
+		// TODO: spawn mobs
+		// TODO: scanner tool!
+		// TODO: make cancerous blocks hurt to walk on
+		// TODO: metastatic (spreading with a gap)
+		// TODO: stretch goal: liquid cancer
 	}
 }
