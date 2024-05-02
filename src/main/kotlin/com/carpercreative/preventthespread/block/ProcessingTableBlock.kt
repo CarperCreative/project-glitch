@@ -94,7 +94,7 @@ class ProcessingTableBlock(
 
 			val counterpartProcessing = neighborState.get(PROCESSING)
 			if (counterpartProcessing != state.get(PROCESSING)) {
-				state.with(PROCESSING, counterpartProcessing)
+				return state.with(PROCESSING, counterpartProcessing)
 			}
 		}
 
