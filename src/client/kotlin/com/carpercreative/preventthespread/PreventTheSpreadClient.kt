@@ -15,6 +15,7 @@ import net.minecraft.util.Identifier
 
 object PreventTheSpreadClient : ClientModInitializer {
 	override fun onInitializeClient() {
+		BlockRenderLayerMap.INSTANCE.putBlock(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_BLOCK, RenderLayer.getCutout())
 		BlockRenderLayerMap.INSTANCE.putBlock(PreventTheSpread.PROCESSING_TABLE_BLOCK, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(PreventTheSpread.TARGETED_DRUG_INJECTOR_BLOCK, RenderLayer.getCutout());
 

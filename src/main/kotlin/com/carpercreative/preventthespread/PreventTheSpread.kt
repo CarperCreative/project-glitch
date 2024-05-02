@@ -89,7 +89,7 @@ object PreventTheSpread : ModInitializer {
 	)
 	val CANCER_LEAVES_BLOCK_ITEM = BlockItem(CANCER_LEAVES_BLOCK, FabricItemSettings())
 
-	val CHEMOTHERAPEUTIC_DRUG_BLOCK = ChemotherapeuticDrugBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_BLUE).breakInstantly().sounds(BlockSoundGroup.GRASS).solidBlock(Blocks::never))
+	val CHEMOTHERAPEUTIC_DRUG_BLOCK = ChemotherapeuticDrugBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_BLUE).nonOpaque().breakInstantly().sounds(BlockSoundGroup.GRASS).solidBlock(Blocks::never))
 	val CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM = BlockItem(CHEMOTHERAPEUTIC_DRUG_BLOCK, FabricItemSettings())
 	val PROCESSING_TABLE_BLOCK = ProcessingTableBlock(
 		FabricBlockSettings.create()
