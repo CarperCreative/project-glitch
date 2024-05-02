@@ -1,10 +1,14 @@
 package com.carpercreative.preventthespread.block
 
+import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.BlockEntityTicker
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
@@ -39,6 +43,16 @@ class ProcessingTableBlock(
 			PROCESSING,
 			PROCESSING_TABLE_PART,
 		)
+	}
+
+	override fun <T : BlockEntity> getTicker(world: World, state: BlockState, type: BlockEntityType<T>): BlockEntityTicker<T>? {
+		if (world.isClient) return null
+
+		@Suppress("UNCHECKED_CAST")
+		return when {
+			type == PreventTheSpread.PROCESSING_TABLE_BLOCK_ENTITY -> ProcessingTableAnalyzerBlockEntity.Ticker as BlockEntityTicker<T>
+			else -> null
+		}
 	}
 
 	override fun getPlacementState(ctx: ItemPlacementContext): BlockState? {
