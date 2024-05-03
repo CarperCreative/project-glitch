@@ -19,6 +19,7 @@ class BlockTagGenerator(
 			.forceAddTag(BlockTags.BASE_STONE_OVERWORLD)
 			.add(Blocks.CAVE_AIR)
 			.forceAddTag(BlockTags.DIRT)
+			.forceAddTag(BlockTags.LEAVES)
 			.forceAddTag(BlockTags.LOGS)
 			.forceAddTag(BlockTags.SLABS)
 			.forceAddTag(BlockTags.STAIRS)
