@@ -92,5 +92,10 @@ class BlobMembershipPersistentState : PersistentState() {
 		fun ServerWorld.getBlobMembershipPersistentState(): BlobMembershipPersistentState {
 			return persistentStateManager.getOrCreate(type, "${PreventTheSpread.MOD_ID}_blobMembership")
 		}
+
+		fun ServerWorld.getBlobMembershipOrNull(pos: BlockPos): BlobIdentifier? {
+			val blobMembershipPersistentState = getBlobMembershipPersistentState()
+			return blobMembershipPersistentState.getMembershipOrNull(pos)
+		}
 	}
 }
