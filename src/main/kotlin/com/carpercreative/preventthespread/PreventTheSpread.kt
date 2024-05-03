@@ -217,7 +217,6 @@ object PreventTheSpread : ModInitializer {
 		}
 
 		// TODO: replace cancer block textures
-		// TODO: make cancer blocks mine-able only using appropriate tools
 		// TODO: replace targeted drug injector model and block state to indicate progress
 		// TODO: create research GUI
 		// TODO: create research state store (per player?)

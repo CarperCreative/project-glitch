@@ -1,6 +1,9 @@
 package com.carpercreative.preventthespread.block
 
+import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
+import com.carpercreative.preventthespread.cancer.TreatmentType
+import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
 import com.mojang.serialization.MapCodec
 import java.util.LinkedList
 import kotlin.jvm.optionals.getOrNull
@@ -71,6 +74,18 @@ class TargetedDrugInjectorBlock(
 		val cancerousBlockPositions = BlockSearch.findBlocks(world, targetPos, INJECTED_BLOCK_COUNT)
 
 		for (cancerousBlockPos in cancerousBlockPositions) {
+			val cancerBlob = world.getCancerBlobOrNull(cancerousBlockPos)
+			if (cancerBlob != null) {
+				if (!cancerBlob.type.isTreatmentValid(TreatmentType.TARGETED_DRUG)) {
+					CancerLogic.hastenSpread(world, pos, random, distance = 2)
+
+					// Skip breaking some of the cancerous blocks when the treatment isn't valid to ensure spread.
+					if (random.nextBetweenExclusive(0, 100) < 15) {
+						continue
+					}
+				}
+			}
+
 			world.removeBlock(cancerousBlockPos, false)
 		}
 	}

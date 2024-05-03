@@ -1,13 +1,17 @@
 package com.carpercreative.preventthespread.block
 
+import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
+import com.carpercreative.preventthespread.cancer.TreatmentType
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
+import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
 import java.util.function.BiConsumer
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.BlockState
 import net.minecraft.block.MapColor
 import net.minecraft.block.piston.PistonBehavior
+import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
@@ -39,11 +43,38 @@ object CancerousBlock {
 	}
 
 	fun onBreak(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity) {
-		// TODO
+		if (world.isClient) return
+		world as ServerWorld
+
+		val cancerBlob = world.getCancerBlobOrNull(pos) ?: return
+
+		if (
+			!(
+				cancerBlob.type.isTreatmentValid(TreatmentType.SURGERY)
+				&& player.mainHandStack.isIn(PreventTheSpread.SURGERY_TOOL_ITEM_TAG)
+			)
+		) {
+			CancerLogic.hastenSpread(world, pos, world.random)
+		}
 	}
 
 	fun onExploded(state: BlockState, world: World, pos: BlockPos, explosion: Explosion, stackMerger: BiConsumer<ItemStack, BlockPos>) {
-		// TODO
+		if (world.isClient) return
+		world as ServerWorld
+
+		val cancerBlob = world.getCancerBlobOrNull(pos) ?: return
+
+		val explodingEntity = explosion.entity
+
+		// Don't hasten spread when using entities like creepers.
+		if (explodingEntity is LivingEntity) return
+
+		if (
+			!cancerBlob.type.isTreatmentValid(TreatmentType.CHEMOTHERAPY)
+			|| explodingEntity.let { it == null || it.type != PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE }
+		) {
+			CancerLogic.hastenSpread(world, pos, world.random)
+		}
 	}
 
 	fun defaultBlockSettings(): FabricBlockSettings {

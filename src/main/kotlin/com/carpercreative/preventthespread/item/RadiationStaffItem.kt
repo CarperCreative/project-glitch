@@ -1,7 +1,10 @@
 package com.carpercreative.preventthespread.item
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
+import com.carpercreative.preventthespread.cancer.TreatmentType
+import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
 import java.util.function.Consumer
 import net.fabricmc.fabric.api.item.v1.CustomDamageHandler
 import net.minecraft.entity.LivingEntity
@@ -91,10 +94,20 @@ class RadiationStaffItem(
 			is BlockHitResult -> {
 				if (hitResult.type == HitResult.Type.MISS) return
 
-				val targetBlockState = world.getBlockState(hitResult.blockPos)
+				val targetPos = hitResult.blockPos
+				val targetBlockState = world.getBlockState(targetPos)
 				if (!targetBlockState.isCancerous()) return
 
-				world.breakBlock(hitResult.blockPos, true, user)
+				world.getCancerBlobOrNull(targetPos)?.also { cancerBlob ->
+					if (!cancerBlob.type.isTreatmentValid(TreatmentType.RADIATION_THERAPY)) {
+						CancerLogic.hastenSpread(world, targetPos, world.random)
+					}
+				}
+
+				world.breakBlock(targetPos, true, user)
+
+				// TODO: this might be skipping permission checks: look into a more appropriate way of simulating a block break as a player (then move hastenSpread to Block.onBreak logic)
+				// (user as? ServerPlayerEntity)?.interactionManager?.tryBreakBlock(targetPos)
 			}
 			is EntityHitResult -> {
 				val entity = hitResult.entity
