@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.BlockState
 import net.minecraft.block.MapColor
 import net.minecraft.block.piston.PistonBehavior
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
@@ -35,6 +36,10 @@ object CancerousBlock {
 		if (!world.isClient() && !newState.isCancerous()) {
 			(world as ServerWorld).getBlobMembershipPersistentState().removeMembership(pos)
 		}
+	}
+
+	fun onBreak(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity) {
+		// TODO
 	}
 
 	fun onExploded(state: BlockState, world: World, pos: BlockPos, explosion: Explosion, stackMerger: BiConsumer<ItemStack, BlockPos>) {
