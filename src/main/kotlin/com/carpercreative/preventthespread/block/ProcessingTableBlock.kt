@@ -14,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.NamedScreenHandlerFactory
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
 import net.minecraft.state.property.DirectionProperty
@@ -21,6 +22,7 @@ import net.minecraft.state.property.EnumProperty
 import net.minecraft.state.property.Properties
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
+import net.minecraft.util.ItemScatterer
 import net.minecraft.util.StringIdentifiable
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
@@ -113,6 +115,18 @@ class ProcessingTableBlock(
 		}
 
 		return super.onBreak(world, pos, state, player)
+	}
+
+	override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
+		if (state.isOf(newState.block)) return
+
+		if (!world.isClient) {
+			world as ServerWorld
+
+			(world.getBlockEntity(pos) as? ProcessingTableAnalyzerBlockEntity)?.let { ItemScatterer.spawn(world, pos, it) }
+		}
+
+		super.onStateReplaced(state, world, pos, newState, moved)
 	}
 
 	override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
