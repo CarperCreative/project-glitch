@@ -3,14 +3,17 @@ package com.carpercreative.preventthespread.block
 import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
+import java.util.function.BiConsumer
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.BlockState
 import net.minecraft.block.MapColor
 import net.minecraft.block.piston.PistonBehavior
+import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.random.Random
 import net.minecraft.world.World
+import net.minecraft.world.explosion.Explosion
 
 /**
  * Entry points to common logic of all cancerous blocks.
@@ -32,6 +35,10 @@ object CancerousBlock {
 		if (!world.isClient() && !newState.isCancerous()) {
 			(world as ServerWorld).getBlobMembershipPersistentState().removeMembership(pos)
 		}
+	}
+
+	fun onExploded(state: BlockState, world: World, pos: BlockPos, explosion: Explosion, stackMerger: BiConsumer<ItemStack, BlockPos>) {
+		// TODO
 	}
 
 	fun defaultBlockSettings(): FabricBlockSettings {

@@ -1,11 +1,14 @@
 package com.carpercreative.preventthespread.block
 
+import java.util.function.BiConsumer
 import net.minecraft.block.BlockState
 import net.minecraft.block.LeavesBlock
+import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.random.Random
 import net.minecraft.world.World
+import net.minecraft.world.explosion.Explosion
 
 class CancerLeavesBlock(
 	settings: Settings,
@@ -26,6 +29,11 @@ class CancerLeavesBlock(
 
 	override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
 		CancerousBlock.onStateReplaced(state,  world, pos, newState, moved)
+	}
+
+	override fun onExploded(state: BlockState, world: World, pos: BlockPos, explosion: Explosion, stackMerger: BiConsumer<ItemStack, BlockPos>) {
+		CancerousBlock.onExploded(state, world, pos, explosion, stackMerger)
+		super.onExploded(state, world, pos, explosion, stackMerger)
 	}
 
 	override fun shouldDecay(state: BlockState): Boolean {
