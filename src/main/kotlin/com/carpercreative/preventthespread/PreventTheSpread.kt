@@ -14,6 +14,7 @@ import com.carpercreative.preventthespread.entity.ChemotherapeuticDrugEntity
 import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
 import com.carpercreative.preventthespread.item.RadiationStaffItem
+import com.carpercreative.preventthespread.item.ScannerItem
 import com.carpercreative.preventthespread.item.SurgeryAxeItem
 import com.carpercreative.preventthespread.item.SurgeryHoeItem
 import com.carpercreative.preventthespread.item.SurgeryPickaxeItem
@@ -131,6 +132,8 @@ object PreventTheSpread : ModInitializer {
 	val PROBE_ITEM = ProbeItem(FabricItemSettings().maxCount(1))
 	val RADIATION_STAFF_ITEM_ID = identifier("radiation_staff")
 	val RADIATION_STAFF_ITEM = RadiationStaffItem(FabricItemSettings().maxCount(1).maxDamage(60).customDamage(RadiationStaffItem.RadiationBeamGunDamageHandler))
+	val SCANNER_ITEM_ID = identifier("scanner")
+	val SCANNER_ITEM = ScannerItem(FabricItemSettings())
 	val SURGERY_AXE_ITEM_ID = identifier("surgery_axe")
 	val SURGERY_AXE_ITEM = SurgeryAxeItem(ToolMaterials.IRON, 6.0f, -3.1f, FabricItemSettings().maxDamage(800))
 	val SURGERY_HOE_ITEM_ID = identifier("surgery_hoe")
@@ -157,6 +160,7 @@ object PreventTheSpread : ModInitializer {
 		.icon { ItemStack(CANCER_DIRT_BLOCK_ITEM) }
 		.displayName(Text.translatable("itemGroup.$MOD_ID.default"))
 		.entries { context, entries ->
+			entries.add(SCANNER_ITEM)
 			entries.add(PROBE_ITEM)
 			entries.add(PROCESSING_TABLE_BLOCK_ITEM)
 			entries.add(CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM)
@@ -219,6 +223,7 @@ object PreventTheSpread : ModInitializer {
 		Registry.register(Registries.ITEM, DEBUG_TOOL_ITEM_ID, DEBUG_TOOL_ITEM)
 		Registry.register(Registries.ITEM, PROBE_ITEM_ID, PROBE_ITEM)
 		Registry.register(Registries.ITEM, RADIATION_STAFF_ITEM_ID, RADIATION_STAFF_ITEM)
+		Registry.register(Registries.ITEM, SCANNER_ITEM_ID, SCANNER_ITEM)
 		Registry.register(Registries.ITEM, SURGERY_AXE_ITEM_ID, SURGERY_AXE_ITEM)
 		Registry.register(Registries.ITEM, SURGERY_HOE_ITEM_ID, SURGERY_HOE_ITEM)
 		Registry.register(Registries.ITEM, SURGERY_PICKAXE_ITEM_ID, SURGERY_PICKAXE_ITEM)
@@ -242,7 +247,6 @@ object PreventTheSpread : ModInitializer {
 		// TODO: implement radiation staff recharge rate and/or heat capacity research
 		// TODO: fix model transformations of surgery tools (on-ground is MASSIVE) .-.
 		// TODO: spawn mobs
-		// TODO: scanner tool!
 		// TODO: make cancerous blocks hurt to walk on
 		// TODO: metastatic (spreading with a gap)
 		// TODO: stretch goal: liquid cancer

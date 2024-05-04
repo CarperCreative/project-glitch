@@ -32,6 +32,7 @@
 	"item.preventthespread.probe.tooltip.full": "Put in the Analyzer, or use while sneaking to empty.",
 	"item.preventthespread.probe.tooltip.blobIdentifier": "Blob identifier: %s",
 	"item.preventthespread.radiation_staff": "Radiation Staff",
+	"item.preventthespread.scanner": "Scanner",
 	"item.preventthespread.surgery_axe": "Surgery Axe",
 	"item.preventthespread.surgery_hoe": "Surgery Hoe",
 	"item.preventthespread.surgery_pickaxe": "Surgery Pickaxe",
