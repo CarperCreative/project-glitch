@@ -1,7 +1,6 @@
 package com.carpercreative.preventthespread.datagen
 
 import com.carpercreative.preventthespread.PreventTheSpread
-import com.carpercreative.preventthespread.PreventTheSpread.identifier
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider
 import net.minecraft.data.server.recipe.RecipeExporter
@@ -18,9 +17,9 @@ class RecipeGenerator(
 ) : FabricRecipeProvider(output) {
 	override fun generate(exporter: RecipeExporter) {
 		exporter.accept(
-			identifier("chemotherapeutic_drug"),
+			PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID,
 			ShapedRecipe(
-				"chemotherapeutic_drug",
+				PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
@@ -38,9 +37,9 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
-			identifier("targeted_drug_injector"),
+			PreventTheSpread.TARGETED_DRUG_INJECTOR_ID,
 			ShapedRecipe(
-				"targeted_drug_injector",
+				PreventTheSpread.TARGETED_DRUG_INJECTOR_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
@@ -59,9 +58,9 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
-			identifier("probe"),
+			PreventTheSpread.PROBE_ITEM_ID,
 			ShapedRecipe(
-				"probe",
+				PreventTheSpread.PROBE_ITEM_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
@@ -79,9 +78,9 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
-			identifier("radiation_staff"),
+			PreventTheSpread.RADIATION_STAFF_ITEM_ID,
 			ShapedRecipe(
-				"radiation_staff",
+				PreventTheSpread.RADIATION_STAFF_ITEM_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
@@ -99,9 +98,9 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
-			identifier("surgery_axe"),
+			PreventTheSpread.SURGERY_AXE_ITEM_ID,
 			ShapedRecipe(
-				"surgery_axe",
+				PreventTheSpread.SURGERY_AXE_ITEM_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
@@ -118,9 +117,9 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
-			identifier("surgery_hoe"),
+			PreventTheSpread.SURGERY_HOE_ITEM_ID,
 			ShapedRecipe(
-				"surgery_hoe",
+				PreventTheSpread.SURGERY_HOE_ITEM_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
@@ -137,9 +136,9 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
-			identifier("surgery_pickaxe"),
+			PreventTheSpread.SURGERY_PICKAXE_ITEM_ID,
 			ShapedRecipe(
-				"surgery_pickaxe",
+				PreventTheSpread.SURGERY_PICKAXE_ITEM_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
@@ -156,9 +155,9 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
-			identifier("surgery_shovel"),
+			PreventTheSpread.SURGERY_SHOVEL_ITEM_ID,
 			ShapedRecipe(
-				"surgery_shovel",
+				PreventTheSpread.SURGERY_SHOVEL_ITEM_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
