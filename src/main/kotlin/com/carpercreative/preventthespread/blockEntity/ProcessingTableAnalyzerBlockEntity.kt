@@ -3,6 +3,7 @@ package com.carpercreative.preventthespread.blockEntity
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.block.ProcessingTableBlock
 import com.carpercreative.preventthespread.item.ProbeItem
+import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
 import com.carpercreative.preventthespread.screen.ProcessingTableAnalyzerScreenHandler
 import com.carpercreative.preventthespread.screen.slot.AnalyzerBookSlot
 import com.carpercreative.preventthespread.screen.slot.AnalyzerInputSlot
@@ -16,9 +17,15 @@ import net.minecraft.inventory.Inventories
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
+import net.minecraft.item.WrittenBookItem
 import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtElement
+import net.minecraft.nbt.NbtList
+import net.minecraft.nbt.NbtString
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.screen.ScreenHandler
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
@@ -168,6 +175,7 @@ class ProcessingTableAnalyzerBlockEntity(
 		val bookStack = getStack(BOOK_SLOT_INDEX)
 
 		return !bookStack.isEmpty
+			&& (bookStack.nbt?.getList(WrittenBookItem.PAGES_KEY, NbtElement.STRING_TYPE.toInt())?.size ?: 0) < WrittenBookItem.MAX_PAGES
 	}
 
 	private fun startAnalyzingSlot(slot: Int) {
@@ -203,6 +211,9 @@ class ProcessingTableAnalyzerBlockEntity(
 
 	object Ticker : BlockEntityTicker<ProcessingTableAnalyzerBlockEntity> {
 		override fun tick(world: World, pos: BlockPos, state: BlockState, blockEntity: ProcessingTableAnalyzerBlockEntity) {
+			if (world.isClient) return
+			world as ServerWorld
+
 			// Do nothing until an item is inserted.
 			val analyzedSlot = blockEntity.analyzingSlot
 			if (analyzedSlot < 0) return
@@ -219,7 +230,7 @@ class ProcessingTableAnalyzerBlockEntity(
 			if (blockEntity.analysisTime >= ANALYSIS_DURATION) {
 				// Analysis finished.
 				if (analyzedStack.isOf(PreventTheSpread.PROBE_ITEM)) {
-					// TODO: output to book
+					analyzeProbe(world, blockEntity, analyzedStack)
 				}
 
 				val analysisOutputStack = getAnalysisOutput(analyzedStack)
@@ -241,6 +252,68 @@ class ProcessingTableAnalyzerBlockEntity(
 
 			return false
 		}
+
+		private fun analyzeProbe(world: ServerWorld, blockEntity: ProcessingTableAnalyzerBlockEntity, stack: ItemStack) {
+			if (!stack.isOf(PreventTheSpread.PROBE_ITEM)) return
+
+			val cancerBlobId = ProbeItem.getSampleCancerBlobId(stack) ?: return
+			val cancerBlob = world.getCancerBlobPersistentState().getCancerBlobByIdOrNull(cancerBlobId)
+
+			if (cancerBlob == null) {
+				prependBook(blockEntity, Text.translatable("${PreventTheSpread.MOD_ID}.analysis.invalid"))
+				return
+			}
+
+			prependBook(
+				blockEntity,
+				Text.translatable(
+					"${PreventTheSpread.MOD_ID}.analysis.results",
+					cancerBlob.type.displayName,
+					Text.empty().also { text ->
+						cancerBlob.type.treatments.forEach { treatment ->
+							text.append(
+								Text.translatable(
+									"${PreventTheSpread.MOD_ID}.analysis.treatment_item",
+									treatment.displayName,
+								)
+							)
+						}
+					},
+				),
+			)
+		}
+
+		private fun signBook(itemStack: ItemStack): ItemStack? {
+			return when {
+				itemStack.isOf(Items.WRITTEN_BOOK) -> itemStack
+				itemStack.isOf(Items.WRITABLE_BOOK) -> ItemStack(Items.WRITTEN_BOOK).apply {
+					val pagesList = NbtList().also { list ->
+						itemStack.nbt?.getList(WrittenBookItem.PAGES_KEY, NbtElement.STRING_TYPE.toInt())
+							?.forEach { list.add(NbtString.of(Text.Serialization.toJsonString(Text.literal(it.asString())))) }
+					}
+					setSubNbt(WrittenBookItem.PAGES_KEY, pagesList)
+					setSubNbt(WrittenBookItem.AUTHOR_KEY, NbtString.of(BOOK_AUTHOR))
+					setSubNbt(WrittenBookItem.TITLE_KEY, NbtString.of(BOOK_TITLE))
+				}
+				else -> null
+			}
+		}
+
+		private fun prependBook(itemStack: ItemStack, text: Text): ItemStack {
+			val book = signBook(itemStack) ?: return itemStack
+
+			val pages = book.getOrCreateNbt().getList(WrittenBookItem.PAGES_KEY, NbtElement.STRING_TYPE.toInt())
+				?: NbtList().also { book.setSubNbt(WrittenBookItem.PAGES_KEY, it) }
+
+			pages.add(0, NbtString.of(Text.Serialization.toJsonString(text)))
+
+			return book
+		}
+
+		private fun prependBook(blockEntity: ProcessingTableAnalyzerBlockEntity, text: Text) {
+			val book = prependBook(blockEntity.getStack(BOOK_SLOT_INDEX), text)
+			blockEntity.setStack(BOOK_SLOT_INDEX, book)
+		}
 	}
 
 	companion object {
@@ -261,6 +334,7 @@ class ProcessingTableAnalyzerBlockEntity(
 		const val ANALYSIS_DURATION = 8 * 20
 
 		const val BOOK_AUTHOR = "Processing Table"
+		const val BOOK_TITLE = "Analysis Results"
 
 		const val ANALYZING_SLOT_PROPERTY_INDEX = 0
 		const val ANALYSIS_PROGRESS_PROPERTY_INDEX = 1
