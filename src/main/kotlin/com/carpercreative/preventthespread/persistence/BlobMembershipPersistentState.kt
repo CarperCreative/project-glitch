@@ -32,6 +32,12 @@ class BlobMembershipPersistentState : PersistentState() {
 		return memberships[blockPos]
 	}
 
+	fun getNearestMemberOrNull(blockPos: BlockPos): BlockPos? {
+		return memberships.keys.minByOrNull { cancerousBlockPos ->
+			cancerousBlockPos.getSquaredDistance(blockPos)
+		}
+	}
+
 	override fun writeNbt(nbt: NbtCompound): NbtCompound {
 		nbt.putInt(KEY_VERSION, 1)
 
