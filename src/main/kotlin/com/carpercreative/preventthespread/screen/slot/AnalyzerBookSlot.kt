@@ -17,6 +17,10 @@ class AnalyzerBookSlot(
 		return isValid(stack)
 	}
 
+	override fun getMaxItemCount(): Int {
+		return 1
+	}
+
 	companion object {
 		fun isValid(stack: ItemStack): Boolean {
 			return stack.isOf(Items.WRITABLE_BOOK)
