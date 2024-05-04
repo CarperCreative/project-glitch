@@ -41,6 +41,11 @@ class ProcessingTableAnalyzerScreenHandler(
 			val x = queueIndex % 2
 			val y = queueIndex / 2
 			addSlot(AnalyzerInputSlot(inventory, ProcessingTableAnalyzerBlockEntity.getQueueInputSlotIndex(queueIndex), 8 + 18 + x * 18, 17 + y * 18))
+		}
+
+		for (queueIndex in 0 until ProcessingTableAnalyzerBlockEntity.QUEUE_SLOT_COUNT) {
+			val x = queueIndex % 2
+			val y = queueIndex / 2
 			addSlot(AnalyzerOutputSlot(inventory, ProcessingTableAnalyzerBlockEntity.getQueueOutputSlotIndex(queueIndex), 8 + 18 + (18 * 5) + x * 18, 17 + y * 18))
 		}
 
@@ -56,7 +61,39 @@ class ProcessingTableAnalyzerScreenHandler(
 		}
 	}
 
-	override fun quickMove(player: PlayerEntity?, slot: Int): ItemStack {
+	override fun quickMove(player: PlayerEntity, slotIndex: Int): ItemStack {
+		// This function doesn't match what the game does, as it always returns ItemStack.EMPTY.
+		// Trying to follow what the game does (returning a copy of the original stack) results in an infinite loop.
+		// Inventory handling in this game is just awful.
+		val slot = getSlot(slotIndex)
+		if (slot == null || !slot.hasStack()) return ItemStack.EMPTY
+
+		val slotStack = slot.stack
+
+		if (slot.inventory == playerInventory) {
+			// Don't try to insert into the book slot if it's not empty - for some reason the game doesn't check this already.
+			if (getSlot(ProcessingTableAnalyzerBlockEntity.BOOK_SLOT_INDEX).let { !it.hasStack() || it.stack.isEmpty }) {
+				// Ignore result of this function, checking instead if the stack is empty before attempting below to insert the remainder into the input slots.
+				insertItem(slotStack, ProcessingTableAnalyzerBlockEntity.BOOK_SLOT_INDEX, ProcessingTableAnalyzerBlockEntity.BOOK_SLOT_INDEX + 1, false)
+			}
+			if (
+				!slotStack.isEmpty
+				&& !insertItem(slotStack, ProcessingTableAnalyzerBlockEntity.getQueueInputSlotIndex(0), ProcessingTableAnalyzerBlockEntity.getQueueInputSlotIndex(ProcessingTableAnalyzerBlockEntity.QUEUE_SLOT_COUNT), false)
+			) {
+				return ItemStack.EMPTY
+			}
+		} else if (slot.inventory == inventory) {
+			if (!insertItem(slotStack, inventory.size(), slots.size, true)) {
+				return ItemStack.EMPTY
+			}
+		}
+
+		if (slotStack.isEmpty) {
+			slot.stack = ItemStack.EMPTY
+		} else {
+			slot.markDirty()
+		}
+
 		return ItemStack.EMPTY
 	}
 
