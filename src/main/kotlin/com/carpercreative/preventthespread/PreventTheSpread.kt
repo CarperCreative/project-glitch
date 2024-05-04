@@ -45,15 +45,12 @@ import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
-import org.slf4j.LoggerFactory
 
 @Suppress("MemberVisibilityCanBePrivate")
 object PreventTheSpread : ModInitializer {
 	const val MOD_ID = "preventthespread"
 
 	fun identifier(path: String) = Identifier(MOD_ID, path)
-
-	private val logger = LoggerFactory.getLogger(MOD_ID)
 
 	val CANCER_DIRT_ID = identifier("cancer_dirt")
 	val CANCER_DIRT_BLOCK = SolidCancerBlock(CancerousBlock.defaultBlockSettings())
