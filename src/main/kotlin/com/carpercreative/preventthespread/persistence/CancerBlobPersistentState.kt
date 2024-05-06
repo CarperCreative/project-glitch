@@ -56,6 +56,13 @@ class CancerBlobPersistentState : PersistentState() {
 		return cancerBlobs.values.sumOf { it.cancerousBlockCount }
 	}
 
+	/**
+	 * @return Amount of cancer blobs which have at least one cancerous block.
+	 */
+	fun getActiveCancerBlobCount(): Int {
+		return cancerBlobs.values.count { it.cancerousBlockCount > 0 }
+	}
+
 	private fun getNextId(): BlobIdentifier {
 		val id = nextId++
 		markDirty()
