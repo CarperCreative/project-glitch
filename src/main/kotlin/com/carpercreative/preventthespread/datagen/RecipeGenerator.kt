@@ -98,6 +98,26 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
+			PreventTheSpread.SCANNER_ITEM_ID,
+			ShapedRecipe(
+				PreventTheSpread.SCANNER_ITEM_ID.toString(),
+				CraftingRecipeCategory.EQUIPMENT,
+				RawShapedRecipe.create(
+					mutableMapOf(
+						'e' to Ingredient.ofItems(Items.ENDER_PEARL),
+						'i' to Ingredient.ofItems(Items.IRON_INGOT),
+						'k' to Ingredient.ofItems(Items.DRIED_KELP),
+					),
+					"iki",
+					"kek",
+					"iki",
+				),
+				PreventTheSpread.SCANNER_ITEM.defaultStack,
+			),
+			null,
+		)
+
+		exporter.accept(
 			PreventTheSpread.SURGERY_AXE_ITEM_ID,
 			ShapedRecipe(
 				PreventTheSpread.SURGERY_AXE_ITEM_ID.toString(),
