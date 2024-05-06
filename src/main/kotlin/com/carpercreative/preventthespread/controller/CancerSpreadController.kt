@@ -1,6 +1,7 @@
 package com.carpercreative.preventthespread.controller
 
 import com.carpercreative.preventthespread.cancer.CancerLogic
+import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerSpreadable
 import com.carpercreative.preventthespread.cancer.CancerType
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
 import com.carpercreative.preventthespread.util.nextOfList
@@ -54,7 +55,10 @@ object CancerSpreadController {
 
 		// Attempt to generate a valid position multiple times.
 		// Returns the last position if none were deemed valid.
-		for (attempt in 1..5) {
+		var attempt = 1
+		while (attempt <= 5) {
+			attempt++
+
 			val angle = random.nextDouble() * PI * 2
 			val distance = random.nextDouble() * maximumRadius
 
@@ -63,6 +67,12 @@ object CancerSpreadController {
 			cancerSpawnPos.z += (cos(angle) * distance).roundToInt()
 
 			cancerSpawnPos.y = world.getTopY(Heightmap.Type.OCEAN_FLOOR, cancerSpawnPos.x, cancerSpawnPos.z) - 1
+
+			if (!world.getBlockState(cancerSpawnPos).isCancerSpreadable()) {
+				// FIXME: this will cause an infinite loop on worlds with weird generators or blocks
+				attempt--
+				continue
+			}
 
 			// Try not to spawn cancer under fluids.
 			if (!world.getFluidState(cancerSpawnPos.offset(Direction.UP)).isEmpty) continue
