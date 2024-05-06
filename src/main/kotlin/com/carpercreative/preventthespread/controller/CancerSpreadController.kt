@@ -4,6 +4,7 @@ import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerSpreadable
 import com.carpercreative.preventthespread.cancer.CancerType
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
+import com.carpercreative.preventthespread.persistence.SpreadDifficultyPersistentState.Companion.getSpreadDifficultyPersistentState
 import com.carpercreative.preventthespread.util.nextOfList
 import kotlin.math.PI
 import kotlin.math.cos
@@ -32,23 +33,23 @@ object CancerSpreadController {
 	}
 
 	private fun tryCreateNewBlob(world: ServerWorld) {
+		val spreadDifficulty = world.getSpreadDifficultyPersistentState()
+
 		val cancerBlobPersistentState = world.getCancerBlobPersistentState()
-		if (cancerBlobPersistentState.getActiveCancerBlobCount() > 1) return
+		if (cancerBlobPersistentState.getActiveCancerBlobCount() >= spreadDifficulty.maxActiveBlobs) return
 
 		val random = world.random
 
-		val cancerSpawnPos = generateCancerSpawnPos(world)
+		val cancerSpawnPos = generateCancerSpawnPos(world, spreadDifficulty.blobSpawnRadius, spreadDifficulty.maxBlobDepth)
 
 		// Generate cancer stats.
 		val cancerType = random.nextOfList(CancerType.entries)
 
 		// Create the cancer blob.
-		CancerLogic.createCancerBlob(world, cancerSpawnPos, maxSize = 7, cancerType)
-		CancerLogic.hastenSpread(world, cancerSpawnPos, random, distance = 1)
+		CancerLogic.createCancerBlob(world, cancerSpawnPos, spreadDifficulty.blobStartingSize, cancerType)
 	}
 
-	private fun generateCancerSpawnPos(world: ServerWorld): BlockPos {
-		val maximumRadius = 100
+	private fun generateCancerSpawnPos(world: ServerWorld, maxRadius: Float, maxDepth: Int): BlockPos {
 		val random = world.random
 
 		val cancerSpawnPos = BlockPos.Mutable()
@@ -60,13 +61,19 @@ object CancerSpreadController {
 			attempt++
 
 			val angle = random.nextDouble() * PI * 2
-			val distance = random.nextDouble() * maximumRadius
+			val distance = random.nextDouble() * maxRadius
 
 			cancerSpawnPos.set(world.spawnPos)
 			cancerSpawnPos.x += (sin(angle) * distance).roundToInt()
 			cancerSpawnPos.z += (cos(angle) * distance).roundToInt()
 
 			cancerSpawnPos.y = world.getTopY(Heightmap.Type.OCEAN_FLOOR, cancerSpawnPos.x, cancerSpawnPos.z) - 1
+
+			if (maxDepth > 0 && random.nextFloat() < 0.5f) {
+				cancerSpawnPos.y = (cancerSpawnPos.y - (random.nextFloat() * maxDepth).roundToInt())
+					// Avoid pockets surrounded by bedrock by starting above bedrock.
+					.coerceAtLeast(world.dimension.minY + 8)
+			}
 
 			if (!world.getBlockState(cancerSpawnPos).isCancerSpreadable()) {
 				// FIXME: this will cause an infinite loop on worlds with weird generators or blocks
