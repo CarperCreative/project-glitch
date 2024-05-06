@@ -16,6 +16,7 @@
 	"preventthespread.analysis.invalid": "[It seems this page was torn apart by the machine.]",
 	"preventthespread.analysis.results": "Sample analysis results:\n\nCancer stage: %s\nSuitable treatments:\n%s",
 	"preventthespread.analysis.treatment_item": "- %s\n",
+	"preventthespread.boss_bar_controller.text": "Cancer Danger Level: %s%%",
 	"preventthespread.cancer_type.advanced": "Advanced",
 	"preventthespread.cancer_type.early": "Early",
 	"preventthespread.cancer_type.pre_cancerous": "Pre-cancerous",

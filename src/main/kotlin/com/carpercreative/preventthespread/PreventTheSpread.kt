@@ -10,6 +10,7 @@ import com.carpercreative.preventthespread.block.ProcessingTableBlock
 import com.carpercreative.preventthespread.block.SolidCancerBlock
 import com.carpercreative.preventthespread.block.TargetedDrugInjectorBlock
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
+import com.carpercreative.preventthespread.controller.BossBarController
 import com.carpercreative.preventthespread.entity.ChemotherapeuticDrugEntity
 import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
@@ -233,6 +234,8 @@ object PreventTheSpread : ModInitializer {
 		Registry.register(Registries.ENTITY_TYPE, CHEMOTHERAPEUTIC_DRUG_ID, CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE)
 
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_analyzer"), PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER)
+
+		BossBarController.init()
 
 		// TODO: replace cancer block textures
 		// TODO: replace targeted drug injector model and block state to indicate progress
