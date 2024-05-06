@@ -43,7 +43,7 @@ object CancerSpreadController {
 		val cancerType = random.nextOfList(CancerType.entries)
 
 		// Create the cancer blob.
-		CancerLogic.createCancerBlob(world, cancerSpawnPos, cancerType)
+		CancerLogic.createCancerBlob(world, cancerSpawnPos, maxSize = 7, cancerType)
 		CancerLogic.hastenSpread(world, cancerSpawnPos, random, distance = 1)
 	}
 

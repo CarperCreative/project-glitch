@@ -6,6 +6,7 @@ import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState
 import com.carpercreative.preventthespread.util.contentsSequence
 import com.carpercreative.preventthespread.util.nextOfArray
 import com.carpercreative.preventthespread.util.nextOfListOrNull
+import java.util.LinkedList
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.SlabBlock
@@ -43,17 +44,57 @@ object CancerLogic {
 			&& block.hardness >= 0f
 	}
 
-	fun createCancerBlob(world: ServerWorld, pos: BlockPos, cancerType: CancerType): CancerBlob? {
+	fun createCancerBlob(world: ServerWorld, pos: BlockPos, maxSize: Int, cancerType: CancerType): CancerBlob? {
 		val blobMembershipPersistentState = world.getBlobMembershipPersistentState()
 
 		if (world.getBlockState(pos).isCancerous() || blobMembershipPersistentState.getMembershipOrNull(pos) != null) return null
 
 		val cancerBlobPersistentState = world.getCancerBlobPersistentState()
 		val cancerBlob = cancerBlobPersistentState.createCancerBlob { CancerBlob(it, cancerType) }
-		convertToCancer(world, pos)
-		blobMembershipPersistentState.setMembership(cancerBlobPersistentState, pos, cancerBlob)
+
+		for (blockPos in getBlocksForBlobCreation(world, pos, maxSize)) {
+			convertToCancer(world, blockPos)
+			blobMembershipPersistentState.setMembership(cancerBlobPersistentState, blockPos, cancerBlob)
+		}
 
 		return cancerBlob
+	}
+
+	private fun getBlocksForBlobCreation(world: ServerWorld, startPos: BlockPos, maxBlocks: Int): List<BlockPos> {
+		val out = mutableListOf<BlockPos>()
+		val visited = hashSetOf<BlockPos>()
+		val queue = LinkedList<BlockPos>()
+
+		val random = world.random
+
+		queue.add(startPos.toImmutable())
+		visited.add(queue.peek())
+
+		while (queue.isNotEmpty() && visited.size < maxBlocks * 3) {
+			val pos = queue.pop()
+
+			// Skip some blocks before marking them as visited to create slightly unpredictable shapes.
+			if (random.nextInt(10) == 0) continue
+
+			val blockState = world.getBlockState(pos)
+			if (
+				(blockState.isAir && random.nextFloat() < 0.8f)
+				|| !blockState.isCancerSpreadable()
+			) continue
+
+			out.add(pos)
+			if (out.size >= maxBlocks) break
+
+			for (direction in Direction.entries) {
+				val nextPos = pos.offset(direction)
+				if (!visited.contains(nextPos)) {
+					queue.add(nextPos)
+					visited.add(nextPos)
+				}
+			}
+		}
+
+		return out
 	}
 
 	fun attemptSpread(world: ServerWorld, pos: BlockPos, random: Random, bypassThrottling: Boolean = false) {

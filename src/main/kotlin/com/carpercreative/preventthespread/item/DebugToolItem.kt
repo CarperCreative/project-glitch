@@ -68,7 +68,7 @@ class DebugToolItem(
 			DebugMode.CREATE_CANCER -> {
 				if (context.player?.isCreativeLevelTwoOp != true) return ActionResult.FAIL
 
-				val cancerBlob = CancerLogic.createCancerBlob(world, context.blockPos, CancerType.entries.random())
+				val cancerBlob = CancerLogic.createCancerBlob(world, context.blockPos, maxSize = 7, CancerType.entries.random())
 
 				if (cancerBlob == null) {
 					context.player?.sendMessage(Text.literal("Failed to create new cancer blob. Can cancer spread to the target block? Does the target block already have a cancer membership?"))
