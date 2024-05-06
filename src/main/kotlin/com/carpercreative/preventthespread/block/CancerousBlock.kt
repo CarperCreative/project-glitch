@@ -6,6 +6,7 @@ import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
 import com.carpercreative.preventthespread.cancer.TreatmentType
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
+import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
 import java.util.function.BiConsumer
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.BlockState
@@ -37,8 +38,11 @@ object CancerousBlock {
 	}
 
 	fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
-		if (!world.isClient() && !newState.isCancerous()) {
-			(world as ServerWorld).getBlobMembershipPersistentState().removeMembership(pos)
+		if (world.isClient()) return
+		world as ServerWorld
+
+		if (!newState.isCancerous()) {
+			world.getBlobMembershipPersistentState().removeMembership(world.getCancerBlobPersistentState(), pos)
 		}
 	}
 

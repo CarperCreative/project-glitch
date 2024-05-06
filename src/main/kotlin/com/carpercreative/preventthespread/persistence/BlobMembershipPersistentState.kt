@@ -14,17 +14,35 @@ import net.minecraft.world.PersistentState
 class BlobMembershipPersistentState : PersistentState() {
 	private val memberships = hashMapOf<BlockPos, BlobIdentifier>()
 
-	fun setMembership(blockPos: BlockPos, cancerBlob: CancerBlob) {
-		setMembership(blockPos, cancerBlob.id)
+	fun setMembership(cancerBlobPersistentState: CancerBlobPersistentState, blockPos: BlockPos, cancerBlob: CancerBlob) {
+		setMembership(cancerBlobPersistentState, blockPos, cancerBlob.id)
 	}
 
-	fun setMembership(blockPos: BlockPos, id: BlobIdentifier) {
-		memberships[blockPos] = id
+	fun setMembership(cancerBlobPersistentState: CancerBlobPersistentState, blockPos: BlockPos, id: BlobIdentifier) {
+		memberships.compute(blockPos) { _, previousId ->
+			if (previousId != null) {
+				cancerBlobPersistentState.getCancerBlobByIdOrNull(previousId)?.also { cancerBlob ->
+					cancerBlobPersistentState.incrementCancerousBlockCount(cancerBlob, -1)
+				}
+			}
+			cancerBlobPersistentState.getCancerBlobByIdOrNull(id)?.also { cancerBlob ->
+				cancerBlobPersistentState.incrementCancerousBlockCount(cancerBlob, 1)
+			}
+
+			id
+		}
 		markDirty()
 	}
 
-	fun removeMembership(blockPos: BlockPos) {
-		memberships.remove(blockPos)
+	fun removeMembership(cancerBlobPersistentState: CancerBlobPersistentState, blockPos: BlockPos) {
+		val cancerBlobId = memberships.remove(blockPos)
+
+		if (cancerBlobId != null) {
+			cancerBlobPersistentState.getCancerBlobByIdOrNull(cancerBlobId)?.also { cancerBlob ->
+				cancerBlobPersistentState.incrementCancerousBlockCount(cancerBlob, -1)
+			}
+		}
+
 		markDirty()
 	}
 
@@ -89,7 +107,7 @@ class BlobMembershipPersistentState : PersistentState() {
 			val idArray = memberships.getIntArray(KEY_MEMBERSHIPS_ID)
 
 			for ((index, id) in idArray.withIndex()) {
-				state.setMembership(BlockPos(xArray[index], yArray[index], zArray[index]), id)
+				state.memberships[BlockPos(xArray[index], yArray[index], zArray[index])] = id
 			}
 
 			return state

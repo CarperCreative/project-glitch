@@ -45,6 +45,13 @@ class CancerBlobPersistentState : PersistentState() {
 		return cancerBlob
 	}
 
+	fun incrementCancerousBlockCount(cancerBlob: CancerBlob, change: Int) {
+		if (change == 0) return
+
+		cancerBlob.cancerousBlockCount += change
+		markDirty()
+	}
+
 	private fun getNextId(): BlobIdentifier {
 		val id = nextId++
 		markDirty()
