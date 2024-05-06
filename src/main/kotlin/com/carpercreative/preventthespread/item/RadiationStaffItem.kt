@@ -7,6 +7,7 @@ import com.carpercreative.preventthespread.cancer.TreatmentType
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
 import java.util.function.Consumer
 import net.fabricmc.fabric.api.item.v1.CustomDamageHandler
+import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.damage.DamageTypes
@@ -66,6 +67,20 @@ class RadiationStaffItem(
 
 		if (stack.damage % TRIGGER_FREQUENCY == 0) {
 			doHit(world, user, stack)
+		}
+	}
+
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, slot: Int, selected: Boolean) {
+		// Ignore radiation staffs without damage as those don't require cooling down.
+		if (stack.damage <= 0) return
+
+		// Don't do cooldown if the radiation staff is currently in use.
+		if (stack == (entity as? PlayerEntity)?.activeItem) return
+
+		stack.damage -= if (isOverheated(stack)) 1 else 2
+
+		if (stack.damage <= 0) {
+			setOverheated(stack, false)
 		}
 	}
 
@@ -147,35 +162,6 @@ class RadiationStaffItem(
 				stack.getOrCreateNbt().putBoolean(KEY_OVERHEATED, true)
 			} else {
 				stack.nbt?.remove(KEY_OVERHEATED)
-			}
-		}
-
-		/**
-		 * Removes damage from radiation staffs in player inventories while they're not in use.
-		 */
-		fun doCooldown(world: ServerWorld) {
-			for (player in world.players) {
-				val activeItem = player.activeItem
-
-				for (stack in player.inventory.main) {
-					doCooldown(stack, activeItem)
-				}
-
-				doCooldown(player.inventory.offHand[0], activeItem)
-			}
-		}
-
-		private fun doCooldown(stack: ItemStack, skipStack: ItemStack?) {
-			// Ignore radiation staffs without damage, and items which aren't the radiation staff.
-			if (stack.damage <= 0 || stack.item !is RadiationStaffItem) return
-
-			// Usually the player's active item, which could be the radiation staff currently in use.
-			if (stack == skipStack) return
-
-			stack.damage -= if (isOverheated(stack)) 1 else 2
-
-			if (stack.damage <= 0) {
-				setOverheated(stack, false)
 			}
 		}
 	}

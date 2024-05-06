@@ -21,7 +21,6 @@ import com.carpercreative.preventthespread.item.SurgeryPickaxeItem
 import com.carpercreative.preventthespread.item.SurgeryShovelItem
 import com.carpercreative.preventthespread.screen.ProcessingTableAnalyzerScreenHandler
 import net.fabricmc.api.ModInitializer
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -234,10 +233,6 @@ object PreventTheSpread : ModInitializer {
 		Registry.register(Registries.ENTITY_TYPE, CHEMOTHERAPEUTIC_DRUG_ID, CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE)
 
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_analyzer"), PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER)
-
-		ServerTickEvents.END_WORLD_TICK.register { world ->
-			RadiationStaffItem.doCooldown(world)
-		}
 
 		// TODO: replace cancer block textures
 		// TODO: replace targeted drug injector model and block state to indicate progress
