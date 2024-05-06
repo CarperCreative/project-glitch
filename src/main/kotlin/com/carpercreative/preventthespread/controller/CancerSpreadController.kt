@@ -3,6 +3,7 @@ package com.carpercreative.preventthespread.controller
 import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerSpreadable
 import com.carpercreative.preventthespread.cancer.CancerType
+import com.carpercreative.preventthespread.cancer.TreatmentType
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
 import com.carpercreative.preventthespread.persistence.SpreadDifficultyPersistentState.Companion.getSpreadDifficultyPersistentState
 import com.carpercreative.preventthespread.util.nextOfList
@@ -43,7 +44,10 @@ object CancerSpreadController {
 		val cancerSpawnPos = generateCancerSpawnPos(world, spreadDifficulty.blobSpawnRadius, spreadDifficulty.maxBlobDepth)
 
 		// Generate cancer stats.
-		val cancerType = random.nextOfList(CancerType.entries)
+		val cancerType = when {
+			spreadDifficulty.defeatedBlobs < 2 -> random.nextOfList(CancerType.entries.filter { it.treatments.contains(TreatmentType.SURGERY) })
+			else -> random.nextOfList(CancerType.entries)
+		}
 
 		// Create the cancer blob.
 		CancerLogic.createCancerBlob(world, cancerSpawnPos, spreadDifficulty.blobStartingSize, cancerType)
