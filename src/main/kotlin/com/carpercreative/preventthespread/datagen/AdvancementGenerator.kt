@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider
 import net.minecraft.advancement.Advancement
 import net.minecraft.advancement.AdvancementEntry
 import net.minecraft.advancement.AdvancementFrame
+import net.minecraft.advancement.AdvancementRewards
 import net.minecraft.advancement.criterion.Criteria
 import net.minecraft.advancement.criterion.ImpossibleCriterion
 import net.minecraft.advancement.criterion.InventoryChangedCriterion
@@ -73,6 +74,7 @@ class AdvancementGenerator(
 				false,
 			)
 			.withImpossibleCriterion()
+			.rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.PROBE_ITEM_ID))
 			.build(consumer, ResearchAdvancement.ROOT_ID)
 
 		val obtainProbe = consumer.createAdvancement(
@@ -81,6 +83,8 @@ class AdvancementGenerator(
 			PreventTheSpread.PROBE_ITEM.defaultStack,
 		) {
 			criterion("obtained_probe", InventoryChangedCriterion.Conditions.items(PreventTheSpread.PROBE_ITEM))
+
+			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.SCANNER_ITEM_ID))
 		}
 
 		val getSample = consumer.createAdvancement(
@@ -93,6 +97,12 @@ class AdvancementGenerator(
 					.block(BlockPredicate.Builder.create().tag(PreventTheSpread.CANCEROUS_BLOCK_TAG)),
 				ItemPredicate.Builder.create().items(PreventTheSpread.PROBE_ITEM),
 			))
+
+			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.PROCESSING_TABLE_ID))
+			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.SURGERY_AXE_ITEM_ID))
+			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.SURGERY_HOE_ITEM_ID))
+			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.SURGERY_PICKAXE_ITEM_ID))
+			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.SURGERY_SHOVEL_ITEM_ID))
 		}
 
 		// Surgery tools.
@@ -113,7 +123,9 @@ class AdvancementGenerator(
 			ResearchAdvancement.CHEMOTHERAPEUTIC_DRUG_ID,
 			getSample,
 			PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM.defaultStack,
-		)
+		) {
+			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID))
+		}
 
 		consumer.createResearchAdvancement(
 			ResearchAdvancement.CHEAPER_CHEMOTHERAPEUTIC_DRUG_ID,
@@ -138,14 +150,18 @@ class AdvancementGenerator(
 			ResearchAdvancement.RADIATION_STAFF_ID,
 			getSample,
 			PreventTheSpread.CANCER_STONE_BLOCK_ITEM.defaultStack,
-		)
+		) {
+			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.RADIATION_STAFF_ITEM_ID))
+		}
 
 		// Targeted drug.
 		val targetedDrug = consumer.createResearchAdvancement(
 			ResearchAdvancement.TARGETED_DRUG_ID,
 			getSample,
 			PreventTheSpread.TARGETED_DRUG_INJECTOR_BLOCK_ITEM.defaultStack,
-		)
+		) {
+			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.TARGETED_DRUG_INJECTOR_ID))
+		}
 
 		consumer.createResearchAdvancement(
 			ResearchAdvancement.TARGETED_DRUG_STRENGTH_1_ID,
