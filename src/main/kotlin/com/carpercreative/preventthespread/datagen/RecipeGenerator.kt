@@ -86,13 +86,13 @@ class RecipeGenerator(
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
-						'a' to Ingredient.ofItems(Items.AMETHYST_SHARD),
 						'b' to Ingredient.ofStacks(PotionUtil.setPotion(Items.POTION.defaultStack, Potions.WATER)),
+						'B' to Ingredient.ofItems(Items.BOOK),
 						'f' to Ingredient.fromTag(ItemTags.WOODEN_FENCES),
-						'r' to Ingredient.ofItems(Items.BLAZE_ROD),
+						'i' to Ingredient.ofItems(Items.IRON_INGOT),
 						's' to Ingredient.fromTag(ItemTags.WOODEN_SLABS),
 					),
-					"rba",
+					"ibB",
 					"sss",
 					"f f",
 				),
