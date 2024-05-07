@@ -6,6 +6,8 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider
 import net.minecraft.data.server.recipe.RecipeExporter
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
+import net.minecraft.potion.PotionUtil
+import net.minecraft.potion.Potions
 import net.minecraft.recipe.Ingredient
 import net.minecraft.recipe.RawShapedRecipe
 import net.minecraft.recipe.ShapedRecipe
@@ -73,6 +75,28 @@ class RecipeGenerator(
 					"s  ",
 				),
 				PreventTheSpread.PROBE_ITEM.defaultStack,
+			),
+			null,
+		)
+
+		exporter.accept(
+			PreventTheSpread.PROCESSING_TABLE_ID,
+			ShapedRecipe(
+				PreventTheSpread.PROCESSING_TABLE_ID.toString(),
+				CraftingRecipeCategory.EQUIPMENT,
+				RawShapedRecipe.create(
+					mutableMapOf(
+						'a' to Ingredient.ofItems(Items.AMETHYST_SHARD),
+						'b' to Ingredient.ofStacks(PotionUtil.setPotion(Items.POTION.defaultStack, Potions.WATER)),
+						'f' to Ingredient.fromTag(ItemTags.WOODEN_FENCES),
+						'r' to Ingredient.ofItems(Items.BLAZE_ROD),
+						's' to Ingredient.fromTag(ItemTags.WOODEN_SLABS),
+					),
+					"rba",
+					"sss",
+					"f f",
+				),
+				PreventTheSpread.PROCESSING_TABLE_BLOCK_ITEM.defaultStack,
 			),
 			null,
 		)
