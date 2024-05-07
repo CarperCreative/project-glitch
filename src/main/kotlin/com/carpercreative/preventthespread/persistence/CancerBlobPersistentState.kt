@@ -1,6 +1,7 @@
 package com.carpercreative.preventthespread.persistence
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.cancer.BlobIdentifier
 import com.carpercreative.preventthespread.cancer.CancerBlob
 import com.carpercreative.preventthespread.cancer.CancerBlob.Companion.toCancerBlob
@@ -8,10 +9,10 @@ import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentS
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtElement
 import net.minecraft.nbt.NbtList
+import net.minecraft.server.MinecraftServer
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.PersistentState
-import net.minecraft.world.World
 
 class CancerBlobPersistentState : PersistentState() {
 	private var nextId = 0
@@ -108,14 +109,13 @@ class CancerBlobPersistentState : PersistentState() {
 			return state
 		}
 
-		fun ServerWorld.getCancerBlobPersistentState(): CancerBlobPersistentState {
-			return server.getWorld(World.OVERWORLD)!!.persistentStateManager.getOrCreate(type, "${PreventTheSpread.MOD_ID}_cancerBlob")
+		fun MinecraftServer.getCancerBlobPersistentState(): CancerBlobPersistentState {
+			return overworld.persistentStateManager.getOrCreate(type, "${PreventTheSpread.MOD_ID}_cancerBlob")
 		}
 
 		fun ServerWorld.getCancerBlobOrNull(pos: BlockPos): CancerBlob? {
 			val blobId = getBlobMembershipOrNull(pos) ?: return null
-			val blobPersistentState = getCancerBlobPersistentState()
-			return blobPersistentState.getCancerBlobByIdOrNull(blobId)
+			return Storage.cancerBlob.getCancerBlobByIdOrNull(blobId)
 		}
 	}
 }

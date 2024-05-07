@@ -1,10 +1,10 @@
 package com.carpercreative.preventthespread.item
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerType
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
-import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -55,11 +55,10 @@ class DebugToolItem(
 
 		return when (debugMode) {
 			DebugMode.INSPECT -> {
-				val cancerBlobPersistentState = world.getCancerBlobPersistentState()
 				val blobMembershipPersistentState = world.getBlobMembershipPersistentState()
 
 				val cancerBlobId = blobMembershipPersistentState.getMembershipOrNull(context.blockPos)
-				val cancerBlob = cancerBlobId?.let { cancerBlobPersistentState.getCancerBlobById(it) }
+				val cancerBlob = cancerBlobId?.let { Storage.cancerBlob.getCancerBlobById(it) }
 
 				context.player?.sendMessage(Text.literal("Identifier of blob by membership: $cancerBlobId\nBlob from store: ${cancerBlob?.let { "type = ${it.type}" }}"))
 

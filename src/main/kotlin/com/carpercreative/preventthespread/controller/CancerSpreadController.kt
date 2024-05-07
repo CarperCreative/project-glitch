@@ -1,11 +1,10 @@
 package com.carpercreative.preventthespread.controller
 
+import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerSpreadable
 import com.carpercreative.preventthespread.cancer.CancerType
 import com.carpercreative.preventthespread.cancer.TreatmentType
-import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
-import com.carpercreative.preventthespread.persistence.SpreadDifficultyPersistentState.Companion.getSpreadDifficultyPersistentState
 import com.carpercreative.preventthespread.util.nextOfList
 import kotlin.math.PI
 import kotlin.math.cos
@@ -34,10 +33,9 @@ object CancerSpreadController {
 	}
 
 	private fun tryCreateNewBlob(world: ServerWorld) {
-		val spreadDifficulty = world.getSpreadDifficultyPersistentState()
+		val spreadDifficulty = Storage.spreadDifficulty
 
-		val cancerBlobPersistentState = world.getCancerBlobPersistentState()
-		if (cancerBlobPersistentState.getActiveCancerBlobCount() >= spreadDifficulty.maxActiveBlobs) return
+		if (Storage.cancerBlob.getActiveCancerBlobCount() >= spreadDifficulty.maxActiveBlobs) return
 
 		val random = world.random
 

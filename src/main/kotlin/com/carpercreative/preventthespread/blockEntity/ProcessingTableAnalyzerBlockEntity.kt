@@ -1,9 +1,9 @@
 package com.carpercreative.preventthespread.blockEntity
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.block.ProcessingTableBlock
 import com.carpercreative.preventthespread.item.ProbeItem
-import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
 import com.carpercreative.preventthespread.screen.ProcessingTableAnalyzerScreenHandler
 import com.carpercreative.preventthespread.screen.slot.AnalyzerBookSlot
 import com.carpercreative.preventthespread.screen.slot.AnalyzerInputSlot
@@ -230,7 +230,7 @@ class ProcessingTableAnalyzerBlockEntity(
 			if (blockEntity.analysisTime >= ANALYSIS_DURATION) {
 				// Analysis finished.
 				if (analyzedStack.isOf(PreventTheSpread.PROBE_ITEM)) {
-					analyzeProbe(world, blockEntity, analyzedStack)
+					analyzeProbe(blockEntity, analyzedStack)
 				}
 
 				val analysisOutputStack = getAnalysisOutput(analyzedStack)
@@ -253,11 +253,11 @@ class ProcessingTableAnalyzerBlockEntity(
 			return false
 		}
 
-		private fun analyzeProbe(world: ServerWorld, blockEntity: ProcessingTableAnalyzerBlockEntity, stack: ItemStack) {
+		private fun analyzeProbe(blockEntity: ProcessingTableAnalyzerBlockEntity, stack: ItemStack) {
 			if (!stack.isOf(PreventTheSpread.PROBE_ITEM)) return
 
 			val cancerBlobId = ProbeItem.getSampleCancerBlobId(stack) ?: return
-			val cancerBlob = world.getCancerBlobPersistentState().getCancerBlobByIdOrNull(cancerBlobId)
+			val cancerBlob = Storage.cancerBlob.getCancerBlobByIdOrNull(cancerBlobId)
 
 			if (cancerBlob == null) {
 				prependBook(blockEntity, Text.translatable("${PreventTheSpread.MOD_ID}.analysis.invalid"))

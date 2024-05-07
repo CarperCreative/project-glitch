@@ -4,9 +4,8 @@ import com.carpercreative.preventthespread.PreventTheSpread
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.server.world.ServerWorld
+import net.minecraft.server.MinecraftServer
 import net.minecraft.world.PersistentState
-import net.minecraft.world.World
 
 class SpreadDifficultyPersistentState(
 	defeatedBlobs: Int,
@@ -57,8 +56,8 @@ class SpreadDifficultyPersistentState(
 			)
 		}
 
-		fun ServerWorld.getSpreadDifficultyPersistentState(): SpreadDifficultyPersistentState {
-			return server.getWorld(World.OVERWORLD)!!.persistentStateManager.getOrCreate(type, "${PreventTheSpread.MOD_ID}_spreadDifficulty")
+		fun MinecraftServer.getSpreadDifficultyPersistentState(): SpreadDifficultyPersistentState {
+			return overworld.persistentStateManager.getOrCreate(type, "${PreventTheSpread.MOD_ID}_spreadDifficulty")
 		}
 	}
 }

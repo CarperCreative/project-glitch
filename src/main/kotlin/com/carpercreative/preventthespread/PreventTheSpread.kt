@@ -236,6 +236,8 @@ object PreventTheSpread : ModInitializer {
 
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_analyzer"), PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER)
 
+		Storage.init()
+
 		BossBarController.init()
 		CancerSpreadController.init()
 

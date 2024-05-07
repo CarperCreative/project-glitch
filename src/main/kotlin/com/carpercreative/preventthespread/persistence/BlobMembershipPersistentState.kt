@@ -1,6 +1,7 @@
 package com.carpercreative.preventthespread.persistence
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.cancer.BlobIdentifier
 import com.carpercreative.preventthespread.cancer.CancerBlob
 import net.minecraft.nbt.NbtCompound
@@ -14,19 +15,19 @@ import net.minecraft.world.PersistentState
 class BlobMembershipPersistentState : PersistentState() {
 	private val memberships = hashMapOf<BlockPos, BlobIdentifier>()
 
-	fun setMembership(cancerBlobPersistentState: CancerBlobPersistentState, blockPos: BlockPos, cancerBlob: CancerBlob) {
-		setMembership(cancerBlobPersistentState, blockPos, cancerBlob.id)
+	fun setMembership(blockPos: BlockPos, cancerBlob: CancerBlob) {
+		setMembership(blockPos, cancerBlob.id)
 	}
 
-	fun setMembership(cancerBlobPersistentState: CancerBlobPersistentState, blockPos: BlockPos, id: BlobIdentifier) {
+	fun setMembership(blockPos: BlockPos, id: BlobIdentifier) {
 		memberships.compute(blockPos) { _, previousId ->
 			if (previousId != null) {
-				cancerBlobPersistentState.getCancerBlobByIdOrNull(previousId)?.also { cancerBlob ->
-					cancerBlobPersistentState.incrementCancerousBlockCount(cancerBlob, -1)
+				Storage.cancerBlob.getCancerBlobByIdOrNull(previousId)?.also { cancerBlob ->
+					Storage.cancerBlob.incrementCancerousBlockCount(cancerBlob, -1)
 				}
 			}
-			cancerBlobPersistentState.getCancerBlobByIdOrNull(id)?.also { cancerBlob ->
-				cancerBlobPersistentState.incrementCancerousBlockCount(cancerBlob, 1)
+			Storage.cancerBlob.getCancerBlobByIdOrNull(id)?.also { cancerBlob ->
+				Storage.cancerBlob.incrementCancerousBlockCount(cancerBlob, 1)
 			}
 
 			id
@@ -34,15 +35,15 @@ class BlobMembershipPersistentState : PersistentState() {
 		markDirty()
 	}
 
-	fun removeMembership(cancerBlobPersistentState: CancerBlobPersistentState, spreadDifficultyPersistentState: SpreadDifficultyPersistentState, blockPos: BlockPos) {
+	fun removeMembership(blockPos: BlockPos) {
 		val cancerBlobId = memberships.remove(blockPos)
 
 		if (cancerBlobId != null) {
-			cancerBlobPersistentState.getCancerBlobByIdOrNull(cancerBlobId)?.also { cancerBlob ->
-				cancerBlobPersistentState.incrementCancerousBlockCount(cancerBlob, -1)
+			Storage.cancerBlob.getCancerBlobByIdOrNull(cancerBlobId)?.also { cancerBlob ->
+				Storage.cancerBlob.incrementCancerousBlockCount(cancerBlob, -1)
 
 				if (cancerBlob.cancerousBlockCount == 0) {
-					spreadDifficultyPersistentState.incrementDefeatedBlobs()
+					Storage.spreadDifficulty.incrementDefeatedBlobs()
 				}
 			}
 		}

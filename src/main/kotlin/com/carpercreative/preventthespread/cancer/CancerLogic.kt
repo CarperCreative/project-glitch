@@ -1,8 +1,8 @@
 package com.carpercreative.preventthespread.cancer
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
-import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
 import com.carpercreative.preventthespread.util.contentsSequence
 import com.carpercreative.preventthespread.util.nextOfArray
 import com.carpercreative.preventthespread.util.nextOfListOrNull
@@ -49,12 +49,11 @@ object CancerLogic {
 
 		if (world.getBlockState(pos).isCancerous() || blobMembershipPersistentState.getMembershipOrNull(pos) != null) return null
 
-		val cancerBlobPersistentState = world.getCancerBlobPersistentState()
-		val cancerBlob = cancerBlobPersistentState.createCancerBlob { CancerBlob(it, cancerType) }
+		val cancerBlob = Storage.cancerBlob.createCancerBlob { CancerBlob(it, cancerType) }
 
 		for (blockPos in getBlocksForBlobCreation(world, pos, maxSize)) {
 			convertToCancer(world, blockPos)
-			blobMembershipPersistentState.setMembership(cancerBlobPersistentState, blockPos, cancerBlob)
+			blobMembershipPersistentState.setMembership(blockPos, cancerBlob)
 		}
 
 		return cancerBlob
@@ -124,7 +123,7 @@ object CancerLogic {
 		val blobMembershipPersistentState = world.getBlobMembershipPersistentState()
 		val blobId = blobMembershipPersistentState.getMembershipOrNull(fromPos)
 		if (blobId != null) {
-			blobMembershipPersistentState.setMembership(world.getCancerBlobPersistentState(), toPos, blobId)
+			blobMembershipPersistentState.setMembership(toPos, blobId)
 		}
 	}
 

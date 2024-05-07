@@ -1,7 +1,7 @@
 package com.carpercreative.preventthespread.controller
 
 import com.carpercreative.preventthespread.PreventTheSpread
-import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
+import com.carpercreative.preventthespread.Storage
 import kotlin.math.roundToInt
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.entity.boss.BossBar
@@ -30,18 +30,16 @@ object BossBarController {
 
 			bossBar.maxValue = 100
 			// TODO: value updates could be reactive to block events
-			bossBar.value = (getDangerLevel(server) * 100).roundToInt()
-			bossBar.name = Text.translatable("${PreventTheSpread.MOD_ID}.boss_bar_controller.text", (getDangerLevel(server) * 100).roundToInt())
+			bossBar.value = (getDangerLevel() * 100).roundToInt()
+			bossBar.name = Text.translatable("${PreventTheSpread.MOD_ID}.boss_bar_controller.text", (getDangerLevel() * 100).roundToInt())
 
 			// TODO: this could be reactive to player joins
 			bossBar.addPlayers(server.playerManager.playerList)
 		}
 	}
 
-	private fun getDangerLevel(server: MinecraftServer): Float {
-		val cancerBlobPersistentState = server.overworld.getCancerBlobPersistentState()
-
-		val cancerousBlockCount = cancerBlobPersistentState.getTotalCancerousBlockCount()
+	private fun getDangerLevel(): Float {
+		val cancerousBlockCount = Storage.cancerBlob.getTotalCancerousBlockCount()
 
 		return cancerousBlockCount.toFloat() / CANCEROUS_BLOCK_LIMIT
 	}
