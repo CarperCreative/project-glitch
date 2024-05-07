@@ -164,7 +164,7 @@ class AdvancementGenerator(
 		val radiationStaff = consumer.createResearchAdvancement(
 			ResearchAdvancement.RADIATION_STAFF_ID,
 			researchRoot,
-			PreventTheSpread.CANCER_STONE_BLOCK_ITEM.defaultStack,
+			PreventTheSpread.RADIATION_STAFF_ITEM.defaultStack,
 		) {
 			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.RADIATION_STAFF_ITEM_ID))
 		}
