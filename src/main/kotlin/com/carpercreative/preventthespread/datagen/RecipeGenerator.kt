@@ -124,11 +124,11 @@ class RecipeGenerator(
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
-						'e' to Ingredient.ofItems(Items.EMERALD),
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
 						's' to Ingredient.ofItems(Items.STICK),
 					),
-					"ee",
-					"se",
+					"cc",
+					"sc",
 					"s ",
 				),
 				PreventTheSpread.SURGERY_AXE_ITEM.defaultStack,
@@ -143,10 +143,10 @@ class RecipeGenerator(
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
-						'e' to Ingredient.ofItems(Items.EMERALD),
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
 						's' to Ingredient.ofItems(Items.STICK),
 					),
-					"ee",
+					"cc",
 					"s ",
 					"s ",
 				),
@@ -162,10 +162,10 @@ class RecipeGenerator(
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
-						'e' to Ingredient.ofItems(Items.EMERALD),
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
 						's' to Ingredient.ofItems(Items.STICK),
 					),
-					"eee",
+					"ccc",
 					" s ",
 					" s ",
 				),
@@ -181,10 +181,10 @@ class RecipeGenerator(
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
-						'e' to Ingredient.ofItems(Items.EMERALD),
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
 						's' to Ingredient.ofItems(Items.STICK),
 					),
-					"e",
+					"c",
 					"s",
 					"s",
 				),
