@@ -286,6 +286,11 @@ class ProcessingTableAnalyzerBlockEntity(
 		private fun signBook(itemStack: ItemStack): ItemStack? {
 			return when {
 				itemStack.isOf(Items.WRITTEN_BOOK) -> itemStack
+				itemStack.isOf(Items.BOOK) -> ItemStack(Items.WRITTEN_BOOK).apply {
+					setSubNbt(WrittenBookItem.PAGES_KEY, NbtList())
+					setSubNbt(WrittenBookItem.AUTHOR_KEY, NbtString.of(BOOK_AUTHOR))
+					setSubNbt(WrittenBookItem.TITLE_KEY, NbtString.of(BOOK_TITLE))
+				}
 				itemStack.isOf(Items.WRITABLE_BOOK) -> ItemStack(Items.WRITTEN_BOOK).apply {
 					val pagesList = NbtList().also { list ->
 						itemStack.nbt?.getList(WrittenBookItem.PAGES_KEY, NbtElement.STRING_TYPE.toInt())

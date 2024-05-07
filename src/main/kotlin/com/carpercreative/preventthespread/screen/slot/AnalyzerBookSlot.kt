@@ -24,6 +24,7 @@ class AnalyzerBookSlot(
 	companion object {
 		fun isValid(stack: ItemStack): Boolean {
 			return stack.isOf(Items.WRITABLE_BOOK)
+				|| stack.isOf(Items.BOOK)
 				|| (
 					stack.isOf(Items.WRITTEN_BOOK)
 						&& stack.nbt?.getString(WrittenBookItem.AUTHOR_KEY) == ProcessingTableAnalyzerBlockEntity.BOOK_AUTHOR
