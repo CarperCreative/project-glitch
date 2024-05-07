@@ -150,7 +150,7 @@ class RecipeGenerator(
 					"s ",
 					"s ",
 				),
-				PreventTheSpread.SURGERY_SHOVEL_ITEM.defaultStack,
+				PreventTheSpread.SURGERY_HOE_ITEM.defaultStack,
 			),
 			null,
 		)
