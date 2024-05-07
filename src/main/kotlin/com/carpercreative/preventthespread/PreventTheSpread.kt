@@ -186,6 +186,25 @@ object PreventTheSpread : ModInitializer {
 		}
 		.build()
 
+	object ResearchAdvancement {
+		private fun researchIdentifier(path: String) = PreventTheSpread.identifier("research/$path")
+
+		val ROOT_ID = researchIdentifier("root")
+		val OBTAIN_PROBE_ID = researchIdentifier("obtain_probe")
+		val GET_SAMPLE_ID = researchIdentifier("get_sample")
+		val SURGERY_EFFICIENCY_1_ID = researchIdentifier("surgery_efficiency_1")
+		val SURGERY_EFFICIENCY_2_ID = researchIdentifier("surgery_efficiency_2")
+		val CHEMOTHERAPEUTIC_DRUG_ID = researchIdentifier(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path)
+		val CHEAPER_CHEMOTHERAPEUTIC_DRUG_ID = researchIdentifier("cheaper_${PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path}")
+		val CHEMOTHERAPEUTIC_DRUG_STRENGTH_1_ID = researchIdentifier("${PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path}_strength_1")
+		val CHEMOTHERAPEUTIC_DRUG_STRENGTH_2_ID = researchIdentifier("${PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path}_strength_2")
+		val RADIATION_STAFF_ID = researchIdentifier(RADIATION_STAFF_ITEM_ID.path)
+		val TARGETED_DRUG_ID = researchIdentifier(TARGETED_DRUG_INJECTOR_ID.path)
+		val CHEAPER_TARGETED_DRUG_ID = researchIdentifier("cheaper_${TARGETED_DRUG_INJECTOR_ID.path}")
+		val TARGETED_DRUG_STRENGTH_1_ID = researchIdentifier("${TARGETED_DRUG_INJECTOR_ID.path}_strength_1")
+		val TARGETED_DRUG_STRENGTH_2_ID = researchIdentifier("${TARGETED_DRUG_INJECTOR_ID.path}_strength_2")
+	}
+
 	override fun onInitialize() {
 		Registry.register(Registries.BLOCK, CANCER_DIRT_ID, CANCER_DIRT_BLOCK)
 		Registry.register(Registries.ITEM, CANCER_DIRT_ID, CANCER_DIRT_BLOCK_ITEM)

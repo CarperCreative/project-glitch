@@ -7,6 +7,7 @@ object PreventTheSpreadDataGenerator : DataGeneratorEntrypoint {
 	override fun onInitializeDataGenerator(fabricDataGenerator: FabricDataGenerator) {
 		// Data pack generator
 		fabricDataGenerator.createPack().apply {
+			addProvider(::AdvancementGenerator)
 			addProvider(::BlockLootTableGenerator)
 			addProvider(::BlockTagGenerator)
 			addProvider(::ItemTagGenerator)
