@@ -187,12 +187,18 @@ object PreventTheSpread : ModInitializer {
 		}
 		.build()
 
+	object StoryAdvancement {
+		private fun storyIdentifier(path: String) = PreventTheSpread.identifier("story/$path")
+
+		val ROOT_ID = storyIdentifier("root")
+		val OBTAIN_PROBE_ID = storyIdentifier("obtain_probe")
+		val GET_SAMPLE_ID = storyIdentifier("get_sample")
+	}
+
 	object ResearchAdvancement {
 		private fun researchIdentifier(path: String) = PreventTheSpread.identifier("research/$path")
 
 		val ROOT_ID = researchIdentifier("root")
-		val OBTAIN_PROBE_ID = researchIdentifier("obtain_probe")
-		val GET_SAMPLE_ID = researchIdentifier("get_sample")
 		val SURGERY_EFFICIENCY_1_ID = researchIdentifier("surgery_efficiency_1")
 		val SURGERY_EFFICIENCY_2_ID = researchIdentifier("surgery_efficiency_2")
 		val CHEMOTHERAPEUTIC_DRUG_ID = researchIdentifier(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path)

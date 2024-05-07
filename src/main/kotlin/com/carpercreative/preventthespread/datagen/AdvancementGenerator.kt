@@ -2,6 +2,7 @@ package com.carpercreative.preventthespread.datagen
 
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.PreventTheSpread.ResearchAdvancement
+import com.carpercreative.preventthespread.PreventTheSpread.StoryAdvancement
 import java.util.function.Consumer
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider
@@ -62,11 +63,11 @@ class AdvancementGenerator(
 	}
 
 	override fun generateAdvancement(consumer: Consumer<AdvancementEntry>) {
-		val root = Advancement.Builder.createUntelemetered()
+		val storyRoot = Advancement.Builder.createUntelemetered()
 			.display(
-				PreventTheSpread.PROCESSING_TABLE_BLOCK_ITEM.defaultStack,
-				ResearchAdvancement.ROOT_ID.titleText,
-				ResearchAdvancement.ROOT_ID.descriptionText,
+				PreventTheSpread.CANCER_STONE_BLOCK_ITEM.defaultStack,
+				StoryAdvancement.ROOT_ID.titleText,
+				StoryAdvancement.ROOT_ID.descriptionText,
 				Identifier("textures/gui/advancements/backgrounds/adventure.png"),
 				AdvancementFrame.TASK,
 				true,
@@ -75,11 +76,11 @@ class AdvancementGenerator(
 			)
 			.withImpossibleCriterion()
 			.rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.PROBE_ITEM_ID))
-			.build(consumer, ResearchAdvancement.ROOT_ID)
+			.build(consumer, StoryAdvancement.ROOT_ID)
 
 		val obtainProbe = consumer.createAdvancement(
-			ResearchAdvancement.OBTAIN_PROBE_ID,
-			root,
+			StoryAdvancement.OBTAIN_PROBE_ID,
+			storyRoot,
 			PreventTheSpread.PROBE_ITEM.defaultStack,
 		) {
 			criterion("obtained_probe", InventoryChangedCriterion.Conditions.items(PreventTheSpread.PROBE_ITEM))
@@ -88,7 +89,7 @@ class AdvancementGenerator(
 		}
 
 		val getSample = consumer.createAdvancement(
-			ResearchAdvancement.GET_SAMPLE_ID,
+			StoryAdvancement.GET_SAMPLE_ID,
 			obtainProbe,
 			PreventTheSpread.CANCER_STONE_BLOCK_ITEM.defaultStack,
 		) {
@@ -105,10 +106,24 @@ class AdvancementGenerator(
 			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.SURGERY_SHOVEL_ITEM_ID))
 		}
 
+		val researchRoot = Advancement.Builder.createUntelemetered()
+			.display(
+				PreventTheSpread.PROCESSING_TABLE_BLOCK_ITEM.defaultStack,
+				ResearchAdvancement.ROOT_ID.titleText,
+				ResearchAdvancement.ROOT_ID.descriptionText,
+				Identifier("textures/gui/advancements/backgrounds/adventure.png"),
+				AdvancementFrame.TASK,
+				true,
+				false,
+				false,
+			)
+			.withImpossibleCriterion()
+			.build(consumer, ResearchAdvancement.ROOT_ID)
+
 		// Surgery tools.
 		val surgeryEfficiency1 = consumer.createResearchAdvancement(
 			ResearchAdvancement.SURGERY_EFFICIENCY_1_ID,
-			getSample,
+			researchRoot,
 			PreventTheSpread.SURGERY_PICKAXE_ITEM.defaultStack,
 		)
 
@@ -121,7 +136,7 @@ class AdvancementGenerator(
 		// Chemotherapeutic drug.
 		val chemotherapeuticDrug = consumer.createResearchAdvancement(
 			ResearchAdvancement.CHEMOTHERAPEUTIC_DRUG_ID,
-			getSample,
+			researchRoot,
 			PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM.defaultStack,
 		) {
 			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID))
@@ -148,7 +163,7 @@ class AdvancementGenerator(
 		// Radiation staff.
 		val radiationStaff = consumer.createResearchAdvancement(
 			ResearchAdvancement.RADIATION_STAFF_ID,
-			getSample,
+			researchRoot,
 			PreventTheSpread.CANCER_STONE_BLOCK_ITEM.defaultStack,
 		) {
 			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.RADIATION_STAFF_ITEM_ID))
@@ -157,7 +172,7 @@ class AdvancementGenerator(
 		// Targeted drug.
 		val targetedDrug = consumer.createResearchAdvancement(
 			ResearchAdvancement.TARGETED_DRUG_ID,
-			getSample,
+			researchRoot,
 			PreventTheSpread.TARGETED_DRUG_INJECTOR_BLOCK_ITEM.defaultStack,
 		) {
 			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.TARGETED_DRUG_INJECTOR_ID))
