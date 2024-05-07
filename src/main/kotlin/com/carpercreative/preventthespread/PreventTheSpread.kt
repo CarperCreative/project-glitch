@@ -151,6 +151,7 @@ object PreventTheSpread : ModInitializer {
 	val SURGERY_PICKAXE_MINEABLE_BLOCK_TAG: TagKey<Block> = TagKey.of(RegistryKeys.BLOCK, identifier("mineable/surgery_pickaxe"))
 	val SURGERY_SHOVEL_MINEABLE_BLOCK_TAG: TagKey<Block> = TagKey.of(RegistryKeys.BLOCK, identifier("mineable/surgery_shovel"))
 
+	val REQUIRES_RECIPE_TO_CRAFT_ITEM_TAG: TagKey<Item> = TagKey.of(RegistryKeys.ITEM, identifier("requires_recipe_to_craft"))
 	val SURGERY_TOOL_ITEM_TAG: TagKey<Item> = TagKey.of(RegistryKeys.ITEM, identifier("surgery_tool"))
 
 	val CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE: EntityType<ChemotherapeuticDrugEntity> = EntityType.Builder.create({ entityType, world -> ChemotherapeuticDrugEntity(entityType, world) }, SpawnGroup.MISC).makeFireImmune().setDimensions(0.98f, 0.98f).maxTrackingRange(10).trackingTickInterval(10).build()

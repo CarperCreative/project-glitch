@@ -3,6 +3,7 @@
 	"package": "com.carpercreative.preventthespread.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
+		"CraftingScreenHandlerMixin",
 		"ExampleMixin"
 	],
 	"injectors": {
