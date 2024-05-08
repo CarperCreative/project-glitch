@@ -127,12 +127,16 @@ object PreventTheSpread : ModInitializer {
 
 	val PROCESSING_TABLE_BLOCK_ENTITY: BlockEntityType<ProcessingTableAnalyzerBlockEntity> = BlockEntityType.Builder.create(::ProcessingTableAnalyzerBlockEntity, PROCESSING_TABLE_BLOCK).build()
 
+	val CANCEROUS_MATERIAL_ID = identifier("cancerous_material")
+	val CANCEROUS_MATERIAL_ITEM = Item(Item.Settings())
 	val DEBUG_TOOL_ITEM_ID = identifier("debug_tool")
 	val DEBUG_TOOL_ITEM = DebugToolItem(FabricItemSettings().maxCount(1).rarity(Rarity.EPIC))
 	val PROBE_ITEM_ID = identifier("probe")
 	val PROBE_ITEM = ProbeItem(FabricItemSettings().maxCount(1))
 	val RADIATION_STAFF_ITEM_ID = identifier("radiation_staff")
 	val RADIATION_STAFF_ITEM = RadiationStaffItem(FabricItemSettings().maxCount(1).maxDamage(60).customDamage(RadiationStaffItem.RadiationBeamGunDamageHandler))
+	val RESEARCH_ID = identifier("research")
+	val RESEARCH_ITEM = Item(Item.Settings())
 	val SCANNER_ITEM_ID = identifier("scanner")
 	val SCANNER_ITEM = ScannerItem(FabricItemSettings())
 	val SURGERY_AXE_ITEM_ID = identifier("surgery_axe")
@@ -165,6 +169,8 @@ object PreventTheSpread : ModInitializer {
 			entries.add(SCANNER_ITEM)
 			entries.add(PROBE_ITEM)
 			entries.add(PROCESSING_TABLE_BLOCK_ITEM)
+			entries.add(CANCEROUS_MATERIAL_ITEM)
+			entries.add(RESEARCH_ITEM)
 			entries.add(CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM)
 			entries.add(RADIATION_STAFF_ITEM)
 			entries.add(SURGERY_AXE_ITEM)
@@ -247,9 +253,11 @@ object PreventTheSpread : ModInitializer {
 
 		Registry.register(Registries.BLOCK_ENTITY_TYPE, PROCESSING_TABLE_ID, PROCESSING_TABLE_BLOCK_ENTITY)
 
+		Registry.register(Registries.ITEM, CANCEROUS_MATERIAL_ID, CANCEROUS_MATERIAL_ITEM)
 		Registry.register(Registries.ITEM, DEBUG_TOOL_ITEM_ID, DEBUG_TOOL_ITEM)
 		Registry.register(Registries.ITEM, PROBE_ITEM_ID, PROBE_ITEM)
 		Registry.register(Registries.ITEM, RADIATION_STAFF_ITEM_ID, RADIATION_STAFF_ITEM)
+		Registry.register(Registries.ITEM, RESEARCH_ID, RESEARCH_ITEM)
 		Registry.register(Registries.ITEM, SCANNER_ITEM_ID, SCANNER_ITEM)
 		Registry.register(Registries.ITEM, SURGERY_AXE_ITEM_ID, SURGERY_AXE_ITEM)
 		Registry.register(Registries.ITEM, SURGERY_HOE_ITEM_ID, SURGERY_HOE_ITEM)
@@ -268,7 +276,7 @@ object PreventTheSpread : ModInitializer {
 		CancerSpreadController.init()
 
 		// TODO: replace cancer block textures
-		// TODO: replace targeted drug injector model and block state to indicate progress
+		// TODO: add cancerous material and research item textures
 		// TODO: create research GUI
 		// TODO: create research state store (per player?)
 		// TODO: implement towers/beacons
