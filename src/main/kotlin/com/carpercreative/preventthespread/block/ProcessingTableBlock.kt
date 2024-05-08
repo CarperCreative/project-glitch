@@ -17,6 +17,7 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.NamedScreenHandlerFactory
+import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
@@ -145,6 +146,16 @@ class ProcessingTableBlock(
 				// TODO: increment use stat
 			}
 			is ProcessingTableResearchBlockEntity -> {
+				// Unlock the root research advancement.
+				world.server!!.advancementLoader.get(PreventTheSpread.ResearchAdvancement.ROOT_ID)?.also { researchRootAdvancement ->
+					val advancementTracker = (player as ServerPlayerEntity).advancementTracker
+					if (advancementTracker.getProgress(researchRootAdvancement).isDone) return@also
+
+					for (criterion in researchRootAdvancement.value.criteria) {
+						advancementTracker.grantCriterion(researchRootAdvancement, criterion.key)
+					}
+				}
+
 				player.openHandledScreen(blockEntity as NamedScreenHandlerFactory)
 				// TODO: increment use stat
 			}

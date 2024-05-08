@@ -52,11 +52,14 @@ class ProcessingTableResearchScreen(
 		// Awful. Cursed. What the fuck.
 		advancementsScreen = AdvancementsScreen(advancementHandler)
 		advancementsScreen.init(client, width, height)
-
-		advancementsScreen.selectTab(advancementHandler.get(PreventTheSpread.ResearchAdvancement.ROOT_ID))
 	}
 
 	override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+		// Attempt to switch to the root research advancement until it's granted.
+		if (selectedTab?.root?.advancementEntry?.id != PreventTheSpread.ResearchAdvancement.ROOT_ID) {
+			advancementsScreen.selectTab(advancementHandler.get(PreventTheSpread.ResearchAdvancement.ROOT_ID))
+		}
+
 		super.render(context, mouseX, mouseY, delta)
 
 		drawAdvancementTooltip(context, mouseX, mouseY, delta)
