@@ -1,9 +1,12 @@
 package com.carpercreative.preventthespread.client.gui.screen
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.networking.SelectResearchPacket
 import com.carpercreative.preventthespread.screen.ProcessingTableResearchScreenHandler
 import com.mojang.blaze3d.systems.RenderSystem
 import kotlin.math.roundToInt
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.minecraft.advancement.AdvancementEntry
 import net.minecraft.advancement.AdvancementProgress
 import net.minecraft.client.gui.DrawContext
@@ -11,6 +14,7 @@ import net.minecraft.client.gui.screen.advancement.AdvancementTab
 import net.minecraft.client.gui.screen.advancement.AdvancementWidget
 import net.minecraft.client.gui.screen.advancement.AdvancementsScreen
 import net.minecraft.client.gui.screen.ingame.HandledScreen
+import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.network.ClientAdvancementManager
 import net.minecraft.client.sound.PositionedSoundInstance
 import net.minecraft.entity.player.PlayerInventory
@@ -33,12 +37,22 @@ class ProcessingTableResearchScreen(
 	private lateinit var advancementsScreen: AdvancementsScreen
 	private val selectedTab get() = SELECTED_TAB_FIELD.get(advancementsScreen) as AdvancementTab?
 
+	private lateinit var researchButton: ButtonWidget
+
 	/**
 	 * `true` if the advancements widget is being moved.
 	 */
 	private var movingTab = false
 
 	private var selectedAdvancement: SelectedAdvancement? = null
+		set(value) {
+			field = value
+
+			ClientPlayNetworking.send(
+				PreventTheSpread.SELECT_RESEARCH_PACKET_ID,
+				PacketByteBufs.create().also { SelectResearchPacket(value?.identifier).write(it) },
+			)
+		}
 
 	override fun init() {
 		backgroundWidth = 252
@@ -52,6 +66,21 @@ class ProcessingTableResearchScreen(
 		// Awful. Cursed. What the fuck.
 		advancementsScreen = AdvancementsScreen(advancementHandler)
 		advancementsScreen.init(client, width, height)
+
+		researchButton = ButtonWidget
+			.builder(Text.translatable("container.${PreventTheSpread.MOD_ID}.processing_table_research.research_button")) {
+				client!!.interactionManager!!.clickButton(handler.syncId, ProcessingTableResearchScreenHandler.RESEARCH_BUTTON_ID)
+
+				selectedAdvancement = null
+			}
+			.position(x + 174, y + 165)
+			.width(70)
+			.build()
+			.also(::addDrawableChild)
+	}
+
+	private fun updateResearchButton() {
+		researchButton.active = selectedAdvancement != null && handler.researchItemCount > 0
 	}
 
 	override fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
@@ -59,6 +88,8 @@ class ProcessingTableResearchScreen(
 		if (selectedTab?.root?.advancementEntry?.id != PreventTheSpread.ResearchAdvancement.ROOT_ID) {
 			advancementsScreen.selectTab(advancementHandler.get(PreventTheSpread.ResearchAdvancement.ROOT_ID))
 		}
+
+		updateResearchButton()
 
 		super.render(context, mouseX, mouseY, delta)
 

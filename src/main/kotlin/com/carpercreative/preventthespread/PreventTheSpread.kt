@@ -21,11 +21,13 @@ import com.carpercreative.preventthespread.item.SurgeryAxeItem
 import com.carpercreative.preventthespread.item.SurgeryHoeItem
 import com.carpercreative.preventthespread.item.SurgeryPickaxeItem
 import com.carpercreative.preventthespread.item.SurgeryShovelItem
+import com.carpercreative.preventthespread.networking.SelectResearchPacket
 import com.carpercreative.preventthespread.screen.ProcessingTableAnalyzerScreenHandler
 import com.carpercreative.preventthespread.screen.ProcessingTableResearchScreenHandler
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
@@ -164,6 +166,8 @@ object PreventTheSpread : ModInitializer {
 	val PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER = ScreenHandlerType(::ProcessingTableAnalyzerScreenHandler, FeatureFlags.VANILLA_FEATURES)
 	val PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER = ScreenHandlerType(::ProcessingTableResearchScreenHandler, FeatureFlags.VANILLA_FEATURES)
 
+	val SELECT_RESEARCH_PACKET_ID = identifier("select_research")
+
 	private val ITEM_GROUP = FabricItemGroup.builder()
 		.icon { ItemStack(CANCER_DIRT_BLOCK_ITEM) }
 		.displayName(Text.translatable("itemGroup.$MOD_ID.default"))
@@ -273,6 +277,8 @@ object PreventTheSpread : ModInitializer {
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_analyzer"), PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER)
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_research"), PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER)
 
+		ServerPlayNetworking.registerGlobalReceiver(SELECT_RESEARCH_PACKET_ID, SelectResearchPacket::handle)
+
 		Storage.init()
 
 		BossBarController.init()
@@ -280,7 +286,6 @@ object PreventTheSpread : ModInitializer {
 
 		// TODO: replace cancer block textures
 		// TODO: add cancerous material and research item textures
-		// TODO: create research GUI
 		// TODO: create research state store (per player?)
 		// TODO: implement towers/beacons
 		// TODO: implement radiation staff recharge rate and/or heat capacity research
