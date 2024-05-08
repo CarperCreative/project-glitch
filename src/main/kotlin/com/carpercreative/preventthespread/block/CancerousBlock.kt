@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.BlockState
 import net.minecraft.block.MapColor
 import net.minecraft.block.piston.PistonBehavior
+import net.minecraft.entity.ItemEntity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
@@ -41,7 +42,12 @@ object CancerousBlock {
 		world as ServerWorld
 
 		if (!newState.isCancerous()) {
-			world.getBlobMembershipPersistentState().removeMembership(pos)
+			val cancerBlob = world.getBlobMembershipPersistentState().removeMembership(pos)
+
+			if (cancerBlob != null && cancerBlob.cancerousBlockCount == 0) {
+				val itemPos = pos.toCenterPos()
+				world.spawnEntity(ItemEntity(world, itemPos.x, itemPos.y, itemPos.z, PreventTheSpread.CANCEROUS_MATERIAL_ITEM.defaultStack))
+			}
 		}
 	}
 
