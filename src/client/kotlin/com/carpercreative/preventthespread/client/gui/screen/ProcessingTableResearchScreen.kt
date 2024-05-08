@@ -161,6 +161,7 @@ class ProcessingTableResearchScreen(
 	override fun mouseScrolled(mouseX: Double, mouseY: Double, horizontalAmount: Double, verticalAmount: Double): Boolean {
 		if (isInsideAdvancementsWidget(mouseX, mouseY)) {
 			selectedTab?.move(horizontalAmount * 16.0, verticalAmount * 16.0)
+			selectedAdvancement = null
 			return true
 		}
 
