@@ -3,6 +3,7 @@ package com.carpercreative.preventthespread.block
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableResearchBlockEntity
+import com.carpercreative.preventthespread.util.grantAdvancement
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -147,14 +148,7 @@ class ProcessingTableBlock(
 			}
 			is ProcessingTableResearchBlockEntity -> {
 				// Unlock the root research advancement.
-				world.server!!.advancementLoader.get(PreventTheSpread.ResearchAdvancement.ROOT_ID)?.also { researchRootAdvancement ->
-					val advancementTracker = (player as ServerPlayerEntity).advancementTracker
-					if (advancementTracker.getProgress(researchRootAdvancement).isDone) return@also
-
-					for (criterion in researchRootAdvancement.value.criteria) {
-						advancementTracker.grantCriterion(researchRootAdvancement, criterion.key)
-					}
-				}
+				(player as ServerPlayerEntity).grantAdvancement(PreventTheSpread.ResearchAdvancement.ROOT_ID)
 
 				player.openHandledScreen(blockEntity as NamedScreenHandlerFactory)
 				// TODO: increment use stat
