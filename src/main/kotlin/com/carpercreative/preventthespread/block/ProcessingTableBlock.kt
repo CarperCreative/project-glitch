@@ -2,6 +2,7 @@ package com.carpercreative.preventthespread.block
 
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
+import com.carpercreative.preventthespread.blockEntity.ProcessingTableResearchBlockEntity
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -9,8 +10,10 @@ import net.minecraft.block.Blocks
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityTicker
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.block.entity.LockableContainerBlockEntity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.NamedScreenHandlerFactory
@@ -50,9 +53,11 @@ class ProcessingTableBlock(
 	override fun <T : BlockEntity> getTicker(world: World, state: BlockState, type: BlockEntityType<T>): BlockEntityTicker<T>? {
 		if (world.isClient) return null
 
+		if (type != PreventTheSpread.PROCESSING_TABLE_BLOCK_ENTITY) return null
+
 		@Suppress("UNCHECKED_CAST")
-		return when {
-			type == PreventTheSpread.PROCESSING_TABLE_BLOCK_ENTITY -> ProcessingTableAnalyzerBlockEntity.Ticker as BlockEntityTicker<T>
+		return when (state.get(PROCESSING_TABLE_PART)) {
+			ProcessingTablePart.LEFT -> ProcessingTableAnalyzerBlockEntity.Ticker as BlockEntityTicker<T>
 			else -> null
 		}
 	}
@@ -123,7 +128,7 @@ class ProcessingTableBlock(
 		if (!world.isClient) {
 			world as ServerWorld
 
-			(world.getBlockEntity(pos) as? ProcessingTableAnalyzerBlockEntity)?.let { ItemScatterer.spawn(world, pos, it) }
+			(world.getBlockEntity(pos) as? Inventory)?.let { ItemScatterer.spawn(world, pos, it) }
 		}
 
 		super.onStateReplaced(state, world, pos, newState, moved)
@@ -134,18 +139,24 @@ class ProcessingTableBlock(
 			return ActionResult.SUCCESS
 		}
 
-		val blockEntity = world.getBlockEntity(pos)
-		if (blockEntity is ProcessingTableAnalyzerBlockEntity) {
-			player.openHandledScreen(blockEntity as NamedScreenHandlerFactory)
-			// TODO: increment use stat
+		when (val blockEntity = world.getBlockEntity(pos)) {
+			is ProcessingTableAnalyzerBlockEntity -> {
+				player.openHandledScreen(blockEntity as NamedScreenHandlerFactory)
+				// TODO: increment use stat
+			}
+			is ProcessingTableResearchBlockEntity -> {
+				player.openHandledScreen(blockEntity as NamedScreenHandlerFactory)
+				// TODO: increment use stat
+			}
 		}
 
 		return ActionResult.CONSUME
 	}
 
-	override fun createBlockEntity(pos: BlockPos, state: BlockState): ProcessingTableAnalyzerBlockEntity? {
+	override fun createBlockEntity(pos: BlockPos, state: BlockState): LockableContainerBlockEntity? {
 		return when (state.get(PROCESSING_TABLE_PART)) {
 			ProcessingTablePart.LEFT -> ProcessingTableAnalyzerBlockEntity(pos, state)
+			ProcessingTablePart.RIGHT -> ProcessingTableResearchBlockEntity(pos, state)
 			else -> null
 		}
 	}

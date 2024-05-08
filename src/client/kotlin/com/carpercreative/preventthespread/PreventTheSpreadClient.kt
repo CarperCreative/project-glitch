@@ -1,6 +1,7 @@
 package com.carpercreative.preventthespread
 
 import com.carpercreative.preventthespread.client.gui.screen.ProcessingTableAnalyzerScreen
+import com.carpercreative.preventthespread.client.gui.screen.ProcessingTableResearchScreen
 import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
 import com.carpercreative.preventthespread.item.RadiationStaffItem
@@ -45,5 +46,6 @@ object PreventTheSpreadClient : ClientModInitializer {
 		EntityRendererRegistry.register(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE) { context -> TntEntityRenderer(context) }
 
 		HandledScreens.register(PreventTheSpread.PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER, ::ProcessingTableAnalyzerScreen)
+		HandledScreens.register(PreventTheSpread.PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER, ::ProcessingTableResearchScreen)
 	}
 }

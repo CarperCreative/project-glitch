@@ -46,6 +46,7 @@
 	"container.preventthespread.processing_table_analyzer": "Processing Table",
 	"container.preventthespread.processing_table_analyzer.empty_book_tooltip.0": "To start analysis, insert a writable book",
 	"container.preventthespread.processing_table_analyzer.empty_book_tooltip.1": "or a book containing previous analysis results.",
+	"container.preventthespread.processing_table_research": "Research Table",
 	"item.preventthespread.cancerous_material": "Cancerous Material",
 	"item.preventthespread.probe.empty": "Empty Probe",
 	"item.preventthespread.probe.full": "Probe with Sample",

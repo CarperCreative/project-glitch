@@ -22,6 +22,7 @@ import com.carpercreative.preventthespread.item.SurgeryHoeItem
 import com.carpercreative.preventthespread.item.SurgeryPickaxeItem
 import com.carpercreative.preventthespread.item.SurgeryShovelItem
 import com.carpercreative.preventthespread.screen.ProcessingTableAnalyzerScreenHandler
+import com.carpercreative.preventthespread.screen.ProcessingTableResearchScreenHandler
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
@@ -161,6 +162,7 @@ object PreventTheSpread : ModInitializer {
 	val CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE: EntityType<ChemotherapeuticDrugEntity> = EntityType.Builder.create({ entityType, world -> ChemotherapeuticDrugEntity(entityType, world) }, SpawnGroup.MISC).makeFireImmune().setDimensions(0.98f, 0.98f).maxTrackingRange(10).trackingTickInterval(10).build()
 
 	val PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER = ScreenHandlerType(::ProcessingTableAnalyzerScreenHandler, FeatureFlags.VANILLA_FEATURES)
+	val PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER = ScreenHandlerType(::ProcessingTableResearchScreenHandler, FeatureFlags.VANILLA_FEATURES)
 
 	private val ITEM_GROUP = FabricItemGroup.builder()
 		.icon { ItemStack(CANCER_DIRT_BLOCK_ITEM) }
@@ -269,6 +271,7 @@ object PreventTheSpread : ModInitializer {
 		Registry.register(Registries.ENTITY_TYPE, CHEMOTHERAPEUTIC_DRUG_ID, CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE)
 
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_analyzer"), PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER)
+		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_research"), PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER)
 
 		Storage.init()
 

@@ -1,0 +1,80 @@
+package com.carpercreative.preventthespread.screen
+
+import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
+import com.carpercreative.preventthespread.blockEntity.ProcessingTableResearchBlockEntity
+import com.carpercreative.preventthespread.screen.slot.ResearchInputSlot
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.inventory.Inventory
+import net.minecraft.inventory.SimpleInventory
+import net.minecraft.item.ItemStack
+import net.minecraft.screen.ScreenHandler
+import net.minecraft.screen.slot.Slot
+
+class ProcessingTableResearchScreenHandler(
+	syncId: Int,
+	private val playerInventory: PlayerInventory,
+	private val inventory: Inventory,
+) : ScreenHandler(
+	PreventTheSpread.PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER,
+	syncId,
+) {
+	constructor(
+		syncId: Int,
+		playerInventory: PlayerInventory,
+	) : this(
+		syncId,
+		playerInventory,
+		SimpleInventory(ProcessingTableAnalyzerBlockEntity.SLOT_COUNT),
+	)
+
+	init {
+		addSlot(ResearchInputSlot(inventory, ProcessingTableResearchBlockEntity.RESEARCH_SLOT_INDEX, 188, 140))
+
+		for (y in 0..2) {
+			for (x in 0..8) {
+				addSlot(Slot(playerInventory, x + y * 9 + 9, 8 + x * 18, 140 + y * 18))
+			}
+		}
+		for (x in 0..8) {
+			addSlot(Slot(playerInventory, x, 8 + x * 18, 198))
+		}
+	}
+
+	override fun quickMove(player: PlayerEntity, slotIndex: Int): ItemStack {
+		// This function doesn't match what the game does, as it always returns ItemStack.EMPTY.
+		// Trying to follow what the game does (returning a copy of the original stack) results in an infinite loop.
+		// Inventory handling in this game is just awful.
+		val slot = getSlot(slotIndex)
+		if (slot == null || !slot.hasStack()) return ItemStack.EMPTY
+
+		val slotStack = slot.stack
+
+		if (slot.inventory == playerInventory) {
+			if (!insertItem(slotStack, ProcessingTableResearchBlockEntity.RESEARCH_SLOT_INDEX, ProcessingTableResearchBlockEntity.RESEARCH_SLOT_INDEX + 1, false)) {
+				return ItemStack.EMPTY
+			}
+		} else if (slot.inventory == inventory) {
+			if (!insertItem(slotStack, inventory.size(), slots.size, true)) {
+				return ItemStack.EMPTY
+			}
+		}
+
+		if (slotStack.isEmpty) {
+			slot.stack = ItemStack.EMPTY
+		} else {
+			slot.markDirty()
+		}
+
+		return ItemStack.EMPTY
+	}
+
+	override fun canUse(player: PlayerEntity?): Boolean {
+		return inventory.canPlayerUse(player)
+	}
+
+	override fun canInsertIntoSlot(stack: ItemStack, slot: Slot): Boolean {
+		return slot.canInsert(stack)
+	}
+}
