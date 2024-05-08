@@ -89,7 +89,7 @@ class ProcessingTableResearchScreen(
 	}
 
 	override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, deltaX: Double, deltaY: Double): Boolean {
-		if (button != 0) {
+		if (button != GLFW.GLFW_MOUSE_BUTTON_LEFT) {
 			movingTab = false
 			return false
 		}
@@ -151,7 +151,7 @@ class ProcessingTableResearchScreen(
 	}
 
 	override fun mouseReleased(mouseX: Double, mouseY: Double, button: Int): Boolean {
-		if (button == 0) {
+		if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
 			movingTab = false
 		}
 
