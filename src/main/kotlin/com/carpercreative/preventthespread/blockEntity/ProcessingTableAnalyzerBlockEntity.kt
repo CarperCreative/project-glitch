@@ -354,6 +354,10 @@ class ProcessingTableAnalyzerBlockEntity(
 					ProbeItem.setSampleCancerBlobId(analyzedStack, null)
 					analyzedStack
 				}
+				analyzedStack.isOf(PreventTheSpread.CANCEROUS_MATERIAL_ITEM) -> {
+					analyzedStack.count = 0
+					PreventTheSpread.RESEARCH_ITEM.defaultStack
+				}
 				// If we somehow analyzed an item we don't recognize, output it as is.
 				else -> analyzedStack
 			}
