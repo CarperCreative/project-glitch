@@ -35,20 +35,21 @@ class BlobMembershipPersistentState : PersistentState() {
 		markDirty()
 	}
 
-	fun removeMembership(blockPos: BlockPos) {
+	fun removeMembership(blockPos: BlockPos): CancerBlob? {
 		val cancerBlobId = memberships.remove(blockPos)
+		val cancerBlob = cancerBlobId?.let(Storage.cancerBlob::getCancerBlobByIdOrNull)
 
-		if (cancerBlobId != null) {
-			Storage.cancerBlob.getCancerBlobByIdOrNull(cancerBlobId)?.also { cancerBlob ->
-				Storage.cancerBlob.incrementCancerousBlockCount(cancerBlob, -1)
+		if (cancerBlob != null) {
+			Storage.cancerBlob.incrementCancerousBlockCount(cancerBlob, -1)
 
-				if (cancerBlob.cancerousBlockCount == 0) {
-					Storage.spreadDifficulty.incrementDefeatedBlobs()
-				}
+			if (cancerBlob.cancerousBlockCount == 0) {
+				Storage.spreadDifficulty.incrementDefeatedBlobs()
 			}
 		}
 
 		markDirty()
+
+		return cancerBlob
 	}
 
 	fun getMembershipOrNull(blockPos: BlockPos): BlobIdentifier? {
