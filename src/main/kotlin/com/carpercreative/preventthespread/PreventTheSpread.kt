@@ -10,6 +10,7 @@ import com.carpercreative.preventthespread.block.ProcessingTableBlock
 import com.carpercreative.preventthespread.block.SolidCancerBlock
 import com.carpercreative.preventthespread.block.TargetedDrugInjectorBlock
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
+import com.carpercreative.preventthespread.blockEntity.ProcessingTableResearchBlockEntity
 import com.carpercreative.preventthespread.controller.BossBarController
 import com.carpercreative.preventthespread.controller.CancerSpreadController
 import com.carpercreative.preventthespread.entity.ChemotherapeuticDrugEntity
@@ -32,6 +33,7 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.block.MapColor
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.block.piston.PistonBehavior
 import net.minecraft.entity.EntityType
@@ -128,7 +130,14 @@ object PreventTheSpread : ModInitializer {
 	)
 	val TARGETED_DRUG_INJECTOR_BLOCK_ITEM = BlockItem(TARGETED_DRUG_INJECTOR_BLOCK, FabricItemSettings())
 
-	val PROCESSING_TABLE_BLOCK_ENTITY: BlockEntityType<ProcessingTableAnalyzerBlockEntity> = BlockEntityType.Builder.create(::ProcessingTableAnalyzerBlockEntity, PROCESSING_TABLE_BLOCK).build()
+	val PROCESSING_TABLE_BLOCK_ENTITY: BlockEntityType<BlockEntity> = BlockEntityType.Builder.create({ pos, state ->
+		@Suppress("USELESS_CAST") // Idea/Kotlin compiler incorrectly reports the cast as useless because its heuristics are wrong.
+		when (val propertyValue = state.get(ProcessingTableBlock.PROCESSING_TABLE_PART)) {
+			ProcessingTableBlock.ProcessingTablePart.LEFT -> ProcessingTableAnalyzerBlockEntity(pos, state)
+			ProcessingTableBlock.ProcessingTablePart.RIGHT -> ProcessingTableResearchBlockEntity(pos, state)
+			else -> throw IllegalArgumentException("Unknown property value: $propertyValue")
+		} as BlockEntity
+	}, PROCESSING_TABLE_BLOCK).build()
 
 	val CANCEROUS_MATERIAL_ID = identifier("cancerous_material")
 	val CANCEROUS_MATERIAL_ITEM = Item(Item.Settings())
