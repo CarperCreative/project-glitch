@@ -113,7 +113,7 @@ class AdvancementGenerator(
 				ResearchAdvancement.ROOT_ID.descriptionText,
 				Identifier("textures/gui/advancements/backgrounds/adventure.png"),
 				AdvancementFrame.TASK,
-				true,
+				false,
 				false,
 				false,
 			)
