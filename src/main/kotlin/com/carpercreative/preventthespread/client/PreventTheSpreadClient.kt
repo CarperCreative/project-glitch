@@ -1,5 +1,6 @@
-package com.carpercreative.preventthespread
+package com.carpercreative.preventthespread.client
 
+import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.client.gui.screen.ProcessingTableAnalyzerScreen
 import com.carpercreative.preventthespread.client.gui.screen.ProcessingTableResearchScreen
 import com.carpercreative.preventthespread.item.DebugToolItem
