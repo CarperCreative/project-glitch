@@ -9,9 +9,9 @@ fun PlayerEntity.getSurgeryEfficiencyLevel(): Int {
 	return 0
 }
 
-fun PlayerEntity.getSurgeryEfficiencyMultiplier(): Float {
+fun PlayerEntity.getSurgeryEfficiencyEnchantmentLevel(): Int {
 	return when (val level = getSurgeryEfficiencyLevel()) {
-		0 -> 0f
-		else -> (level + 2).let { it * it + 1f }
+		0 -> 0
+		else -> (level * 2) + 1
 	}
 }

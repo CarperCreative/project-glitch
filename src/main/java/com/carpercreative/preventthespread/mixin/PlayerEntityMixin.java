@@ -1,31 +1,26 @@
 package com.carpercreative.preventthespread.mixin;
 
 import com.carpercreative.preventthespread.PreventTheSpread;
-import com.carpercreative.preventthespread.cancer.CancerLogic;
 import com.carpercreative.preventthespread.util.ResearchHelperKt;
-import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin {
-	@Inject(
+	@Redirect(
 		method = "getBlockBreakingSpeed(Lnet/minecraft/block/BlockState;)F",
-		at = @At("RETURN"),
-		cancellable = true
+		at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;getEfficiency(Lnet/minecraft/entity/LivingEntity;)I")
 	)
-	public void getBlockBreakingSpeed$surgeryEfficiencyResearch(BlockState block, CallbackInfoReturnable<Float> cir) {
+	public int surgeryEfficiencyResearch$getBlockBreakingSpeed$getEfficiency(LivingEntity entity) {
 		PlayerEntity that = (PlayerEntity) (Object) this;
-		if (
-			cir.getReturnValueF() >= 1f
-			&& CancerLogic.INSTANCE.isCancerous(block)
-			&& that.getMainHandStack().isIn(PreventTheSpread.INSTANCE.getSURGERY_TOOL_ITEM_TAG())
-		) {
-			float researchMultiplier = ResearchHelperKt.getSurgeryEfficiencyMultiplier(that);
-			cir.setReturnValue(cir.getReturnValueF() + researchMultiplier);
+		if (that.getMainHandStack().isIn(PreventTheSpread.INSTANCE.getSURGERY_TOOL_ITEM_TAG())) {
+			return ResearchHelperKt.getSurgeryEfficiencyEnchantmentLevel(that);
+		} else {
+			return EnchantmentHelper.getEfficiency(entity);
 		}
 	}
 }
