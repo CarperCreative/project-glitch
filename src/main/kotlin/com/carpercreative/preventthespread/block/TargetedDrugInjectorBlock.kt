@@ -93,7 +93,7 @@ class TargetedDrugInjectorBlock(
 	override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: Random) {
 		val progress = state.get(PROGRESS)
 		val targetPos = pos.offset(state.get(FACING).opposite)
-		val cancerousBlockPositions = BlockSearch.findBlocks(world, targetPos, (progress / 8f * INJECTED_BLOCK_COUNT).roundToInt())
+		val cancerousBlockPositions = BlockSearch.findBlocks(world, targetPos, (progress.toFloat() / MAX_PROGRESS * INJECTED_BLOCK_COUNT).roundToInt())
 
 		for (cancerousBlockPos in cancerousBlockPositions) {
 			world.addBlockBreakParticles(cancerousBlockPos, world.getBlockState(cancerousBlockPos))
