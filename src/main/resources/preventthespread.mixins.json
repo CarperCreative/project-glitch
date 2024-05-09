@@ -5,7 +5,8 @@
 	"mixins": [
 		"CraftingScreenHandlerMixin",
 		"ExampleMixin",
-		"PlayerEntityMixin"
+		"PlayerEntityMixin",
+		"TntEntityMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

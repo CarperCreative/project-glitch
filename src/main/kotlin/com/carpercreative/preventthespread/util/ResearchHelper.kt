@@ -16,6 +16,12 @@ fun PlayerEntity.getSurgeryEfficiencyEnchantmentLevel(): Int {
 	}
 }
 
+fun PlayerEntity.getChemotherapeuticDrugStrength(): Int {
+	if (hasAdvancement(PreventTheSpread.ResearchAdvancement.CHEMOTHERAPEUTIC_DRUG_STRENGTH_2_ID)) return 2
+	if (hasAdvancement(PreventTheSpread.ResearchAdvancement.CHEMOTHERAPEUTIC_DRUG_STRENGTH_1_ID)) return 1
+	return 0
+}
+
 fun PlayerEntity.getTargetedDrugInjectorStrength(): Int {
 	if (hasAdvancement(PreventTheSpread.ResearchAdvancement.TARGETED_DRUG_STRENGTH_2_ID)) return 2
 	if (hasAdvancement(PreventTheSpread.ResearchAdvancement.TARGETED_DRUG_STRENGTH_1_ID)) return 1
