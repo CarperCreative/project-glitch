@@ -4,9 +4,9 @@ import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
 import com.carpercreative.preventthespread.cancer.TreatmentType
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
+import com.carpercreative.preventthespread.util.BlockSearch
 import com.carpercreative.preventthespread.util.getTargetedDrugInjectorStrength
 import com.mojang.serialization.MapCodec
-import java.util.LinkedList
 import kotlin.jvm.optionals.getOrNull
 import kotlin.math.roundToInt
 import net.minecraft.block.BarrierBlock
@@ -75,7 +75,7 @@ class TargetedDrugInjectorBlock(
 		// Perform the injection.
 
 		val targetPos = pos.offset(state.get(FACING).opposite)
-		val cancerousBlockPositions = BlockSearch.findBlocks(world, targetPos, getAffectedBlockCount(state.get(STRENGTH)))
+		val cancerousBlockPositions = BlockSearch.findCancerousBlocks(world, targetPos, getAffectedBlockCount(state.get(STRENGTH)))
 
 		for (cancerousBlockPos in cancerousBlockPositions) {
 			val cancerBlob = world.getCancerBlobOrNull(cancerousBlockPos)
@@ -98,7 +98,7 @@ class TargetedDrugInjectorBlock(
 		val progress = state.get(PROGRESS)
 		val targetPos = pos.offset(state.get(FACING).opposite)
 		val affectedBlockCount = getAffectedBlockCount(state.get(STRENGTH))
-		val cancerousBlockPositions = BlockSearch.findBlocks(world, targetPos, (progress.toFloat() / MAX_PROGRESS * affectedBlockCount).roundToInt())
+		val cancerousBlockPositions = BlockSearch.findCancerousBlocks(world, targetPos, (progress.toFloat() / MAX_PROGRESS * affectedBlockCount).roundToInt())
 
 		for (cancerousBlockPos in cancerousBlockPositions) {
 			world.addBlockBreakParticles(cancerousBlockPos, world.getBlockState(cancerousBlockPos))
@@ -210,38 +210,6 @@ class TargetedDrugInjectorBlock(
 
 		fun isInjecting(blockState: BlockState): Boolean {
 			return (blockState.getOrEmpty(PROGRESS).getOrNull() ?: 0) != 0
-		}
-	}
-
-	object BlockSearch {
-		fun findBlocks(world: WorldAccess, startPos: BlockPos, limit: Int): List<BlockPos> {
-			val visited = hashSetOf<BlockPos>()
-			val cancerous = mutableListOf<BlockPos>()
-			val candidates = LinkedList<BlockPos>()
-
-			candidates.add(startPos)
-			visited.add(startPos)
-
-			while (candidates.isNotEmpty()) {
-				val pos = candidates.pop()
-
-				// All found cancerous blocks must be connected.
-				if (!world.getBlockState(pos).isCancerous()) continue
-
-				cancerous.add(pos)
-				if (cancerous.size >= limit) break
-
-				for (direction in DIRECTIONS) {
-					val offsetPos = pos.offset(direction)
-
-					if (!visited.contains(offsetPos)) {
-						visited.add(offsetPos)
-						candidates.add(offsetPos)
-					}
-				}
-			}
-
-			return cancerous
 		}
 	}
 }
