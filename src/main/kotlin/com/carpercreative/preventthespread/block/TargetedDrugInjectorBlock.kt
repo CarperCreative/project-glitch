@@ -4,6 +4,7 @@ import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
 import com.carpercreative.preventthespread.cancer.TreatmentType
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
+import com.carpercreative.preventthespread.util.getTargetedDrugInjectorStrength
 import com.mojang.serialization.MapCodec
 import java.util.LinkedList
 import kotlin.jvm.optionals.getOrNull
@@ -36,7 +37,9 @@ class TargetedDrugInjectorBlock(
 	settings: Settings,
 ) : RodBlock(settings), Waterloggable {
 	init {
-		defaultState = stateManager.defaultState.with(FACING, Direction.UP)
+		defaultState = stateManager.defaultState
+			.with(FACING, Direction.UP)
+			.with(STRENGTH, 0)
 	}
 
 	override fun getCodec(): MapCodec<out TargetedDrugInjectorBlock> = CODEC
@@ -44,6 +47,7 @@ class TargetedDrugInjectorBlock(
 	override fun appendProperties(builder: StateManager.Builder<Block, BlockState>) {
 		builder.add(Properties.FACING)
 		builder.add(PROGRESS)
+		builder.add(STRENGTH)
 		builder.add(Properties.WATERLOGGED)
 	}
 
@@ -71,7 +75,7 @@ class TargetedDrugInjectorBlock(
 		// Perform the injection.
 
 		val targetPos = pos.offset(state.get(FACING).opposite)
-		val cancerousBlockPositions = BlockSearch.findBlocks(world, targetPos, INJECTED_BLOCK_COUNT)
+		val cancerousBlockPositions = BlockSearch.findBlocks(world, targetPos, getAffectedBlockCount(state.get(STRENGTH)))
 
 		for (cancerousBlockPos in cancerousBlockPositions) {
 			val cancerBlob = world.getCancerBlobOrNull(cancerousBlockPos)
@@ -93,7 +97,8 @@ class TargetedDrugInjectorBlock(
 	override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: Random) {
 		val progress = state.get(PROGRESS)
 		val targetPos = pos.offset(state.get(FACING).opposite)
-		val cancerousBlockPositions = BlockSearch.findBlocks(world, targetPos, (progress.toFloat() / MAX_PROGRESS * INJECTED_BLOCK_COUNT).roundToInt())
+		val affectedBlockCount = getAffectedBlockCount(state.get(STRENGTH))
+		val cancerousBlockPositions = BlockSearch.findBlocks(world, targetPos, (progress.toFloat() / MAX_PROGRESS * affectedBlockCount).roundToInt())
 
 		for (cancerousBlockPos in cancerousBlockPositions) {
 			world.addBlockBreakParticles(cancerousBlockPos, world.getBlockState(cancerousBlockPos))
@@ -105,6 +110,7 @@ class TargetedDrugInjectorBlock(
 		return defaultState
 			.with(FACING, ctx.side)
 			.with(Properties.WATERLOGGED, fluidState.fluid === Fluids.WATER)
+			.with(STRENGTH, ctx.player?.getTargetedDrugInjectorStrength() ?: 0)
 	}
 
 	override fun canPlaceAt(state: BlockState, world: WorldView, pos: BlockPos): Boolean {
@@ -193,7 +199,14 @@ class TargetedDrugInjectorBlock(
 		 */
 		val PROGRESS = IntProperty.of("progress", 0, MAX_PROGRESS)
 
-		const val INJECTED_BLOCK_COUNT = 24
+		/**
+		 * Affects the amount of blocks affected. See [getAffectedBlockCount].
+		 */
+		val STRENGTH = IntProperty.of("strength", 0, 2)
+
+		fun getAffectedBlockCount(strength: Int): Int {
+			return 12 + strength * 8
+		}
 
 		fun isInjecting(blockState: BlockState): Boolean {
 			return (blockState.getOrEmpty(PROGRESS).getOrNull() ?: 0) != 0
