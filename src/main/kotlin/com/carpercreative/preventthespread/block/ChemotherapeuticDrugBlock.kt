@@ -66,6 +66,10 @@ class ChemotherapeuticDrugBlock(
 		}
 	}
 
+	override fun shouldDropItemsOnExplosion(explosion: Explosion?): Boolean {
+		return false
+	}
+
 	/**
 	 * We're overriding this function because the original removes the block from the world before we can read its strength from the [BlockState].
  	 */
