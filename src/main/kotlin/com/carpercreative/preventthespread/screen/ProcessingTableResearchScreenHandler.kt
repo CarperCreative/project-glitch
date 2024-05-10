@@ -1,6 +1,7 @@
 package com.carpercreative.preventthespread.screen
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableResearchBlockEntity
 import com.carpercreative.preventthespread.screen.slot.ResearchInputSlot
@@ -104,6 +105,14 @@ class ProcessingTableResearchScreenHandler(
 				if (!player.grantAdvancement(selectedResearchId)) return false
 
 				inventory.removeStack(ProcessingTableResearchBlockEntity.RESEARCH_SLOT_INDEX, 1)
+
+				for (team in Storage.teamManager.getTeams()) {
+					if (!team.players.contains(player)) continue
+
+					for (teamPlayer in team.players) {
+						(teamPlayer as ServerPlayerEntity).grantAdvancement(selectedResearchId)
+					}
+				}
 
 				this.selectedResearchId = null
 				sendContentUpdates = true
