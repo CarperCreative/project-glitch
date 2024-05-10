@@ -4,6 +4,7 @@ import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
 import com.carpercreative.preventthespread.persistence.SpreadDifficultyPersistentState
 import com.carpercreative.preventthespread.persistence.SpreadDifficultyPersistentState.Companion.getSpreadDifficultyPersistentState
+import com.carpercreative.preventthespread.team.TeamManager
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.world.ServerWorld
@@ -25,6 +26,8 @@ object Storage {
 	val spreadDifficulty: SpreadDifficultyPersistentState
 		get() = spreadDifficultyPersistentState ?: throw IllegalStateException("Tried to access ${SpreadDifficultyPersistentState::class.java.name} without a loaded world.")
 
+	val teamManager = TeamManager()
+
 	fun init() {
 		ServerWorldEvents.LOAD.register(::onWorldLoad)
 		ServerWorldEvents.UNLOAD.register(::onWorldUnload)
@@ -41,6 +44,8 @@ object Storage {
 		if (server.overworld == world) {
 			cancerBlobPersistentState = null
 			spreadDifficultyPersistentState = null
+
+			teamManager.clear()
 		}
 	}
 }
