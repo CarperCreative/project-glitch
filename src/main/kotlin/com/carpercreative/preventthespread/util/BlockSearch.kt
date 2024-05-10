@@ -9,6 +9,13 @@ import net.minecraft.world.WorldAccess
 
 object BlockSearch {
 	fun findBlocks(world: WorldAccess, startPos: BlockPos, limit: Int, predicate: (state: BlockState) -> Boolean): List<BlockPos> {
+		if (limit == 1) {
+			return when {
+				world.getBlockState(startPos).let(predicate) -> listOf(startPos.toImmutable())
+				else -> emptyList()
+			}
+		}
+
 		val visited = hashSetOf<BlockPos>()
 		val found = mutableListOf<BlockPos>()
 		val candidates = LinkedList<BlockPos>()
