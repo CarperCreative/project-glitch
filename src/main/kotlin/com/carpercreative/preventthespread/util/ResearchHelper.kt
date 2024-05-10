@@ -22,6 +22,12 @@ fun PlayerEntity.getChemotherapeuticDrugStrength(): Int {
 	return 0
 }
 
+fun PlayerEntity.getRadiationStaffStrength(): Int {
+	if (hasAdvancement(PreventTheSpread.ResearchAdvancement.RADIATION_STAFF_STRENGTH_2_ID)) return 2
+	if (hasAdvancement(PreventTheSpread.ResearchAdvancement.RADIATION_STAFF_STRENGTH_1_ID)) return 1
+	return 0
+}
+
 fun PlayerEntity.getTargetedDrugInjectorStrength(): Int {
 	if (hasAdvancement(PreventTheSpread.ResearchAdvancement.TARGETED_DRUG_STRENGTH_2_ID)) return 2
 	if (hasAdvancement(PreventTheSpread.ResearchAdvancement.TARGETED_DRUG_STRENGTH_1_ID)) return 1

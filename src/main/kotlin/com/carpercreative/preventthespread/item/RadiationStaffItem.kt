@@ -5,6 +5,8 @@ import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
 import com.carpercreative.preventthespread.cancer.TreatmentType
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
+import com.carpercreative.preventthespread.util.BlockSearch
+import com.carpercreative.preventthespread.util.getRadiationStaffStrength
 import java.util.function.Consumer
 import net.fabricmc.fabric.api.item.v1.CustomDamageHandler
 import net.minecraft.entity.Entity
@@ -23,6 +25,7 @@ import net.minecraft.util.UseAction
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.hit.EntityHitResult
 import net.minecraft.util.hit.HitResult
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class RadiationStaffItem(
@@ -113,16 +116,13 @@ class RadiationStaffItem(
 				val targetBlockState = world.getBlockState(targetPos)
 				if (!targetBlockState.isCancerous()) return
 
-				world.getCancerBlobOrNull(targetPos)?.also { cancerBlob ->
-					if (!cancerBlob.type.isTreatmentValid(TreatmentType.RADIATION_THERAPY)) {
-						CancerLogic.hastenSpread(world, targetPos, world.random)
-					}
+				val strength = (user as? PlayerEntity)?.getRadiationStaffStrength() ?: 0
+				val affectedBlockCount = getAffectedBlockCount(strength)
+				val affectedBlockPositions = BlockSearch.findCancerousBlocks(world, targetPos, affectedBlockCount)
+
+				for (affectedBlockPos in affectedBlockPositions) {
+					breakBlock(world, affectedBlockPos, user)
 				}
-
-				world.breakBlock(targetPos, true, user)
-
-				// TODO: this might be skipping permission checks: look into a more appropriate way of simulating a block break as a player (then move hastenSpread to Block.onBreak logic)
-				// (user as? ServerPlayerEntity)?.interactionManager?.tryBreakBlock(targetPos)
 			}
 			is EntityHitResult -> {
 				val entity = hitResult.entity
@@ -133,6 +133,19 @@ class RadiationStaffItem(
 			}
 			else -> {}
 		}
+	}
+
+	private fun breakBlock(world: ServerWorld, pos: BlockPos, user: LivingEntity) {
+		world.getCancerBlobOrNull(pos)?.also { cancerBlob ->
+			if (!cancerBlob.type.isTreatmentValid(TreatmentType.RADIATION_THERAPY)) {
+				CancerLogic.hastenSpread(world, pos, world.random)
+			}
+		}
+
+		world.breakBlock(pos, true, user)
+
+		// TODO: this might be skipping permission checks: look into a more appropriate way of simulating a block break as a player (then move hastenSpread to Block.onBreak logic)
+		// (user as? ServerPlayerEntity)?.interactionManager?.tryBreakBlock(targetPos)
 	}
 
 	override fun getItemBarColor(stack: ItemStack): Int {
@@ -163,6 +176,10 @@ class RadiationStaffItem(
 			} else {
 				stack.nbt?.remove(KEY_OVERHEATED)
 			}
+		}
+
+		fun getAffectedBlockCount(strength: Int): Int {
+			return 1 + strength * 4
 		}
 	}
 
