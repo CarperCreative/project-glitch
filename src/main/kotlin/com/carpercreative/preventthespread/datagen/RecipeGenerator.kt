@@ -25,11 +25,11 @@ class RecipeGenerator(
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
-						'e' to Ingredient.ofItems(Items.EMERALD),
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
 						'p' to Ingredient.fromTag(ItemTags.PLANKS),
 						'r' to Ingredient.ofItems(Items.LIGHTNING_ROD),
 					),
-					" e ",
+					" c ",
 					"p p",
 					"r r",
 				),
@@ -45,11 +45,11 @@ class RecipeGenerator(
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
-						'e' to Ingredient.ofItems(Items.EMERALD),
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
 						'p' to Ingredient.fromTag(ItemTags.PLANKS),
 						'r' to Ingredient.ofItems(Items.LIGHTNING_ROD),
 					),
-					" e ",
+					" c ",
 					"prp",
 					"r r",
 				),
@@ -150,10 +150,10 @@ class RecipeGenerator(
 				RawShapedRecipe.create(
 					mutableMapOf(
 						'a' to Ingredient.ofItems(Items.AMETHYST_SHARD),
-						'e' to Ingredient.ofItems(Items.EMERALD),
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
 						's' to Ingredient.ofItems(Items.STICK),
 					),
-					" es",
+					" cs",
 					"  a",
 					" s ",
 				),
