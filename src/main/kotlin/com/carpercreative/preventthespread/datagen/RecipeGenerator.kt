@@ -30,10 +30,30 @@ class RecipeGenerator(
 						'r' to Ingredient.ofItems(Items.LIGHTNING_ROD),
 					),
 					" e ",
-					"prp",
+					"p p",
 					"r r",
 				),
 				ItemStack(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM, 8),
+			),
+			null,
+		)
+
+		exporter.accept(
+			PreventTheSpread.ResearchAdvancement.CHEAPER_CHEMOTHERAPEUTIC_DRUG_ID,
+			ShapedRecipe(
+				PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.toString(),
+				CraftingRecipeCategory.EQUIPMENT,
+				RawShapedRecipe.create(
+					mutableMapOf(
+						'e' to Ingredient.ofItems(Items.EMERALD),
+						'p' to Ingredient.fromTag(ItemTags.PLANKS),
+						'r' to Ingredient.ofItems(Items.LIGHTNING_ROD),
+					),
+					" e ",
+					"prp",
+					"r r",
+				),
+				ItemStack(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM, 16),
 			),
 			null,
 		)
@@ -55,6 +75,27 @@ class RecipeGenerator(
 					" r ",
 				),
 				ItemStack(PreventTheSpread.TARGETED_DRUG_INJECTOR_BLOCK_ITEM, 8),
+			),
+			null,
+		)
+
+		exporter.accept(
+			PreventTheSpread.ResearchAdvancement.CHEAPER_TARGETED_DRUG_ID,
+			ShapedRecipe(
+				PreventTheSpread.TARGETED_DRUG_INJECTOR_ID.toString(),
+				CraftingRecipeCategory.EQUIPMENT,
+				RawShapedRecipe.create(
+					mutableMapOf(
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
+						'r' to Ingredient.ofItems(Items.LIGHTNING_ROD),
+						's' to Ingredient.ofItems(Items.SLIME_BALL),
+						't' to Ingredient.ofItems(Items.IRON_TRAPDOOR),
+					),
+					"c c",
+					"tst",
+					" r ",
+				),
+				ItemStack(PreventTheSpread.TARGETED_DRUG_INJECTOR_BLOCK_ITEM, 16),
 			),
 			null,
 		)

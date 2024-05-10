@@ -146,7 +146,9 @@ class AdvancementGenerator(
 			ResearchAdvancement.CHEAPER_CHEMOTHERAPEUTIC_DRUG_ID,
 			chemotherapeuticDrug,
 			PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM.defaultStack,
-		)
+		) {
+			rewards(AdvancementRewards.Builder.recipe(ResearchAdvancement.CHEAPER_CHEMOTHERAPEUTIC_DRUG_ID))
+		}
 
 		consumer.createResearchAdvancement(
 			ResearchAdvancement.CHEMOTHERAPEUTIC_DRUG_STRENGTH_1_ID,
@@ -206,7 +208,9 @@ class AdvancementGenerator(
 			ResearchAdvancement.CHEAPER_TARGETED_DRUG_ID,
 			targetedDrug,
 			PreventTheSpread.TARGETED_DRUG_INJECTOR_BLOCK_ITEM.defaultStack,
-		)
+		) {
+			rewards(AdvancementRewards.Builder.recipe(ResearchAdvancement.CHEAPER_TARGETED_DRUG_ID))
+		}
 	}
 
 	private fun Advancement.Builder.build(consumer: Consumer<AdvancementEntry>, identifier: Identifier): AdvancementEntry {
