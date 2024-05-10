@@ -220,6 +220,17 @@ object PreventTheSpread : ModInitializer {
 	object ResearchAdvancement {
 		private fun researchIdentifier(path: String) = PreventTheSpread.identifier("research/$path")
 
+		val ALL_IDS: Set<Identifier> by lazy {
+			ResearchAdvancement::class.java.declaredMethods.asSequence()
+				.filter {
+					it.canAccess(ResearchAdvancement)
+					&& it.returnType == Identifier::class.java
+					&& it.parameterCount == 0
+				}
+				.map { it.invoke(ResearchAdvancement) as Identifier }
+				.toHashSet()
+		}
+
 		val ROOT_ID = researchIdentifier("root")
 		val SURGERY_EFFICIENCY_1_ID = researchIdentifier("surgery_efficiency_1")
 		val SURGERY_EFFICIENCY_2_ID = researchIdentifier("surgery_efficiency_2")
