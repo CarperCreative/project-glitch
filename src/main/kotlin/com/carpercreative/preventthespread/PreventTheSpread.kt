@@ -227,6 +227,8 @@ object PreventTheSpread : ModInitializer {
 		val CHEMOTHERAPEUTIC_DRUG_STRENGTH_1_ID = researchIdentifier("${PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path}_strength_1")
 		val CHEMOTHERAPEUTIC_DRUG_STRENGTH_2_ID = researchIdentifier("${PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path}_strength_2")
 		val RADIATION_STAFF_ID = researchIdentifier(RADIATION_STAFF_ITEM_ID.path)
+		val RADIATION_STAFF_STRENGTH_1_ID = researchIdentifier("${RADIATION_STAFF_ITEM_ID.path}_strength_1")
+		val RADIATION_STAFF_STRENGTH_2_ID = researchIdentifier("${RADIATION_STAFF_ITEM_ID.path}_strength_2")
 		val TARGETED_DRUG_ID = researchIdentifier(TARGETED_DRUG_INJECTOR_ID.path)
 		val CHEAPER_TARGETED_DRUG_ID = researchIdentifier("cheaper_${TARGETED_DRUG_INJECTOR_ID.path}")
 		val TARGETED_DRUG_STRENGTH_1_ID = researchIdentifier("${TARGETED_DRUG_INJECTOR_ID.path}_strength_1")

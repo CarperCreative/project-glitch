@@ -169,6 +169,18 @@ class AdvancementGenerator(
 			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.RADIATION_STAFF_ITEM_ID))
 		}
 
+		consumer.createResearchAdvancement(
+			ResearchAdvancement.RADIATION_STAFF_STRENGTH_1_ID,
+			radiationStaff,
+			PreventTheSpread.RADIATION_STAFF_ITEM.defaultStack,
+		).also {
+			consumer.createResearchAdvancement(
+				ResearchAdvancement.RADIATION_STAFF_STRENGTH_2_ID,
+				it,
+				PreventTheSpread.RADIATION_STAFF_ITEM.defaultStack,
+			)
+		}
+
 		// Targeted drug.
 		val targetedDrug = consumer.createResearchAdvancement(
 			ResearchAdvancement.TARGETED_DRUG_ID,
