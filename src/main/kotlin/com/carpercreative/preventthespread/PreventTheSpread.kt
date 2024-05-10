@@ -14,6 +14,7 @@ import com.carpercreative.preventthespread.blockEntity.ProcessingTableResearchBl
 import com.carpercreative.preventthespread.controller.BossBarController
 import com.carpercreative.preventthespread.controller.CancerSpreadController
 import com.carpercreative.preventthespread.controller.EveryoneTeamController
+import com.carpercreative.preventthespread.controller.ResearchSynchronizationController
 import com.carpercreative.preventthespread.entity.ChemotherapeuticDrugEntity
 import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
@@ -307,6 +308,7 @@ object PreventTheSpread : ModInitializer {
 		BossBarController.init()
 		CancerSpreadController.init()
 		EveryoneTeamController.init()
+		ResearchSynchronizationController.init()
 
 		// TODO: replace cancer block textures
 		// TODO: add cancerous material and research item textures
