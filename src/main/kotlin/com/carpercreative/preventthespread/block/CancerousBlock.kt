@@ -90,7 +90,7 @@ object CancerousBlock {
 		return FabricBlockSettings.create()
 			.mapColor(MapColor.DARK_CRIMSON)
 			.pistonBehavior(PistonBehavior.BLOCK)
-			.strength(4.0f)
+			.strength(3.0f)
 			.ticksRandomly()
 	}
 }
