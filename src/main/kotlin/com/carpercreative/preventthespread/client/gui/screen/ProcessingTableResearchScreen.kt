@@ -7,11 +7,7 @@ import com.mojang.blaze3d.systems.RenderSystem
 import kotlin.math.roundToInt
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
-import net.minecraft.advancement.AdvancementEntry
-import net.minecraft.advancement.AdvancementProgress
 import net.minecraft.client.gui.DrawContext
-import net.minecraft.client.gui.screen.advancement.AdvancementTab
-import net.minecraft.client.gui.screen.advancement.AdvancementWidget
 import net.minecraft.client.gui.screen.advancement.AdvancementsScreen
 import net.minecraft.client.gui.screen.ingame.HandledScreen
 import net.minecraft.client.gui.widget.ButtonWidget
@@ -35,7 +31,7 @@ class ProcessingTableResearchScreen(
 	private lateinit var advancementHandler: ClientAdvancementManager
 
 	private lateinit var advancementsScreen: AdvancementsScreen
-	private val selectedTab get() = SELECTED_TAB_FIELD.get(advancementsScreen) as AdvancementTab?
+	private val selectedTab get() = advancementsScreen.selectedTab
 
 	private lateinit var researchButton: ButtonWidget
 
@@ -155,17 +151,17 @@ class ProcessingTableResearchScreen(
 		if (isInsideAdvancementsWidget(mouseX, mouseY)) {
 			val relativeMouseX = (mouseX - x - 9).toInt()
 			val relativeMouseY = (mouseY - y - 18).toInt()
-			val originX = MathHelper.floor(selectedTab.originX_accessor)
-			val originY = MathHelper.floor(selectedTab.originY_accessor)
+			val originX = MathHelper.floor(selectedTab.originX)
+			val originY = MathHelper.floor(selectedTab.originY)
 
-			for ((advancementEntry, advancementWidget) in selectedTab.widgets_accessor) {
+			for ((advancementEntry, advancementWidget) in selectedTab.widgets) {
 				if (!advancementWidget.shouldRender(originX, originY, relativeMouseX, relativeMouseY)) continue
 
 				// Do not allow selecting researches which are already complete.
-				if (advancementWidget.progress_accessor?.isDone != false) continue
+				if (advancementWidget.progress?.isDone != false) continue
 
 				// Do not allow selecting researches which don't have the previous researches completed.
-				if (advancementWidget.parent_accessor?.progress_accessor?.isDone != true) continue
+				if (advancementWidget.parent?.progress?.isDone != true) continue
 
 				selectedAdvancement = SelectedAdvancement(
 					advancementEntry.id,
@@ -214,21 +210,5 @@ class ProcessingTableResearchScreen(
 
 	companion object {
 		private val TEXTURE = PreventTheSpread.identifier("textures/gui/container/processing_table_research.png")
-
-		private val SELECTED_TAB_FIELD = AdvancementsScreen::class.java.getDeclaredField("selectedTab").also { it.trySetAccessible() }
-
-		private val ADVANCEMENT_TAB_ORIGIN_X_FIELD = AdvancementTab::class.java.getDeclaredField("originX").also { it.trySetAccessible() }
-		private val AdvancementTab.originX_accessor: Double get() = ADVANCEMENT_TAB_ORIGIN_X_FIELD.getDouble(this)
-		private val ADVANCEMENT_TAB_ORIGIN_Y_FIELD = AdvancementTab::class.java.getDeclaredField("originY").also { it.trySetAccessible() }
-		private val AdvancementTab.originY_accessor: Double get() = ADVANCEMENT_TAB_ORIGIN_Y_FIELD.getDouble(this)
-
-		private val ADVANCEMENT_TAB_WIDGETS_FIELD = AdvancementTab::class.java.getDeclaredField("widgets").also { it.trySetAccessible() }
-		@Suppress("UNCHECKED_CAST")
-		private val AdvancementTab.widgets_accessor get() = ADVANCEMENT_TAB_WIDGETS_FIELD.get(this) as Map<AdvancementEntry, AdvancementWidget>
-
-		private val ADVANCEMENT_WIDGET_PROGRESS_FIELD = AdvancementWidget::class.java.getDeclaredField("progress").also { it.trySetAccessible() }
-		private val AdvancementWidget.progress_accessor get() = ADVANCEMENT_WIDGET_PROGRESS_FIELD.get(this) as AdvancementProgress?
-		private val ADVANCEMENT_WIDGET_PARENT_FIELD = AdvancementWidget::class.java.getDeclaredField("parent").also { it.trySetAccessible() }
-		private val AdvancementWidget.parent_accessor get() = ADVANCEMENT_WIDGET_PARENT_FIELD.get(this) as AdvancementWidget?
 	}
 }

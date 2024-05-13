@@ -19,6 +19,10 @@ repositories {
 	// for more information about repositories.
 }
 
+loom {
+	accessWidenerPath = file("src/main/resources/preventthespread.accesswidener")
+}
+
 fabricApi {
 	configureDataGeneration()
 }

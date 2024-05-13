@@ -16,7 +16,7 @@ fun PlayerEntity.hasAdvancement(identifier: Identifier): Boolean {
 			val advancementHandler = networkHandler.advancementHandler
 			val advancement = advancementHandler.get(identifier)
 				?: return false
-			val advancementProgress = advancementHandler.advancementProgresses_accessor[advancement]
+			val advancementProgress = advancementHandler.advancementProgresses[advancement]
 				?: return false
 			return advancementProgress.isDone
 		}
