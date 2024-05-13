@@ -310,7 +310,6 @@ object PreventTheSpread : ModInitializer {
 		EveryoneTeamController.init()
 		ResearchSynchronizationController.init()
 
-		// TODO: replace cancer block textures
 		// TODO: add cancerous material and research item textures
 		// TODO: create research state store (per player?)
 		// TODO: implement towers/beacons
