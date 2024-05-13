@@ -3,10 +3,16 @@ package com.carpercreative.preventthespread.cancer
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
+import com.carpercreative.preventthespread.persistence.SpreadDifficultyPersistentState
 import com.carpercreative.preventthespread.util.contentsSequence
 import com.carpercreative.preventthespread.util.nextOfArray
+import com.carpercreative.preventthespread.util.nextOfList
 import com.carpercreative.preventthespread.util.nextOfListOrNull
 import java.util.LinkedList
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.roundToInt
+import kotlin.math.sin
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.SlabBlock
@@ -17,6 +23,7 @@ import net.minecraft.util.math.BlockBox
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.random.Random
+import net.minecraft.world.Heightmap
 
 object CancerLogic {
 	private val WEIGHTED_DIRECTIONS = arrayOf(
@@ -44,14 +51,83 @@ object CancerLogic {
 			&& block.hardness >= 0f
 	}
 
-	fun createCancerBlob(world: ServerWorld, pos: BlockPos, maxSize: Int, cancerType: CancerType): CancerBlob? {
+	fun generateCancerSpawnPos(world: ServerWorld, maxRadius: Float, maxDepth: Int): BlockPos {
+		val random = world.random
+
+		val cancerSpawnPos = BlockPos.Mutable()
+
+		// Attempt to generate a valid position multiple times.
+		// Returns the last position if none were deemed valid.
+		var attempt = 1
+		while (attempt <= 5) {
+			attempt++
+
+			val angle = random.nextDouble() * PI * 2
+			val distance = random.nextDouble() * maxRadius
+
+			cancerSpawnPos.set(world.spawnPos)
+			cancerSpawnPos.x += (sin(angle) * distance).roundToInt()
+			cancerSpawnPos.z += (cos(angle) * distance).roundToInt()
+
+			cancerSpawnPos.y = world.getTopY(Heightmap.Type.OCEAN_FLOOR, cancerSpawnPos.x, cancerSpawnPos.z) - 1
+
+			if (maxDepth > 0 && random.nextFloat() < 0.5f) {
+				cancerSpawnPos.y = (cancerSpawnPos.y - (random.nextFloat() * maxDepth).roundToInt())
+					// Avoid pockets surrounded by bedrock by starting above bedrock.
+					.coerceAtLeast(world.dimension.minY + 8)
+			}
+
+			if (!world.getBlockState(cancerSpawnPos).isCancerSpreadable()) {
+				// FIXME: this will cause an infinite loop on worlds with weird generators or blocks
+				attempt--
+				continue
+			}
+
+			// Try not to spawn cancer under fluids.
+			if (!world.getFluidState(cancerSpawnPos.offset(Direction.UP)).isEmpty) continue
+
+			// Position passed all checks.
+			break
+		}
+
+		return cancerSpawnPos
+	}
+
+	/**
+	 * Creates a new [CancerBlob] according to the current [spread difficulty][SpreadDifficultyPersistentState] values, using the given [world]'s randomness.
+	 */
+	fun createCancerBlob(world: ServerWorld): CancerBlob? {
+		val spreadDifficulty = Storage.spreadDifficulty
+		val cancerSpawnPos = generateCancerSpawnPos(world, spreadDifficulty.blobSpawnRadius, spreadDifficulty.maxBlobDepth)
+
+		return createCancerBlob(world, cancerSpawnPos)
+	}
+
+	/**
+	 * Creates a new [CancerBlob] according to the current [spread difficulty][SpreadDifficultyPersistentState] values, using the given [world]'s randomness.
+	 */
+	fun createCancerBlob(world: ServerWorld, cancerSpawnPos: BlockPos): CancerBlob? {
+		val random = world.random
+		val spreadDifficulty = Storage.spreadDifficulty
+
+		// Generate cancer stats.
+		val cancerType = when {
+			spreadDifficulty.defeatedBlobs < 2 -> random.nextOfList(CancerType.entries.filter { it.treatments.contains(TreatmentType.SURGERY) })
+			else -> random.nextOfList(CancerType.entries)
+		}
+
+		// Create the cancer blob.
+		return createCancerBlob(world, cancerSpawnPos, spreadDifficulty.blobStartingSize, cancerType)
+	}
+
+	fun createCancerBlob(world: ServerWorld, cancerSpawnPos: BlockPos, maxSize: Int, cancerType: CancerType): CancerBlob? {
 		val blobMembershipPersistentState = world.getBlobMembershipPersistentState()
 
-		if (world.getBlockState(pos).isCancerous() || blobMembershipPersistentState.getMembershipOrNull(pos) != null) return null
+		if (world.getBlockState(cancerSpawnPos).isCancerous() || blobMembershipPersistentState.getMembershipOrNull(cancerSpawnPos) != null) return null
 
 		val cancerBlob = Storage.cancerBlob.createCancerBlob { CancerBlob(it, cancerType) }
 
-		for (blockPos in getBlocksForBlobCreation(world, pos, maxSize)) {
+		for (blockPos in getBlocksForBlobCreation(world, cancerSpawnPos, maxSize)) {
 			convertToCancer(world, blockPos)
 			blobMembershipPersistentState.setMembership(blockPos, cancerBlob)
 		}
