@@ -177,10 +177,37 @@ object CancerLogic {
 		return out
 	}
 
-	fun attemptSpread(world: ServerWorld, pos: BlockPos, random: Random, bypassThrottling: Boolean = false) {
+	private fun getSpreadTargetPosition(world: ServerWorld, fromPos: BlockPos, random: Random): BlockPos {
+		// Chance for a metastatic jump.
+		if (random.nextFloat() < (1f / 1000)) {
+			val cancerBlob = world.getBlobMembershipPersistentState()
+				.getMembershipOrNull(fromPos)
+				?.let(Storage.cancerBlob::getCancerBlobById)
+
+			if (cancerBlob != null && cancerBlob.isMetastatic) {
+				val maxJumpDistance = cancerBlob.maxMetastaticJumpDistance
+				val candidatePos = BlockPos.Mutable()
+
+				for (attempt in 1..8) {
+					candidatePos.x = fromPos.x + random.nextBetweenExclusive(-maxJumpDistance, maxJumpDistance)
+					// Prefer jumping sideways.
+					candidatePos.y = fromPos.y + random.nextBetweenExclusive(-maxJumpDistance / 2, maxJumpDistance / 3)
+					candidatePos.z = fromPos.z + random.nextBetweenExclusive(-maxJumpDistance, maxJumpDistance)
+
+					if (world.getBlockState(candidatePos).isCancerSpreadable()) {
+						return candidatePos.toImmutable()
+					}
+				}
+			}
+		}
+
 		// Favor horizontal spread.
 		val spreadDirection = random.nextOfArray(WEIGHTED_DIRECTIONS)
-		val spreadPosition = pos.offset(spreadDirection)
+		return fromPos.offset(spreadDirection)
+	}
+
+	fun attemptSpread(world: ServerWorld, pos: BlockPos, random: Random, bypassThrottling: Boolean = false) {
+		val spreadPosition = getSpreadTargetPosition(world, pos, random)
 		val targetCurrentBlockState = world.getBlockState(spreadPosition)
 
 		if (!targetCurrentBlockState.isCancerSpreadable()) return
