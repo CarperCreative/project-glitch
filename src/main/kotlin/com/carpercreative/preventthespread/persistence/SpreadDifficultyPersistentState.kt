@@ -32,6 +32,12 @@ class SpreadDifficultyPersistentState(
 	val blobStartingSize: Int
 		get() = (6 + defeatedBlobs * 2).coerceAtMost(64)
 
+	val metastaticChance: Float
+		get() = ((defeatedBlobs - 5).coerceAtLeast(0) * 0.1f).coerceAtMost(0.8f)
+
+	val metastaticMaxJumpDistance: Int
+		get() = ((defeatedBlobs - 5).coerceAtLeast(0) / 4) * 5
+
 	override fun writeNbt(nbt: NbtCompound): NbtCompound {
 		nbt.putInt(KEY_VERSION, 1)
 

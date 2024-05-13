@@ -116,16 +116,21 @@ object CancerLogic {
 			else -> random.nextOfList(CancerType.entries)
 		}
 
+		val metastaticMaxJumpDistance = when {
+			random.nextFloat() < spreadDifficulty.metastaticChance -> spreadDifficulty.metastaticMaxJumpDistance
+			else -> 0
+		}
+
 		// Create the cancer blob.
-		return createCancerBlob(world, cancerSpawnPos, spreadDifficulty.blobStartingSize, cancerType)
+		return createCancerBlob(world, cancerSpawnPos, spreadDifficulty.blobStartingSize, cancerType, metastaticMaxJumpDistance)
 	}
 
-	fun createCancerBlob(world: ServerWorld, cancerSpawnPos: BlockPos, maxSize: Int, cancerType: CancerType): CancerBlob? {
+	fun createCancerBlob(world: ServerWorld, cancerSpawnPos: BlockPos, maxSize: Int, cancerType: CancerType, maxMetastaticJumpDistance: Int): CancerBlob? {
 		val blobMembershipPersistentState = world.getBlobMembershipPersistentState()
 
 		if (world.getBlockState(cancerSpawnPos).isCancerous() || blobMembershipPersistentState.getMembershipOrNull(cancerSpawnPos) != null) return null
 
-		val cancerBlob = Storage.cancerBlob.createCancerBlob { CancerBlob(it, cancerType) }
+		val cancerBlob = Storage.cancerBlob.createCancerBlob { CancerBlob(it, cancerType, maxMetastaticJumpDistance) }
 
 		for (blockPos in getBlocksForBlobCreation(world, cancerSpawnPos, maxSize)) {
 			convertToCancer(world, blockPos)

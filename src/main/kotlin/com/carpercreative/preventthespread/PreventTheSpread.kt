@@ -317,7 +317,6 @@ object PreventTheSpread : ModInitializer {
 		// TODO: fix model transformations of surgery tools (on-ground is MASSIVE) .-.
 		// TODO: spawn mobs
 		// TODO: make cancerous blocks hurt to walk on
-		// TODO: metastatic (spreading with a gap)
 		// TODO: stretch goal: liquid cancer
 	}
 }
