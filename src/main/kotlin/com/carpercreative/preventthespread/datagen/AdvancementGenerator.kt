@@ -99,11 +99,14 @@ class AdvancementGenerator(
 				ItemPredicate.Builder.create().items(PreventTheSpread.PROBE_ITEM),
 			))
 
-			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.PROCESSING_TABLE_ID))
-			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.SURGERY_AXE_ITEM_ID))
-			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.SURGERY_HOE_ITEM_ID))
-			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.SURGERY_PICKAXE_ITEM_ID))
-			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.SURGERY_SHOVEL_ITEM_ID))
+			rewards(
+				AdvancementRewards.Builder()
+					.addRecipe(PreventTheSpread.PROCESSING_TABLE_ID)
+					.addRecipe(PreventTheSpread.SURGERY_AXE_ITEM_ID)
+					.addRecipe(PreventTheSpread.SURGERY_HOE_ITEM_ID)
+					.addRecipe(PreventTheSpread.SURGERY_PICKAXE_ITEM_ID)
+					.addRecipe(PreventTheSpread.SURGERY_SHOVEL_ITEM_ID)
+			)
 		}
 
 		val researchRoot = Advancement.Builder.createUntelemetered()
