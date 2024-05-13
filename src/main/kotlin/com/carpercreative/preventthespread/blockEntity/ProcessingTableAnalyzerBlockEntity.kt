@@ -279,6 +279,11 @@ class ProcessingTableAnalyzerBlockEntity(
 							)
 						}
 					},
+					Text.empty().also { notes ->
+						if (cancerBlob.isMetastatic) {
+							notes.append(Text.translatable("${PreventTheSpread.MOD_ID}.analysis.is_metastatic"))
+						}
+					},
 				),
 			)
 		}
