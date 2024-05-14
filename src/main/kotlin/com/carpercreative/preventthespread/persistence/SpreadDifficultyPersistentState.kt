@@ -1,6 +1,7 @@
 package com.carpercreative.preventthespread.persistence
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import kotlin.math.ceil
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import net.minecraft.nbt.NbtCompound
@@ -21,22 +22,22 @@ class SpreadDifficultyPersistentState(
 	}
 
 	val maxActiveBlobs: Int
-		get() = 1 + ((defeatedBlobs - 4).coerceAtLeast(0) / 7)
+		get() = (1 + (ceil((defeatedBlobs - 2).coerceAtLeast(0) / 4f).roundToInt())).coerceAtMost(6)
 
 	val blobSpawnRadius: Float
-		get() = 50f + 100f * defeatedBlobs.toFloat().pow(0.4f)
+		get() = 50f + 100f * defeatedBlobs.toFloat().pow(0.6f)
 
 	val maxBlobDepth: Int
-		get() = (20f * (defeatedBlobs - 5).coerceAtLeast(0).toFloat().pow(0.4f)).roundToInt()
+		get() = (20f * (defeatedBlobs - 1).coerceAtLeast(0).toFloat().pow(0.5f)).roundToInt()
 
 	val blobStartingSize: Int
-		get() = (6 + defeatedBlobs * 2).coerceAtMost(64)
+		get() = (6 + defeatedBlobs * 8).coerceAtMost(126)
 
 	val metastaticChance: Float
-		get() = ((defeatedBlobs - 5).coerceAtLeast(0) * 0.1f).coerceAtMost(0.8f)
+		get() = ((defeatedBlobs - 3).coerceAtLeast(0) * 0.1f).coerceAtMost(0.8f)
 
 	val metastaticMaxJumpDistance: Int
-		get() = ((defeatedBlobs - 5).coerceAtLeast(0) / 4) * 5
+		get() = (defeatedBlobs - 3).coerceAtLeast(0) * 3
 
 	override fun writeNbt(nbt: NbtCompound): NbtCompound {
 		nbt.putInt(KEY_VERSION, 1)
