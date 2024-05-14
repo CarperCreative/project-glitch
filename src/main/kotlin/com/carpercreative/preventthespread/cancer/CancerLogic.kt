@@ -76,7 +76,8 @@ object CancerLogic {
 		// Attempt to generate a valid position multiple times.
 		// Returns the last position if none were deemed valid.
 		var attempt = 1
-		while (attempt <= 5) {
+		var invalidAttempts = 0
+		nextAttempt@while (attempt <= 5) {
 			attempt++
 
 			val angle = random.nextDouble() * PI * 2
@@ -86,33 +87,63 @@ object CancerLogic {
 			cancerSpawnPos.x += (sin(angle) * distance).roundToInt()
 			cancerSpawnPos.z += (cos(angle) * distance).roundToInt()
 
-			// Find surface position, ignoring leaves, trees, and fluids.
 			cancerSpawnPos.y = world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, cancerSpawnPos.x, cancerSpawnPos.z) - 1
+
+			if (invalidAttempts > 5) {
+				// Fallback in case of worlds where no blocks are valid seed locations.
+				// Go up until...
+				while (
+					// hitting air or a valid cancer seed block,
+					!world.getBlockState(cancerSpawnPos).run { isAir || isValidCancerSeed() }
+					// or reaching the height limit (disregards all validity checks).
+					&& !world.isOutOfHeightLimit(cancerSpawnPos.y + 1)
+				) {
+					cancerSpawnPos.y++
+				}
+				return cancerSpawnPos
+			}
+
+			// Find surface position, ignoring leaves, trees, and fluids.
+			var blocksDescendedToFindSurface = 0
 			while (cancerSpawnPos.y > minimumY) {
-				val blockState = world.getBlockState(cancerSpawnPos)
-				if (blockState.isValidCancerSeed()) break
+				if (world.getBlockState(cancerSpawnPos).isValidCancerSeed()) break
 
 				cancerSpawnPos.y--
+
+				// Prevent descending too far below the surface to avoid compounding depth with the max depth from spread difficulty.
+				if (blocksDescendedToFindSurface++ > 15) continue@nextAttempt
 			}
 
 			if (maxDepth > 0 && random.nextFloat() < 0.5f) {
-				cancerSpawnPos.y = (cancerSpawnPos.y - (random.nextFloat() * maxDepth).roundToInt())
+				// Hide below the ground, up to the max depth.
+				// While descending, check every block, and use the last one which is a valid spawn location.
+				var maxDescent = (random.nextFloat() * maxDepth).roundToInt()
+				var lastValidY = cancerSpawnPos.y
+				while (maxDescent > 0) {
+					maxDescent--
+					cancerSpawnPos.y--
+
+					if (world.getBlockState(cancerSpawnPos).isValidCancerSeed()) {
+						lastValidY = cancerSpawnPos.y
+					}
+				}
+				cancerSpawnPos.y = lastValidY
 			}
 
-			// Avoid pockets surrounded by bedrock by always starting above bedrock.
 			cancerSpawnPos.y = cancerSpawnPos.y.coerceAtLeast(minimumY)
 
-			if (!world.getBlockState(cancerSpawnPos).isCancerSpreadable()) {
-				// FIXME: this will cause an infinite loop on worlds with weird generators or blocks
+			if (!world.getBlockState(cancerSpawnPos).isValidCancerSeed()) {
 				attempt--
-				continue
+				invalidAttempts++
+				continue@nextAttempt
 			}
 
 			// Try not to spawn cancer under fluids.
+			// If a position under a fluid is reached every attempt, the last one will be returned.
 			if (!world.getFluidState(cancerSpawnPos.offset(Direction.UP)).isEmpty) continue
 
 			// Position passed all checks.
-			break
+			break@nextAttempt
 		}
 
 		return cancerSpawnPos
