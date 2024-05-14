@@ -1,9 +1,15 @@
 package com.carpercreative.preventthespread.item
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
+import com.carpercreative.preventthespread.cancer.TreatmentType
+import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
+import com.carpercreative.preventthespread.util.BlockSearch
+import com.carpercreative.preventthespread.util.getRadiationStaffStrength
 import java.util.function.Consumer
 import net.fabricmc.fabric.api.item.v1.CustomDamageHandler
+import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.damage.DamageTypes
@@ -19,6 +25,7 @@ import net.minecraft.util.UseAction
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.hit.EntityHitResult
 import net.minecraft.util.hit.HitResult
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class RadiationStaffItem(
@@ -66,6 +73,20 @@ class RadiationStaffItem(
 		}
 	}
 
+	override fun inventoryTick(stack: ItemStack, world: World, entity: Entity, slot: Int, selected: Boolean) {
+		// Ignore radiation staffs without damage as those don't require cooling down.
+		if (stack.damage <= 0) return
+
+		// Don't do cooldown if the radiation staff is currently in use.
+		if (stack == (entity as? PlayerEntity)?.activeItem) return
+
+		stack.damage -= if (isOverheated(stack)) 1 else 2
+
+		if (stack.damage <= 0) {
+			setOverheated(stack, false)
+		}
+	}
+
 	private fun doHit(world: ServerWorld, user: LivingEntity, stack: ItemStack) {
 		// TODO: tickDelta should be set to prevent quick movements from being ignored
 		val range = 10.0
@@ -91,10 +112,17 @@ class RadiationStaffItem(
 			is BlockHitResult -> {
 				if (hitResult.type == HitResult.Type.MISS) return
 
-				val targetBlockState = world.getBlockState(hitResult.blockPos)
+				val targetPos = hitResult.blockPos
+				val targetBlockState = world.getBlockState(targetPos)
 				if (!targetBlockState.isCancerous()) return
 
-				world.breakBlock(hitResult.blockPos, true, user)
+				val strength = (user as? PlayerEntity)?.getRadiationStaffStrength() ?: 0
+				val affectedBlockCount = getAffectedBlockCount(strength)
+				val affectedBlockPositions = BlockSearch.findCancerousBlocks(world, targetPos, affectedBlockCount)
+
+				for (affectedBlockPos in affectedBlockPositions) {
+					breakBlock(world, affectedBlockPos, user)
+				}
 			}
 			is EntityHitResult -> {
 				val entity = hitResult.entity
@@ -105,6 +133,19 @@ class RadiationStaffItem(
 			}
 			else -> {}
 		}
+	}
+
+	private fun breakBlock(world: ServerWorld, pos: BlockPos, user: LivingEntity) {
+		world.getCancerBlobOrNull(pos)?.also { cancerBlob ->
+			if (!cancerBlob.type.isTreatmentValid(TreatmentType.RADIATION_THERAPY)) {
+				CancerLogic.hastenSpread(world, pos, world.random)
+			}
+		}
+
+		world.breakBlock(pos, true, user)
+
+		// TODO: this might be skipping permission checks: look into a more appropriate way of simulating a block break as a player (then move hastenSpread to Block.onBreak logic)
+		// (user as? ServerPlayerEntity)?.interactionManager?.tryBreakBlock(targetPos)
 	}
 
 	override fun getItemBarColor(stack: ItemStack): Int {
@@ -137,33 +178,8 @@ class RadiationStaffItem(
 			}
 		}
 
-		/**
-		 * Removes damage from radiation staffs in player inventories while they're not in use.
-		 */
-		fun doCooldown(world: ServerWorld) {
-			for (player in world.players) {
-				val activeItem = player.activeItem
-
-				for (stack in player.inventory.main) {
-					doCooldown(stack, activeItem)
-				}
-
-				doCooldown(player.inventory.offHand[0], activeItem)
-			}
-		}
-
-		private fun doCooldown(stack: ItemStack, skipStack: ItemStack?) {
-			// Ignore radiation staffs without damage, and items which aren't the radiation staff.
-			if (stack.damage <= 0 || stack.item !is RadiationStaffItem) return
-
-			// Usually the player's active item, which could be the radiation staff currently in use.
-			if (stack == skipStack) return
-
-			stack.damage -= if (isOverheated(stack)) 1 else 2
-
-			if (stack.damage <= 0) {
-				setOverheated(stack, false)
-			}
+		fun getAffectedBlockCount(strength: Int): Int {
+			return 1 + strength * 4
 		}
 	}
 

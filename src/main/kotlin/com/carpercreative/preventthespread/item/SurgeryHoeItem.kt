@@ -1,7 +1,10 @@
 package com.carpercreative.preventthespread.item
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import net.fabricmc.fabric.api.item.v1.EnchantingContext
 import net.minecraft.block.BlockState
+import net.minecraft.enchantment.Enchantment
+import net.minecraft.enchantment.Enchantments
 import net.minecraft.item.HoeItem
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ToolMaterial
@@ -24,5 +27,10 @@ class SurgeryHoeItem(
 			true
 		else
 			super.isSuitableFor(state)
+	}
+
+	override fun canBeEnchantedWith(stack: ItemStack, enchantment: Enchantment, context: EnchantingContext): Boolean {
+		if (enchantment == Enchantments.EFFICIENCY) return false
+		return super.canBeEnchantedWith(stack, enchantment, context)
 	}
 }

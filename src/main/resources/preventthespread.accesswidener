@@ -1,0 +1,10 @@
+accessWidener v2 named
+
+accessible field net/minecraft/client/gui/screen/advancement/AdvancementTab originX D
+accessible field net/minecraft/client/gui/screen/advancement/AdvancementTab originY D
+accessible field net/minecraft/client/gui/screen/advancement/AdvancementTab widgets Ljava/util/Map;
+accessible field net/minecraft/client/gui/screen/advancement/AdvancementsScreen selectedTab Lnet/minecraft/client/gui/screen/advancement/AdvancementTab;
+accessible field net/minecraft/client/gui/screen/advancement/AdvancementWidget parent Lnet/minecraft/client/gui/screen/advancement/AdvancementWidget;
+accessible field net/minecraft/client/gui/screen/advancement/AdvancementWidget progress Lnet/minecraft/advancement/AdvancementProgress;
+accessible field net/minecraft/client/network/ClientAdvancementManager advancementProgresses Ljava/util/Map;
+accessible field net/minecraft/entity/TntEntity BLOCK_STATE Lnet/minecraft/entity/data/TrackedData;

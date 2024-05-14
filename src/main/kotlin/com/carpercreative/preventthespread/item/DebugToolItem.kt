@@ -1,10 +1,9 @@
 package com.carpercreative.preventthespread.item
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.cancer.CancerLogic
-import com.carpercreative.preventthespread.cancer.CancerType
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
-import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobPersistentState
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -55,11 +54,10 @@ class DebugToolItem(
 
 		return when (debugMode) {
 			DebugMode.INSPECT -> {
-				val cancerBlobPersistentState = world.getCancerBlobPersistentState()
 				val blobMembershipPersistentState = world.getBlobMembershipPersistentState()
 
 				val cancerBlobId = blobMembershipPersistentState.getMembershipOrNull(context.blockPos)
-				val cancerBlob = cancerBlobId?.let { cancerBlobPersistentState.getCancerBlobById(it) }
+				val cancerBlob = cancerBlobId?.let { Storage.cancerBlob.getCancerBlobById(it) }
 
 				context.player?.sendMessage(Text.literal("Identifier of blob by membership: $cancerBlobId\nBlob from store: ${cancerBlob?.let { "type = ${it.type}" }}"))
 
@@ -68,7 +66,7 @@ class DebugToolItem(
 			DebugMode.CREATE_CANCER -> {
 				if (context.player?.isCreativeLevelTwoOp != true) return ActionResult.FAIL
 
-				val cancerBlob = CancerLogic.createCancerBlob(world, context.blockPos, CancerType.entries.random())
+				val cancerBlob = CancerLogic.createCancerBlob(world, context.blockPos)
 
 				if (cancerBlob == null) {
 					context.player?.sendMessage(Text.literal("Failed to create new cancer blob. Can cancer spread to the target block? Does the target block already have a cancer membership?"))

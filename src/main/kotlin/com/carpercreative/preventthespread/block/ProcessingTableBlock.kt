@@ -1,15 +1,25 @@
 package com.carpercreative.preventthespread.block
 
+import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
+import com.carpercreative.preventthespread.blockEntity.ProcessingTableResearchBlockEntity
+import com.carpercreative.preventthespread.util.grantAdvancement
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.BlockEntityTicker
+import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.block.entity.LockableContainerBlockEntity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.NamedScreenHandlerFactory
+import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
 import net.minecraft.state.property.DirectionProperty
@@ -17,6 +27,7 @@ import net.minecraft.state.property.EnumProperty
 import net.minecraft.state.property.Properties
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
+import net.minecraft.util.ItemScatterer
 import net.minecraft.util.StringIdentifiable
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
@@ -39,6 +50,18 @@ class ProcessingTableBlock(
 			PROCESSING,
 			PROCESSING_TABLE_PART,
 		)
+	}
+
+	override fun <T : BlockEntity> getTicker(world: World, state: BlockState, type: BlockEntityType<T>): BlockEntityTicker<T>? {
+		if (world.isClient) return null
+
+		if (type != PreventTheSpread.PROCESSING_TABLE_BLOCK_ENTITY) return null
+
+		@Suppress("UNCHECKED_CAST")
+		return when (state.get(PROCESSING_TABLE_PART)) {
+			ProcessingTablePart.LEFT -> ProcessingTableAnalyzerBlockEntity.Ticker as BlockEntityTicker<T>
+			else -> null
+		}
 	}
 
 	override fun getPlacementState(ctx: ItemPlacementContext): BlockState? {
@@ -80,7 +103,7 @@ class ProcessingTableBlock(
 
 			val counterpartProcessing = neighborState.get(PROCESSING)
 			if (counterpartProcessing != state.get(PROCESSING)) {
-				state.with(PROCESSING, counterpartProcessing)
+				return state.with(PROCESSING, counterpartProcessing)
 			}
 		}
 
@@ -101,23 +124,44 @@ class ProcessingTableBlock(
 		return super.onBreak(world, pos, state, player)
 	}
 
+	override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
+		if (state.isOf(newState.block)) return
+
+		if (!world.isClient) {
+			world as ServerWorld
+
+			(world.getBlockEntity(pos) as? Inventory)?.let { ItemScatterer.spawn(world, pos, it) }
+		}
+
+		super.onStateReplaced(state, world, pos, newState, moved)
+	}
+
 	override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
 		if (world.isClient) {
 			return ActionResult.SUCCESS
 		}
 
-		val blockEntity = world.getBlockEntity(pos)
-		if (blockEntity is ProcessingTableAnalyzerBlockEntity) {
-			player.openHandledScreen(blockEntity as NamedScreenHandlerFactory)
-			// TODO: increment use stat
+		when (val blockEntity = world.getBlockEntity(pos)) {
+			is ProcessingTableAnalyzerBlockEntity -> {
+				player.openHandledScreen(blockEntity as NamedScreenHandlerFactory)
+				// TODO: increment use stat
+			}
+			is ProcessingTableResearchBlockEntity -> {
+				// Unlock the root research advancement.
+				(player as ServerPlayerEntity).grantAdvancement(PreventTheSpread.ResearchAdvancement.ROOT_ID)
+
+				player.openHandledScreen(blockEntity as NamedScreenHandlerFactory)
+				// TODO: increment use stat
+			}
 		}
 
 		return ActionResult.CONSUME
 	}
 
-	override fun createBlockEntity(pos: BlockPos, state: BlockState): ProcessingTableAnalyzerBlockEntity? {
+	override fun createBlockEntity(pos: BlockPos, state: BlockState): LockableContainerBlockEntity? {
 		return when (state.get(PROCESSING_TABLE_PART)) {
 			ProcessingTablePart.LEFT -> ProcessingTableAnalyzerBlockEntity(pos, state)
+			ProcessingTablePart.RIGHT -> ProcessingTableResearchBlockEntity(pos, state)
 			else -> null
 		}
 	}

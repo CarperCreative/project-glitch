@@ -1,7 +1,6 @@
 package com.carpercreative.preventthespread.datagen
 
 import com.carpercreative.preventthespread.PreventTheSpread
-import com.carpercreative.preventthespread.PreventTheSpread.identifier
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider
 import net.minecraft.data.server.recipe.RecipeExporter
@@ -18,18 +17,18 @@ class RecipeGenerator(
 ) : FabricRecipeProvider(output) {
 	override fun generate(exporter: RecipeExporter) {
 		exporter.accept(
-			identifier("chemotherapeutic_drug"),
+			PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID,
 			ShapedRecipe(
-				"chemotherapeutic_drug",
+				PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
-						'e' to Ingredient.ofItems(Items.EMERALD),
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
 						'p' to Ingredient.fromTag(ItemTags.PLANKS),
 						'r' to Ingredient.ofItems(Items.LIGHTNING_ROD),
 					),
-					" e ",
-					"prp",
+					" c ",
+					"p p",
 					"r r",
 				),
 				ItemStack(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM, 8),
@@ -38,19 +37,39 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
-			identifier("targeted_drug_injector"),
+			PreventTheSpread.ResearchAdvancement.CHEAPER_CHEMOTHERAPEUTIC_DRUG_ID,
 			ShapedRecipe(
-				"targeted_drug_injector",
+				PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
 						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
+						'p' to Ingredient.fromTag(ItemTags.PLANKS),
 						'r' to Ingredient.ofItems(Items.LIGHTNING_ROD),
-						's' to Ingredient.ofItems(Items.SLIME_BALL),
+					),
+					" c ",
+					"prp",
+					"r r",
+				),
+				ItemStack(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM, 16),
+			),
+			null,
+		)
+
+		exporter.accept(
+			PreventTheSpread.TARGETED_DRUG_INJECTOR_ID,
+			ShapedRecipe(
+				PreventTheSpread.TARGETED_DRUG_INJECTOR_ID.toString(),
+				CraftingRecipeCategory.EQUIPMENT,
+				RawShapedRecipe.create(
+					mutableMapOf(
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
+						'g' to Ingredient.ofItems(Items.GLOW_LICHEN),
+						'r' to Ingredient.ofItems(Items.LIGHTNING_ROD),
 						't' to Ingredient.ofItems(Items.IRON_TRAPDOOR),
 					),
 					" c ",
-					"tst",
+					"tgt",
 					" r ",
 				),
 				ItemStack(PreventTheSpread.TARGETED_DRUG_INJECTOR_BLOCK_ITEM, 8),
@@ -59,9 +78,30 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
-			identifier("probe"),
+			PreventTheSpread.ResearchAdvancement.CHEAPER_TARGETED_DRUG_ID,
 			ShapedRecipe(
-				"probe",
+				PreventTheSpread.TARGETED_DRUG_INJECTOR_ID.toString(),
+				CraftingRecipeCategory.EQUIPMENT,
+				RawShapedRecipe.create(
+					mutableMapOf(
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
+						'g' to Ingredient.ofItems(Items.GLOW_LICHEN),
+						'r' to Ingredient.ofItems(Items.LIGHTNING_ROD),
+						't' to Ingredient.ofItems(Items.IRON_TRAPDOOR),
+					),
+					"c c",
+					"tgt",
+					" r ",
+				),
+				ItemStack(PreventTheSpread.TARGETED_DRUG_INJECTOR_BLOCK_ITEM, 16),
+			),
+			null,
+		)
+
+		exporter.accept(
+			PreventTheSpread.PROBE_ITEM_ID,
+			ShapedRecipe(
+				PreventTheSpread.PROBE_ITEM_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
@@ -79,17 +119,39 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
-			identifier("radiation_staff"),
+			PreventTheSpread.PROCESSING_TABLE_ID,
 			ShapedRecipe(
-				"radiation_staff",
+				PreventTheSpread.PROCESSING_TABLE_ID.toString(),
+				CraftingRecipeCategory.EQUIPMENT,
+				RawShapedRecipe.create(
+					mutableMapOf(
+						'b' to Ingredient.ofItems(Items.GLASS_BOTTLE),
+						'B' to Ingredient.ofItems(Items.BOOK),
+						'f' to Ingredient.fromTag(ItemTags.WOODEN_FENCES),
+						'i' to Ingredient.ofItems(Items.IRON_INGOT),
+						's' to Ingredient.fromTag(ItemTags.WOODEN_SLABS),
+					),
+					"ibB",
+					"sss",
+					"f f",
+				),
+				PreventTheSpread.PROCESSING_TABLE_BLOCK_ITEM.defaultStack,
+			),
+			null,
+		)
+
+		exporter.accept(
+			PreventTheSpread.RADIATION_STAFF_ITEM_ID,
+			ShapedRecipe(
+				PreventTheSpread.RADIATION_STAFF_ITEM_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
 						'a' to Ingredient.ofItems(Items.AMETHYST_SHARD),
-						'e' to Ingredient.ofItems(Items.EMERALD),
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
 						's' to Ingredient.ofItems(Items.STICK),
 					),
-					" es",
+					" cs",
 					"  a",
 					" s ",
 				),
@@ -99,17 +161,38 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
-			identifier("surgery_axe"),
+			PreventTheSpread.SCANNER_ITEM_ID,
 			ShapedRecipe(
-				"surgery_axe",
+				PreventTheSpread.SCANNER_ITEM_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
-						'e' to Ingredient.ofItems(Items.EMERALD),
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
+						'g' to Ingredient.ofItems(Items.GLASS_PANE),
+						'i' to Ingredient.ofItems(Items.IRON_INGOT),
+						'p' to Ingredient.fromTag(ItemTags.PLANKS),
+					),
+					"pcp",
+					"cgi",
+					"pcp",
+				),
+				PreventTheSpread.SCANNER_ITEM.defaultStack,
+			),
+			null,
+		)
+
+		exporter.accept(
+			PreventTheSpread.SURGERY_AXE_ITEM_ID,
+			ShapedRecipe(
+				PreventTheSpread.SURGERY_AXE_ITEM_ID.toString(),
+				CraftingRecipeCategory.EQUIPMENT,
+				RawShapedRecipe.create(
+					mutableMapOf(
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
 						's' to Ingredient.ofItems(Items.STICK),
 					),
-					"ee",
-					"se",
+					"cc",
+					"sc",
 					"s ",
 				),
 				PreventTheSpread.SURGERY_AXE_ITEM.defaultStack,
@@ -118,35 +201,35 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
-			identifier("surgery_hoe"),
+			PreventTheSpread.SURGERY_HOE_ITEM_ID,
 			ShapedRecipe(
-				"surgery_hoe",
+				PreventTheSpread.SURGERY_HOE_ITEM_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
-						'e' to Ingredient.ofItems(Items.EMERALD),
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
 						's' to Ingredient.ofItems(Items.STICK),
 					),
-					"ee",
+					"cc",
 					"s ",
 					"s ",
 				),
-				PreventTheSpread.SURGERY_SHOVEL_ITEM.defaultStack,
+				PreventTheSpread.SURGERY_HOE_ITEM.defaultStack,
 			),
 			null,
 		)
 
 		exporter.accept(
-			identifier("surgery_pickaxe"),
+			PreventTheSpread.SURGERY_PICKAXE_ITEM_ID,
 			ShapedRecipe(
-				"surgery_pickaxe",
+				PreventTheSpread.SURGERY_PICKAXE_ITEM_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
-						'e' to Ingredient.ofItems(Items.EMERALD),
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
 						's' to Ingredient.ofItems(Items.STICK),
 					),
-					"eee",
+					"ccc",
 					" s ",
 					" s ",
 				),
@@ -156,16 +239,16 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
-			identifier("surgery_shovel"),
+			PreventTheSpread.SURGERY_SHOVEL_ITEM_ID,
 			ShapedRecipe(
-				"surgery_shovel",
+				PreventTheSpread.SURGERY_SHOVEL_ITEM_ID.toString(),
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
-						'e' to Ingredient.ofItems(Items.EMERALD),
+						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
 						's' to Ingredient.ofItems(Items.STICK),
 					),
-					"e",
+					"c",
 					"s",
 					"s",
 				),

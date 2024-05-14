@@ -10,23 +10,33 @@ import com.carpercreative.preventthespread.block.ProcessingTableBlock
 import com.carpercreative.preventthespread.block.SolidCancerBlock
 import com.carpercreative.preventthespread.block.TargetedDrugInjectorBlock
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
+import com.carpercreative.preventthespread.blockEntity.ProcessingTableResearchBlockEntity
+import com.carpercreative.preventthespread.controller.BossBarController
+import com.carpercreative.preventthespread.controller.CancerSpreadController
+import com.carpercreative.preventthespread.controller.EveryoneTeamController
+import com.carpercreative.preventthespread.controller.ResearchSynchronizationController
+import com.carpercreative.preventthespread.controller.StoryRootUnlockController
 import com.carpercreative.preventthespread.entity.ChemotherapeuticDrugEntity
 import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
 import com.carpercreative.preventthespread.item.RadiationStaffItem
+import com.carpercreative.preventthespread.item.ScannerItem
 import com.carpercreative.preventthespread.item.SurgeryAxeItem
 import com.carpercreative.preventthespread.item.SurgeryHoeItem
 import com.carpercreative.preventthespread.item.SurgeryPickaxeItem
 import com.carpercreative.preventthespread.item.SurgeryShovelItem
+import com.carpercreative.preventthespread.networking.SelectResearchPacket
 import com.carpercreative.preventthespread.screen.ProcessingTableAnalyzerScreenHandler
+import com.carpercreative.preventthespread.screen.ProcessingTableResearchScreenHandler
 import net.fabricmc.api.ModInitializer
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.block.MapColor
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.block.piston.PistonBehavior
 import net.minecraft.entity.EntityType
@@ -45,7 +55,6 @@ import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
-import org.slf4j.LoggerFactory
 
 @Suppress("MemberVisibilityCanBePrivate")
 object PreventTheSpread : ModInitializer {
@@ -53,30 +62,39 @@ object PreventTheSpread : ModInitializer {
 
 	fun identifier(path: String) = Identifier(MOD_ID, path)
 
-	private val logger = LoggerFactory.getLogger(MOD_ID)
-
-	val CANCER_DIRT_BLOCK = SolidCancerBlock(CancerousBlock.defaultBlockSettings())
+	val CANCER_DIRT_ID = identifier("cancer_dirt")
+	val CANCER_DIRT_BLOCK = SolidCancerBlock(CancerousBlock.defaultBlockSettings().strength(1.5f))
 	val CANCER_DIRT_BLOCK_ITEM = BlockItem(CANCER_DIRT_BLOCK, FabricItemSettings())
+	val CANCER_LOG_ID = identifier("cancer_log")
 	val CANCER_LOG_BLOCK = CancerPillarBlock(CancerousBlock.defaultBlockSettings())
 	val CANCER_LOG_BLOCK_ITEM = BlockItem(CANCER_LOG_BLOCK, FabricItemSettings())
-	val CANCER_PLANKS_BLOCK = SolidCancerBlock(CancerousBlock.defaultBlockSettings())
+	val CANCER_PLANKS_ID = identifier("cancer_planks")
+	val CANCER_PLANKS_BLOCK = SolidCancerBlock(CancerousBlock.defaultBlockSettings().strength(2.5f, 3f))
 	val CANCER_PLANKS_BLOCK_ITEM = BlockItem(CANCER_PLANKS_BLOCK, FabricItemSettings())
+	val CANCER_STONE_ID = identifier("cancer_stone")
 	val CANCER_STONE_BLOCK = SolidCancerBlock(CancerousBlock.defaultBlockSettings().requiresTool())
 	val CANCER_STONE_BLOCK_ITEM = BlockItem(CANCER_STONE_BLOCK, FabricItemSettings())
 
-	val CANCER_DIRT_SLAB_BLOCK = CancerSlabBlock(CancerousBlock.defaultBlockSettings())
+	val CANCER_DIRT_SLAB_ID = identifier("cancer_dirt_slab")
+	val CANCER_DIRT_SLAB_BLOCK = CancerSlabBlock(FabricBlockSettings.copy(CANCER_DIRT_BLOCK))
 	val CANCER_DIRT_SLAB_BLOCK_ITEM = BlockItem(CANCER_DIRT_SLAB_BLOCK, FabricItemSettings())
+	val CANCER_DIRT_STAIRS_ID = identifier("cancer_dirt_stairs")
 	val CANCER_DIRT_STAIRS_BLOCK = CancerStairsBlock(CANCER_DIRT_BLOCK.defaultState, FabricBlockSettings.copy(CANCER_DIRT_BLOCK))
 	val CANCER_DIRT_STAIRS_BLOCK_ITEM = BlockItem(CANCER_DIRT_STAIRS_BLOCK, FabricItemSettings())
-	val CANCER_PLANKS_SLAB_BLOCK = CancerSlabBlock(CancerousBlock.defaultBlockSettings())
+	val CANCER_PLANKS_SLAB_ID = identifier("cancer_planks_slab")
+	val CANCER_PLANKS_SLAB_BLOCK = CancerSlabBlock(FabricBlockSettings.copy(CANCER_PLANKS_BLOCK))
 	val CANCER_PLANKS_SLAB_BLOCK_ITEM = BlockItem(CANCER_PLANKS_SLAB_BLOCK, FabricItemSettings())
+	val CANCER_PLANKS_STAIRS_ID = identifier("cancer_planks_stairs")
 	val CANCER_PLANKS_STAIRS_BLOCK = CancerStairsBlock(CANCER_PLANKS_BLOCK.defaultState, FabricBlockSettings.copy(CANCER_PLANKS_BLOCK))
 	val CANCER_PLANKS_STAIRS_BLOCK_ITEM = BlockItem(CANCER_PLANKS_STAIRS_BLOCK, FabricItemSettings())
-	val CANCER_STONE_SLAB_BLOCK = CancerSlabBlock(CancerousBlock.defaultBlockSettings().requiresTool())
+	val CANCER_STONE_SLAB_ID = identifier("cancer_stone_slab")
+	val CANCER_STONE_SLAB_BLOCK = CancerSlabBlock(FabricBlockSettings.copy(CANCER_STONE_BLOCK))
 	val CANCER_STONE_SLAB_BLOCK_ITEM = BlockItem(CANCER_STONE_SLAB_BLOCK, FabricItemSettings())
-	val CANCER_STONE_STAIRS_BLOCK = CancerStairsBlock(CANCER_STONE_BLOCK.defaultState, FabricBlockSettings.copy(CANCER_STONE_BLOCK).requiresTool())
+	val CANCER_STONE_STAIRS_ID = identifier("cancer_stone_stairs")
+	val CANCER_STONE_STAIRS_BLOCK = CancerStairsBlock(CANCER_STONE_BLOCK.defaultState, FabricBlockSettings.copy(CANCER_STONE_BLOCK))
 	val CANCER_STONE_STAIRS_BLOCK_ITEM = BlockItem(CANCER_STONE_STAIRS_BLOCK, FabricItemSettings())
 
+	val CANCER_LEAVES_ID = identifier("cancer_leaves")
 	val CANCER_LEAVES_BLOCK = CancerLeavesBlock(
 		CancerousBlock.defaultBlockSettings()
 			.allowsSpawning(Blocks::canSpawnOnLeaves)
@@ -89,8 +107,10 @@ object PreventTheSpread : ModInitializer {
 	)
 	val CANCER_LEAVES_BLOCK_ITEM = BlockItem(CANCER_LEAVES_BLOCK, FabricItemSettings())
 
-	val CHEMOTHERAPEUTIC_DRUG_BLOCK = ChemotherapeuticDrugBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_BLUE).breakInstantly().sounds(BlockSoundGroup.GRASS).solidBlock(Blocks::never))
+	val CHEMOTHERAPEUTIC_DRUG_ID = identifier("chemotherapeutic_drug")
+	val CHEMOTHERAPEUTIC_DRUG_BLOCK = ChemotherapeuticDrugBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_BLUE).nonOpaque().breakInstantly().sounds(BlockSoundGroup.GRASS).solidBlock(Blocks::never))
 	val CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM = BlockItem(CHEMOTHERAPEUTIC_DRUG_BLOCK, FabricItemSettings())
+	val PROCESSING_TABLE_ID = identifier("processing_table")
 	val PROCESSING_TABLE_BLOCK = ProcessingTableBlock(
 		FabricBlockSettings.create()
 			.hardness(3.5f)
@@ -100,6 +120,7 @@ object PreventTheSpread : ModInitializer {
 			.sounds(BlockSoundGroup.WOOD)
 	)
 	val PROCESSING_TABLE_BLOCK_ITEM = BlockItem(PROCESSING_TABLE_BLOCK, FabricItemSettings())
+	val TARGETED_DRUG_INJECTOR_ID = identifier("targeted_drug_injector")
 	val TARGETED_DRUG_INJECTOR_BLOCK = TargetedDrugInjectorBlock(
 		FabricBlockSettings.create()
 			.blockVision(Blocks::never)
@@ -112,14 +133,34 @@ object PreventTheSpread : ModInitializer {
 	)
 	val TARGETED_DRUG_INJECTOR_BLOCK_ITEM = BlockItem(TARGETED_DRUG_INJECTOR_BLOCK, FabricItemSettings())
 
-	val PROCESSING_TABLE_BLOCK_ENTITY: BlockEntityType<ProcessingTableAnalyzerBlockEntity> = BlockEntityType.Builder.create(::ProcessingTableAnalyzerBlockEntity, PROCESSING_TABLE_BLOCK).build()
+	val PROCESSING_TABLE_BLOCK_ENTITY: BlockEntityType<BlockEntity> = BlockEntityType.Builder.create({ pos, state ->
+		@Suppress("USELESS_CAST") // Idea/Kotlin compiler incorrectly reports the cast as useless because its heuristics are wrong.
+		when (val propertyValue = state.get(ProcessingTableBlock.PROCESSING_TABLE_PART)) {
+			ProcessingTableBlock.ProcessingTablePart.LEFT -> ProcessingTableAnalyzerBlockEntity(pos, state)
+			ProcessingTableBlock.ProcessingTablePart.RIGHT -> ProcessingTableResearchBlockEntity(pos, state)
+			else -> throw IllegalArgumentException("Unknown property value: $propertyValue")
+		} as BlockEntity
+	}, PROCESSING_TABLE_BLOCK).build()
 
+	val CANCEROUS_MATERIAL_ID = identifier("cancerous_material")
+	val CANCEROUS_MATERIAL_ITEM = Item(Item.Settings())
+	val DEBUG_TOOL_ITEM_ID = identifier("debug_tool")
 	val DEBUG_TOOL_ITEM = DebugToolItem(FabricItemSettings().maxCount(1).rarity(Rarity.EPIC))
+	val PROBE_ITEM_ID = identifier("probe")
 	val PROBE_ITEM = ProbeItem(FabricItemSettings().maxCount(1))
+	val RADIATION_STAFF_ITEM_ID = identifier("radiation_staff")
 	val RADIATION_STAFF_ITEM = RadiationStaffItem(FabricItemSettings().maxCount(1).maxDamage(60).customDamage(RadiationStaffItem.RadiationBeamGunDamageHandler))
+	val RESEARCH_ID = identifier("research")
+	val RESEARCH_ITEM = Item(Item.Settings())
+	val SCANNER_ITEM_ID = identifier("scanner")
+	val SCANNER_ITEM = ScannerItem(FabricItemSettings())
+	val SURGERY_AXE_ITEM_ID = identifier("surgery_axe")
 	val SURGERY_AXE_ITEM = SurgeryAxeItem(ToolMaterials.IRON, 6.0f, -3.1f, FabricItemSettings().maxDamage(800))
+	val SURGERY_HOE_ITEM_ID = identifier("surgery_hoe")
 	val SURGERY_HOE_ITEM = SurgeryHoeItem(ToolMaterials.IRON, -2, -1.0f, FabricItemSettings().maxDamage(800))
+	val SURGERY_PICKAXE_ITEM_ID = identifier("surgery_pickaxe")
 	val SURGERY_PICKAXE_ITEM = SurgeryPickaxeItem(ToolMaterials.IRON, 1, -2.8f, FabricItemSettings().maxDamage(800))
+	val SURGERY_SHOVEL_ITEM_ID = identifier("surgery_shovel")
 	val SURGERY_SHOVEL_ITEM = SurgeryShovelItem(ToolMaterials.IRON, 1.5f, -3.0f, FabricItemSettings().maxDamage(800))
 
 	val CANCEROUS_BLOCK_TAG: TagKey<Block> = TagKey.of(RegistryKeys.BLOCK, identifier("cancerous"))
@@ -129,18 +170,25 @@ object PreventTheSpread : ModInitializer {
 	val SURGERY_PICKAXE_MINEABLE_BLOCK_TAG: TagKey<Block> = TagKey.of(RegistryKeys.BLOCK, identifier("mineable/surgery_pickaxe"))
 	val SURGERY_SHOVEL_MINEABLE_BLOCK_TAG: TagKey<Block> = TagKey.of(RegistryKeys.BLOCK, identifier("mineable/surgery_shovel"))
 
+	val REQUIRES_RECIPE_TO_CRAFT_ITEM_TAG: TagKey<Item> = TagKey.of(RegistryKeys.ITEM, identifier("requires_recipe_to_craft"))
 	val SURGERY_TOOL_ITEM_TAG: TagKey<Item> = TagKey.of(RegistryKeys.ITEM, identifier("surgery_tool"))
 
 	val CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE: EntityType<ChemotherapeuticDrugEntity> = EntityType.Builder.create({ entityType, world -> ChemotherapeuticDrugEntity(entityType, world) }, SpawnGroup.MISC).makeFireImmune().setDimensions(0.98f, 0.98f).maxTrackingRange(10).trackingTickInterval(10).build()
 
 	val PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER = ScreenHandlerType(::ProcessingTableAnalyzerScreenHandler, FeatureFlags.VANILLA_FEATURES)
+	val PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER = ScreenHandlerType(::ProcessingTableResearchScreenHandler, FeatureFlags.VANILLA_FEATURES)
+
+	val SELECT_RESEARCH_PACKET_ID = identifier("select_research")
 
 	private val ITEM_GROUP = FabricItemGroup.builder()
 		.icon { ItemStack(CANCER_DIRT_BLOCK_ITEM) }
 		.displayName(Text.translatable("itemGroup.$MOD_ID.default"))
 		.entries { context, entries ->
+			entries.add(SCANNER_ITEM)
 			entries.add(PROBE_ITEM)
 			entries.add(PROCESSING_TABLE_BLOCK_ITEM)
+			entries.add(CANCEROUS_MATERIAL_ITEM)
+			entries.add(RESEARCH_ITEM)
 			entries.add(CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM)
 			entries.add(RADIATION_STAFF_ITEM)
 			entries.add(SURGERY_AXE_ITEM)
@@ -163,69 +211,114 @@ object PreventTheSpread : ModInitializer {
 		}
 		.build()
 
+	object StoryAdvancement {
+		private fun storyIdentifier(path: String) = PreventTheSpread.identifier("story/$path")
+
+		val ROOT_ID = storyIdentifier("root")
+		val OBTAIN_PROBE_ID = storyIdentifier("obtain_probe")
+		val GET_SAMPLE_ID = storyIdentifier("get_sample")
+	}
+
+	object ResearchAdvancement {
+		private fun researchIdentifier(path: String) = PreventTheSpread.identifier("research/$path")
+
+		val ALL_IDS: Set<Identifier> by lazy {
+			ResearchAdvancement::class.java.declaredMethods.asSequence()
+				.filter {
+					it.canAccess(ResearchAdvancement)
+					&& it.returnType == Identifier::class.java
+					&& it.parameterCount == 0
+				}
+				.map { it.invoke(ResearchAdvancement) as Identifier }
+				.toHashSet()
+		}
+
+		val ROOT_ID = researchIdentifier("root")
+		val SURGERY_EFFICIENCY_1_ID = researchIdentifier("surgery_efficiency_1")
+		val SURGERY_EFFICIENCY_2_ID = researchIdentifier("surgery_efficiency_2")
+		val CHEMOTHERAPEUTIC_DRUG_ID = researchIdentifier(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path)
+		val CHEAPER_CHEMOTHERAPEUTIC_DRUG_ID = researchIdentifier("cheaper_${PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path}")
+		val CHEMOTHERAPEUTIC_DRUG_STRENGTH_1_ID = researchIdentifier("${PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path}_strength_1")
+		val CHEMOTHERAPEUTIC_DRUG_STRENGTH_2_ID = researchIdentifier("${PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path}_strength_2")
+		val RADIATION_STAFF_ID = researchIdentifier(RADIATION_STAFF_ITEM_ID.path)
+		val RADIATION_STAFF_STRENGTH_1_ID = researchIdentifier("${RADIATION_STAFF_ITEM_ID.path}_strength_1")
+		val RADIATION_STAFF_STRENGTH_2_ID = researchIdentifier("${RADIATION_STAFF_ITEM_ID.path}_strength_2")
+		val TARGETED_DRUG_ID = researchIdentifier(TARGETED_DRUG_INJECTOR_ID.path)
+		val CHEAPER_TARGETED_DRUG_ID = researchIdentifier("cheaper_${TARGETED_DRUG_INJECTOR_ID.path}")
+		val TARGETED_DRUG_STRENGTH_1_ID = researchIdentifier("${TARGETED_DRUG_INJECTOR_ID.path}_strength_1")
+		val TARGETED_DRUG_STRENGTH_2_ID = researchIdentifier("${TARGETED_DRUG_INJECTOR_ID.path}_strength_2")
+	}
+
 	override fun onInitialize() {
-		Registry.register(Registries.BLOCK, identifier("cancer_dirt"), CANCER_DIRT_BLOCK)
-		Registry.register(Registries.ITEM, identifier("cancer_dirt"), CANCER_DIRT_BLOCK_ITEM)
-		Registry.register(Registries.BLOCK, identifier("cancer_log"), CANCER_LOG_BLOCK)
-		Registry.register(Registries.ITEM, identifier("cancer_log"), CANCER_LOG_BLOCK_ITEM)
-		Registry.register(Registries.BLOCK, identifier("cancer_planks"), CANCER_PLANKS_BLOCK)
-		Registry.register(Registries.ITEM, identifier("cancer_planks"), CANCER_PLANKS_BLOCK_ITEM)
-		Registry.register(Registries.BLOCK, identifier("cancer_stone"), CANCER_STONE_BLOCK)
-		Registry.register(Registries.ITEM, identifier("cancer_stone"), CANCER_STONE_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, CANCER_DIRT_ID, CANCER_DIRT_BLOCK)
+		Registry.register(Registries.ITEM, CANCER_DIRT_ID, CANCER_DIRT_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, CANCER_LOG_ID, CANCER_LOG_BLOCK)
+		Registry.register(Registries.ITEM, CANCER_LOG_ID, CANCER_LOG_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, CANCER_PLANKS_ID, CANCER_PLANKS_BLOCK)
+		Registry.register(Registries.ITEM, CANCER_PLANKS_ID, CANCER_PLANKS_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, CANCER_STONE_ID, CANCER_STONE_BLOCK)
+		Registry.register(Registries.ITEM, CANCER_STONE_ID, CANCER_STONE_BLOCK_ITEM)
 
-		Registry.register(Registries.BLOCK, identifier("cancer_dirt_slab"), CANCER_DIRT_SLAB_BLOCK)
-		Registry.register(Registries.ITEM, identifier("cancer_dirt_slab"), CANCER_DIRT_SLAB_BLOCK_ITEM)
-		Registry.register(Registries.BLOCK, identifier("cancer_dirt_stairs"), CANCER_DIRT_STAIRS_BLOCK)
-		Registry.register(Registries.ITEM, identifier("cancer_dirt_stairs"), CANCER_DIRT_STAIRS_BLOCK_ITEM)
-		Registry.register(Registries.BLOCK, identifier("cancer_planks_slab"), CANCER_PLANKS_SLAB_BLOCK)
-		Registry.register(Registries.ITEM, identifier("cancer_planks_slab"), CANCER_PLANKS_SLAB_BLOCK_ITEM)
-		Registry.register(Registries.BLOCK, identifier("cancer_planks_stairs"), CANCER_PLANKS_STAIRS_BLOCK)
-		Registry.register(Registries.ITEM, identifier("cancer_planks_stairs"), CANCER_PLANKS_STAIRS_BLOCK_ITEM)
-		Registry.register(Registries.BLOCK, identifier("cancer_stone_slab"), CANCER_STONE_SLAB_BLOCK)
-		Registry.register(Registries.ITEM, identifier("cancer_stone_slab"), CANCER_STONE_SLAB_BLOCK_ITEM)
-		Registry.register(Registries.BLOCK, identifier("cancer_stone_stairs"), CANCER_STONE_STAIRS_BLOCK)
-		Registry.register(Registries.ITEM, identifier("cancer_stone_stairs"), CANCER_STONE_STAIRS_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, CANCER_DIRT_SLAB_ID, CANCER_DIRT_SLAB_BLOCK)
+		Registry.register(Registries.ITEM, CANCER_DIRT_SLAB_ID, CANCER_DIRT_SLAB_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, CANCER_DIRT_STAIRS_ID, CANCER_DIRT_STAIRS_BLOCK)
+		Registry.register(Registries.ITEM, CANCER_DIRT_STAIRS_ID, CANCER_DIRT_STAIRS_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, CANCER_PLANKS_SLAB_ID, CANCER_PLANKS_SLAB_BLOCK)
+		Registry.register(Registries.ITEM, CANCER_PLANKS_SLAB_ID, CANCER_PLANKS_SLAB_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, CANCER_PLANKS_STAIRS_ID, CANCER_PLANKS_STAIRS_BLOCK)
+		Registry.register(Registries.ITEM, CANCER_PLANKS_STAIRS_ID, CANCER_PLANKS_STAIRS_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, CANCER_STONE_SLAB_ID, CANCER_STONE_SLAB_BLOCK)
+		Registry.register(Registries.ITEM, CANCER_STONE_SLAB_ID, CANCER_STONE_SLAB_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, CANCER_STONE_STAIRS_ID, CANCER_STONE_STAIRS_BLOCK)
+		Registry.register(Registries.ITEM, CANCER_STONE_STAIRS_ID, CANCER_STONE_STAIRS_BLOCK_ITEM)
 
-		Registry.register(Registries.BLOCK, identifier("cancer_leaves"), CANCER_LEAVES_BLOCK)
-		Registry.register(Registries.ITEM, identifier("cancer_leaves"), CANCER_LEAVES_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, CANCER_LEAVES_ID, CANCER_LEAVES_BLOCK)
+		Registry.register(Registries.ITEM, CANCER_LEAVES_ID, CANCER_LEAVES_BLOCK_ITEM)
 
-		Registry.register(Registries.BLOCK, identifier("chemotherapeutic_drug"), CHEMOTHERAPEUTIC_DRUG_BLOCK)
-		Registry.register(Registries.ITEM, identifier("chemotherapeutic_drug"), CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM)
-		Registry.register(Registries.BLOCK, identifier("processing_table"), PROCESSING_TABLE_BLOCK)
-		Registry.register(Registries.ITEM, identifier("processing_table"), PROCESSING_TABLE_BLOCK_ITEM)
-		Registry.register(Registries.BLOCK, identifier("targeted_drug_injector"), TARGETED_DRUG_INJECTOR_BLOCK)
-		Registry.register(Registries.ITEM, identifier("targeted_drug_injector"), TARGETED_DRUG_INJECTOR_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, CHEMOTHERAPEUTIC_DRUG_ID, CHEMOTHERAPEUTIC_DRUG_BLOCK)
+		Registry.register(Registries.ITEM, CHEMOTHERAPEUTIC_DRUG_ID, CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, PROCESSING_TABLE_ID, PROCESSING_TABLE_BLOCK)
+		Registry.register(Registries.ITEM, PROCESSING_TABLE_ID, PROCESSING_TABLE_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, TARGETED_DRUG_INJECTOR_ID, TARGETED_DRUG_INJECTOR_BLOCK)
+		Registry.register(Registries.ITEM, TARGETED_DRUG_INJECTOR_ID, TARGETED_DRUG_INJECTOR_BLOCK_ITEM)
 
-		Registry.register(Registries.BLOCK_ENTITY_TYPE, identifier("processing_table"), PROCESSING_TABLE_BLOCK_ENTITY)
+		Registry.register(Registries.BLOCK_ENTITY_TYPE, PROCESSING_TABLE_ID, PROCESSING_TABLE_BLOCK_ENTITY)
 
-		Registry.register(Registries.ITEM, identifier("debug_tool"), DEBUG_TOOL_ITEM)
-		Registry.register(Registries.ITEM, identifier("probe"), PROBE_ITEM)
-		Registry.register(Registries.ITEM, identifier("radiation_staff"), RADIATION_STAFF_ITEM)
-		Registry.register(Registries.ITEM, identifier("surgery_axe"), SURGERY_AXE_ITEM)
-		Registry.register(Registries.ITEM, identifier("surgery_hoe"), SURGERY_HOE_ITEM)
-		Registry.register(Registries.ITEM, identifier("surgery_pickaxe"), SURGERY_PICKAXE_ITEM)
-		Registry.register(Registries.ITEM, identifier("surgery_shovel"), SURGERY_SHOVEL_ITEM)
+		Registry.register(Registries.ITEM, CANCEROUS_MATERIAL_ID, CANCEROUS_MATERIAL_ITEM)
+		Registry.register(Registries.ITEM, DEBUG_TOOL_ITEM_ID, DEBUG_TOOL_ITEM)
+		Registry.register(Registries.ITEM, PROBE_ITEM_ID, PROBE_ITEM)
+		Registry.register(Registries.ITEM, RADIATION_STAFF_ITEM_ID, RADIATION_STAFF_ITEM)
+		Registry.register(Registries.ITEM, RESEARCH_ID, RESEARCH_ITEM)
+		Registry.register(Registries.ITEM, SCANNER_ITEM_ID, SCANNER_ITEM)
+		Registry.register(Registries.ITEM, SURGERY_AXE_ITEM_ID, SURGERY_AXE_ITEM)
+		Registry.register(Registries.ITEM, SURGERY_HOE_ITEM_ID, SURGERY_HOE_ITEM)
+		Registry.register(Registries.ITEM, SURGERY_PICKAXE_ITEM_ID, SURGERY_PICKAXE_ITEM)
+		Registry.register(Registries.ITEM, SURGERY_SHOVEL_ITEM_ID, SURGERY_SHOVEL_ITEM)
 
 		Registry.register(Registries.ITEM_GROUP, identifier("default"), ITEM_GROUP)
 
-		Registry.register(Registries.ENTITY_TYPE, identifier("chemotherapeutic_drug"), CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE)
+		Registry.register(Registries.ENTITY_TYPE, CHEMOTHERAPEUTIC_DRUG_ID, CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE)
 
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_analyzer"), PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER)
+		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_research"), PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER)
 
-		ServerTickEvents.END_WORLD_TICK.register { world ->
-			RadiationStaffItem.doCooldown(world)
-		}
+		ServerPlayNetworking.registerGlobalReceiver(SELECT_RESEARCH_PACKET_ID, SelectResearchPacket::handle)
 
-		// TODO: replace cancer block textures
-		// TODO: add surgery tool crafting recipe
-		// TODO: make cancer blocks mine-able only using appropriate tools
-		// TODO: replace chemotherapeutic drug textures/model
-		// TODO: replace targeted drug injector model and block state to indicate progress
-		// TODO: create research table block
-		// TODO: create research GUI
+		Storage.init()
+
+		BossBarController.init()
+		CancerSpreadController.init()
+		EveryoneTeamController.init()
+		ResearchSynchronizationController.init()
+		StoryRootUnlockController.init()
+
+		// TODO: add cancerous material and research item textures
 		// TODO: create research state store (per player?)
 		// TODO: implement towers/beacons
 		// TODO: implement radiation staff recharge rate and/or heat capacity research
 		// TODO: fix model transformations of surgery tools (on-ground is MASSIVE) .-.
+		// TODO: spawn mobs
+		// TODO: make cancerous blocks hurt to walk on
+		// TODO: stretch goal: liquid cancer
 	}
 }

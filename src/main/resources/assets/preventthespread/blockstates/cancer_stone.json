@@ -1,5 +1,21 @@
 {
 	"variants": {
-		"": { "model": "preventthespread:block/cancer_stone" }
+		"": [
+			{
+				"model": "preventthespread:block/cancer_stone"
+			},
+			{
+				"model": "preventthespread:block/cancer_stone",
+				"y": 90
+			},
+			{
+				"model": "preventthespread:block/cancer_stone",
+				"y": 180
+			},
+			{
+				"model": "preventthespread:block/cancer_stone",
+				"y": 270
+			}
+		]
 	}
 }

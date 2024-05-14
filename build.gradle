@@ -20,15 +20,7 @@ repositories {
 }
 
 loom {
-	splitEnvironmentSourceSets()
-
-	mods {
-		"preventthespread" {
-			sourceSet sourceSets.main
-			sourceSet sourceSets.client
-		}
-	}
-
+	accessWidenerPath = file("src/main/resources/preventthespread.accesswidener")
 }
 
 fabricApi {

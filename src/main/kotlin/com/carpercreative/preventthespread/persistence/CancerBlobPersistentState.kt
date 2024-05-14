@@ -1,15 +1,18 @@
 package com.carpercreative.preventthespread.persistence
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.cancer.BlobIdentifier
 import com.carpercreative.preventthespread.cancer.CancerBlob
 import com.carpercreative.preventthespread.cancer.CancerBlob.Companion.toCancerBlob
+import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipOrNull
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtElement
 import net.minecraft.nbt.NbtList
+import net.minecraft.server.MinecraftServer
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.PersistentState
-import net.minecraft.world.World
 
 class CancerBlobPersistentState : PersistentState() {
 	private var nextId = 0
@@ -41,6 +44,24 @@ class CancerBlobPersistentState : PersistentState() {
 			markDirty()
 		}
 		return cancerBlob
+	}
+
+	fun incrementCancerousBlockCount(cancerBlob: CancerBlob, change: Int) {
+		if (change == 0) return
+
+		cancerBlob.cancerousBlockCount += change
+		markDirty()
+	}
+
+	fun getTotalCancerousBlockCount(): Int {
+		return cancerBlobs.values.sumOf { it.cancerousBlockCount }
+	}
+
+	/**
+	 * @return Amount of cancer blobs which have at least one cancerous block.
+	 */
+	fun getActiveCancerBlobCount(): Int {
+		return cancerBlobs.values.count { it.cancerousBlockCount > 0 }
 	}
 
 	private fun getNextId(): BlobIdentifier {
@@ -88,8 +109,13 @@ class CancerBlobPersistentState : PersistentState() {
 			return state
 		}
 
-		fun ServerWorld.getCancerBlobPersistentState(): CancerBlobPersistentState {
-			return server.getWorld(World.OVERWORLD)!!.persistentStateManager.getOrCreate(type, "${PreventTheSpread.MOD_ID}_cancerBlob")
+		fun MinecraftServer.getCancerBlobPersistentState(): CancerBlobPersistentState {
+			return overworld.persistentStateManager.getOrCreate(type, "${PreventTheSpread.MOD_ID}_cancerBlob")
+		}
+
+		fun ServerWorld.getCancerBlobOrNull(pos: BlockPos): CancerBlob? {
+			val blobId = getBlobMembershipOrNull(pos) ?: return null
+			return Storage.cancerBlob.getCancerBlobByIdOrNull(blobId)
 		}
 	}
 }

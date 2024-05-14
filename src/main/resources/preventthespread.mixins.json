@@ -3,7 +3,10 @@
 	"package": "com.carpercreative.preventthespread.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"ExampleMixin"
+		"CraftingScreenHandlerMixin",
+		"ExampleMixin",
+		"PlayerEntityMixin",
+		"TntEntityMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

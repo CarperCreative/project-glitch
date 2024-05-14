@@ -1,6 +1,7 @@
 package com.carpercreative.preventthespread.persistence
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.cancer.BlobIdentifier
 import com.carpercreative.preventthespread.cancer.CancerBlob
 import net.minecraft.nbt.NbtCompound
@@ -19,17 +20,46 @@ class BlobMembershipPersistentState : PersistentState() {
 	}
 
 	fun setMembership(blockPos: BlockPos, id: BlobIdentifier) {
-		memberships[blockPos] = id
+		memberships.compute(blockPos) { _, previousId ->
+			if (previousId != null) {
+				Storage.cancerBlob.getCancerBlobByIdOrNull(previousId)?.also { cancerBlob ->
+					Storage.cancerBlob.incrementCancerousBlockCount(cancerBlob, -1)
+				}
+			}
+			Storage.cancerBlob.getCancerBlobByIdOrNull(id)?.also { cancerBlob ->
+				Storage.cancerBlob.incrementCancerousBlockCount(cancerBlob, 1)
+			}
+
+			id
+		}
 		markDirty()
 	}
 
-	fun removeMembership(blockPos: BlockPos) {
-		memberships.remove(blockPos)
+	fun removeMembership(blockPos: BlockPos): CancerBlob? {
+		val cancerBlobId = memberships.remove(blockPos)
+		val cancerBlob = cancerBlobId?.let(Storage.cancerBlob::getCancerBlobByIdOrNull)
+
+		if (cancerBlob != null) {
+			Storage.cancerBlob.incrementCancerousBlockCount(cancerBlob, -1)
+
+			if (cancerBlob.cancerousBlockCount == 0) {
+				Storage.spreadDifficulty.incrementDefeatedBlobs()
+			}
+		}
+
 		markDirty()
+
+		return cancerBlob
 	}
 
 	fun getMembershipOrNull(blockPos: BlockPos): BlobIdentifier? {
 		return memberships[blockPos]
+	}
+
+	fun getNearestMemberOrNull(blockPos: BlockPos): BlockPos? {
+		return memberships.keys.minByOrNull { cancerousBlockPos ->
+			cancerousBlockPos.getSquaredDistance(blockPos)
+		}
 	}
 
 	override fun writeNbt(nbt: NbtCompound): NbtCompound {
@@ -83,7 +113,7 @@ class BlobMembershipPersistentState : PersistentState() {
 			val idArray = memberships.getIntArray(KEY_MEMBERSHIPS_ID)
 
 			for ((index, id) in idArray.withIndex()) {
-				state.setMembership(BlockPos(xArray[index], yArray[index], zArray[index]), id)
+				state.memberships[BlockPos(xArray[index], yArray[index], zArray[index])] = id
 			}
 
 			return state
@@ -91,6 +121,11 @@ class BlobMembershipPersistentState : PersistentState() {
 
 		fun ServerWorld.getBlobMembershipPersistentState(): BlobMembershipPersistentState {
 			return persistentStateManager.getOrCreate(type, "${PreventTheSpread.MOD_ID}_blobMembership")
+		}
+
+		fun ServerWorld.getBlobMembershipOrNull(pos: BlockPos): BlobIdentifier? {
+			val blobMembershipPersistentState = getBlobMembershipPersistentState()
+			return blobMembershipPersistentState.getMembershipOrNull(pos)
 		}
 	}
 }

@@ -1,5 +1,21 @@
 {
 	"variants": {
-		"": { "model": "preventthespread:block/cancer_dirt" }
+		"": [
+			{
+				"model": "preventthespread:block/cancer_dirt"
+			},
+			{
+				"model": "preventthespread:block/cancer_dirt",
+				"y": 90
+			},
+			{
+				"model": "preventthespread:block/cancer_dirt",
+				"y": 180
+			},
+			{
+				"model": "preventthespread:block/cancer_dirt",
+				"y": 270
+			}
+		]
 	}
 }
