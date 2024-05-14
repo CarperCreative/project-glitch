@@ -36,15 +36,21 @@ object CancerLogic {
 		return isIn(PreventTheSpread.CANCEROUS_BLOCK_TAG)
 	}
 
+	private fun BlockState.isCancerModifiable(): Boolean {
+		// No point spreading to already cancer infested blocks.
+		return !isCancerous()
+			// Spreading to block entities could have unintended consequences, like dropping the entire contents of a chest.
+			&& !hasBlockEntity()
+			// Prevent spreading to unbreakable blocks like bedrock.
+			&& block.hardness >= 0f
+	}
+
 	/**
 	 * @return `true` for blocks which are valid targets for cancer to spread to.
 	 * This excludes all cancer blocks and block entities.
 	 */
 	fun BlockState.isCancerSpreadable(): Boolean {
-		// No point spreading to already cancer infested blocks.
-		return !isCancerous()
-			// Spreading to block entities could have unintended consequences, like dropping the entire contents of a chest.
-			&& !hasBlockEntity()
+		return isCancerModifiable()
 			// Allow spreading only to explicitly whitelisted blocks.
 			&& isIn(PreventTheSpread.CANCER_SPREADABLE_BLOCK_TAG)
 			// Prevent spreading to unbreakable blocks like bedrock.
