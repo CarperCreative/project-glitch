@@ -6,8 +6,6 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider
 import net.minecraft.data.server.recipe.RecipeExporter
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
-import net.minecraft.potion.PotionUtil
-import net.minecraft.potion.Potions
 import net.minecraft.recipe.Ingredient
 import net.minecraft.recipe.RawShapedRecipe
 import net.minecraft.recipe.ShapedRecipe
@@ -127,7 +125,7 @@ class RecipeGenerator(
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
-						'b' to Ingredient.ofStacks(PotionUtil.setPotion(Items.POTION.defaultStack, Potions.WATER)),
+						'b' to Ingredient.ofItems(Items.GLASS_BOTTLE),
 						'B' to Ingredient.ofItems(Items.BOOK),
 						'f' to Ingredient.fromTag(ItemTags.WOODEN_FENCES),
 						'i' to Ingredient.ofItems(Items.IRON_INGOT),
