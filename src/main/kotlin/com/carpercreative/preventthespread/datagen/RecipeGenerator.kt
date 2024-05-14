@@ -147,13 +147,13 @@ class RecipeGenerator(
 				CraftingRecipeCategory.EQUIPMENT,
 				RawShapedRecipe.create(
 					mutableMapOf(
-						'a' to Ingredient.ofItems(Items.AMETHYST_SHARD),
-						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
+						'd' to Ingredient.ofItems(Items.DIAMOND),
+						'L' to Ingredient.ofItems(Items.LAPIS_BLOCK),
 						's' to Ingredient.ofItems(Items.STICK),
 					),
-					" cs",
-					"  a",
-					" s ",
+					"ds",
+					" L",
+					"s ",
 				),
 				PreventTheSpread.RADIATION_STAFF_ITEM.defaultStack,
 			),
