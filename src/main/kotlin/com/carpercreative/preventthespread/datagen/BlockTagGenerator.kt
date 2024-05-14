@@ -37,6 +37,7 @@ class BlockTagGenerator(
 			.add(PreventTheSpread.CANCER_PLANKS_BLOCK)
 			.add(PreventTheSpread.CANCER_PLANKS_SLAB_BLOCK)
 			.add(PreventTheSpread.CANCER_PLANKS_STAIRS_BLOCK)
+			.add(PreventTheSpread.PROCESSING_TABLE_BLOCK)
 		getOrCreateTagBuilder(PreventTheSpread.SURGERY_HOE_MINEABLE_BLOCK_TAG)
 			.add(PreventTheSpread.CANCER_LEAVES_BLOCK)
 		getOrCreateTagBuilder(PreventTheSpread.SURGERY_PICKAXE_MINEABLE_BLOCK_TAG)
