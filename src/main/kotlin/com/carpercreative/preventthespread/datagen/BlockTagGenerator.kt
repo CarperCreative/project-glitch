@@ -51,6 +51,15 @@ class BlockTagGenerator(
 			.add(PreventTheSpread.CANCER_DIRT_SLAB_BLOCK)
 			.add(PreventTheSpread.CANCER_DIRT_STAIRS_BLOCK)
 
+		getOrCreateTagBuilder(PreventTheSpread.VALID_CANCER_SEED_BLOCK_TAG)
+			.forceAddTag(BlockTags.BASE_STONE_NETHER)
+			.forceAddTag(BlockTags.BASE_STONE_OVERWORLD)
+			.forceAddTag(BlockTags.DIRT)
+			.add(Blocks.GRAVEL)
+			.add(Blocks.SAND)
+			.addSandstoneBlocks()
+			.forceAddTag(BlockTags.TERRACOTTA)
+
 		getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
 			.add(PreventTheSpread.PROCESSING_TABLE_BLOCK)
 	}

@@ -53,8 +53,18 @@ object CancerLogic {
 		return isCancerModifiable()
 			// Allow spreading only to explicitly whitelisted blocks.
 			&& isIn(PreventTheSpread.CANCER_SPREADABLE_BLOCK_TAG)
-			// Prevent spreading to unbreakable blocks like bedrock.
-			&& block.hardness >= 0f
+	}
+
+	/**
+	 * @return `true` for blocks which are valid targets for a cancer blob to get spawned from.
+	 * This excludes all cancer blocks and block entities.
+	 */
+	fun BlockState.isValidCancerSeed(): Boolean {
+		return isCancerModifiable()
+			// Never spawn a blob in air.
+			&& !isAir
+			// Allow spreading only to explicitly whitelisted blocks.
+			&& isIn(PreventTheSpread.VALID_CANCER_SEED_BLOCK_TAG)
 	}
 
 	fun generateCancerSpawnPos(world: ServerWorld, maxRadius: Float, maxDepth: Int): BlockPos {
@@ -80,7 +90,7 @@ object CancerLogic {
 			cancerSpawnPos.y = world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, cancerSpawnPos.x, cancerSpawnPos.z) - 1
 			while (cancerSpawnPos.y > minimumY) {
 				val blockState = world.getBlockState(cancerSpawnPos)
-				if (!blockState.isAir && blockState.isCancerSpreadable() && !blockState.isIn(BlockTags.LOGS)) break
+				if (blockState.isValidCancerSeed()) break
 
 				cancerSpawnPos.y--
 			}
