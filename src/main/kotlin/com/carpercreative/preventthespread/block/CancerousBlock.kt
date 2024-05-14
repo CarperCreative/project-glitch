@@ -26,10 +26,7 @@ import net.minecraft.world.explosion.Explosion
  */
 object CancerousBlock {
 	fun randomTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: Random) {
-		// Prevent spreading on every random tick to keep it manageable.
-		if (random.nextFloat() <= 0.5f) return
-
-		CancerLogic.attemptSpread(world, pos, random)
+		// NOOP
 	}
 
 	fun scheduledTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: Random) {
