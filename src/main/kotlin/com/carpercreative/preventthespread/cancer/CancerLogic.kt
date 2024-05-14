@@ -52,6 +52,7 @@ object CancerLogic {
 	}
 
 	fun generateCancerSpawnPos(world: ServerWorld, maxRadius: Float, maxDepth: Int): BlockPos {
+		val minimumY = world.dimension.minY + 8
 		val random = world.random
 
 		val cancerSpawnPos = BlockPos.Mutable()
@@ -69,13 +70,21 @@ object CancerLogic {
 			cancerSpawnPos.x += (sin(angle) * distance).roundToInt()
 			cancerSpawnPos.z += (cos(angle) * distance).roundToInt()
 
-			cancerSpawnPos.y = world.getTopY(Heightmap.Type.OCEAN_FLOOR, cancerSpawnPos.x, cancerSpawnPos.z) - 1
+			// Find surface position, ignoring leaves, trees, and fluids.
+			cancerSpawnPos.y = world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, cancerSpawnPos.x, cancerSpawnPos.z) - 1
+			while (cancerSpawnPos.y > minimumY) {
+				val blockState = world.getBlockState(cancerSpawnPos)
+				if (!blockState.isAir && blockState.isCancerSpreadable() && !blockState.isIn(BlockTags.LOGS)) break
+
+				cancerSpawnPos.y--
+			}
 
 			if (maxDepth > 0 && random.nextFloat() < 0.5f) {
 				cancerSpawnPos.y = (cancerSpawnPos.y - (random.nextFloat() * maxDepth).roundToInt())
-					// Avoid pockets surrounded by bedrock by starting above bedrock.
-					.coerceAtLeast(world.dimension.minY + 8)
 			}
+
+			// Avoid pockets surrounded by bedrock by always starting above bedrock.
+			cancerSpawnPos.y = cancerSpawnPos.y.coerceAtLeast(minimumY)
 
 			if (!world.getBlockState(cancerSpawnPos).isCancerSpreadable()) {
 				// FIXME: this will cause an infinite loop on worlds with weird generators or blocks
