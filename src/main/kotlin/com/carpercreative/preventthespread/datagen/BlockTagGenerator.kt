@@ -19,8 +19,11 @@ class BlockTagGenerator(
 			.forceAddTag(BlockTags.BASE_STONE_OVERWORLD)
 			.add(Blocks.CAVE_AIR)
 			.forceAddTag(BlockTags.DIRT)
+			.add(Blocks.GRAVEL)
 			.forceAddTag(BlockTags.LEAVES)
 			.forceAddTag(BlockTags.LOGS)
+			.add(Blocks.SAND)
+			.addSandstoneBlocks()
 			.forceAddTag(BlockTags.SLABS)
 			.forceAddTag(BlockTags.STAIRS)
 			.forceAddTag(BlockTags.TERRACOTTA)
@@ -50,5 +53,17 @@ class BlockTagGenerator(
 
 		getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
 			.add(PreventTheSpread.PROCESSING_TABLE_BLOCK)
+	}
+
+	private fun FabricTagBuilder.addSandstoneBlocks(): FabricTagBuilder {
+		add(Blocks.CHISELED_RED_SANDSTONE)
+		add(Blocks.CHISELED_SANDSTONE)
+		add(Blocks.CUT_SANDSTONE)
+		add(Blocks.CUT_RED_SANDSTONE)
+		add(Blocks.RED_SANDSTONE)
+		add(Blocks.SANDSTONE)
+		add(Blocks.SMOOTH_RED_SANDSTONE)
+		add(Blocks.SMOOTH_SANDSTONE)
+		return this
 	}
 }
