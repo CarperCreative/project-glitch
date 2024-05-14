@@ -64,12 +64,12 @@ class RecipeGenerator(
 				RawShapedRecipe.create(
 					mutableMapOf(
 						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
+						'g' to Ingredient.ofItems(Items.GLOW_LICHEN),
 						'r' to Ingredient.ofItems(Items.LIGHTNING_ROD),
-						's' to Ingredient.ofItems(Items.SLIME_BALL),
 						't' to Ingredient.ofItems(Items.IRON_TRAPDOOR),
 					),
 					" c ",
-					"tst",
+					"tgt",
 					" r ",
 				),
 				ItemStack(PreventTheSpread.TARGETED_DRUG_INJECTOR_BLOCK_ITEM, 8),
@@ -85,12 +85,12 @@ class RecipeGenerator(
 				RawShapedRecipe.create(
 					mutableMapOf(
 						'c' to Ingredient.ofItems(Items.COPPER_INGOT),
+						'g' to Ingredient.ofItems(Items.GLOW_LICHEN),
 						'r' to Ingredient.ofItems(Items.LIGHTNING_ROD),
-						's' to Ingredient.ofItems(Items.SLIME_BALL),
 						't' to Ingredient.ofItems(Items.IRON_TRAPDOOR),
 					),
 					"c c",
-					"tst",
+					"tgt",
 					" r ",
 				),
 				ItemStack(PreventTheSpread.TARGETED_DRUG_INJECTOR_BLOCK_ITEM, 16),
