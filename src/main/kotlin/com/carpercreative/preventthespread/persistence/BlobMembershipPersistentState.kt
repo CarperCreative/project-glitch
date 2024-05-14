@@ -15,6 +15,8 @@ import net.minecraft.world.PersistentState
 class BlobMembershipPersistentState : PersistentState() {
 	private val memberships = hashMapOf<BlockPos, BlobIdentifier>()
 
+	fun getBlobMembershipsEntries(): Set<Map.Entry<BlockPos, BlobIdentifier>> = memberships.entries
+
 	fun setMembership(blockPos: BlockPos, cancerBlob: CancerBlob) {
 		setMembership(blockPos, cancerBlob.id)
 	}
