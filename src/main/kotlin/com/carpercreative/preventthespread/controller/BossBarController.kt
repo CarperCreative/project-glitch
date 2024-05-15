@@ -1,5 +1,6 @@
 package com.carpercreative.preventthespread.controller
 
+import com.carpercreative.preventthespread.ChallengeConstants
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.Storage
 import kotlin.math.roundToInt
@@ -41,6 +42,6 @@ object BossBarController {
 	private fun getDangerLevel(): Float {
 		val cancerousBlockCount = Storage.cancerBlob.getTotalCancerousBlockCount()
 
-		return cancerousBlockCount.toFloat() / CANCEROUS_BLOCK_LIMIT
+		return cancerousBlockCount.toFloat() / ChallengeConstants.CANCEROUS_BLOCK_LIMIT
 	}
 }
