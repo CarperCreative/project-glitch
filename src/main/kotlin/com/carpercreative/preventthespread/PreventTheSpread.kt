@@ -13,6 +13,7 @@ import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBl
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableResearchBlockEntity
 import com.carpercreative.preventthespread.controller.BossBarController
 import com.carpercreative.preventthespread.controller.CancerSpreadController
+import com.carpercreative.preventthespread.controller.CancerTouchEffectController
 import com.carpercreative.preventthespread.controller.EveryoneTeamController
 import com.carpercreative.preventthespread.controller.ResearchSynchronizationController
 import com.carpercreative.preventthespread.controller.StoryRootUnlockController
@@ -309,6 +310,7 @@ object PreventTheSpread : ModInitializer {
 
 		BossBarController.init()
 		CancerSpreadController.init()
+		CancerTouchEffectController.init()
 		EveryoneTeamController.init()
 		ResearchSynchronizationController.init()
 		StoryRootUnlockController.init()
@@ -319,7 +321,6 @@ object PreventTheSpread : ModInitializer {
 		// TODO: implement radiation staff recharge rate and/or heat capacity research
 		// TODO: fix model transformations of surgery tools (on-ground is MASSIVE) .-.
 		// TODO: spawn mobs
-		// TODO: make cancerous blocks hurt to walk on
 		// TODO: stretch goal: liquid cancer
 	}
 }
