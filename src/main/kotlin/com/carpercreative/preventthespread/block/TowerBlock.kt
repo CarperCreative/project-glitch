@@ -88,6 +88,13 @@ abstract class TowerBlock(
 	}
 
 	companion object {
+		const val AREA_OF_EFFECT_HORIZONTAL = 8
+		const val AREA_OF_EFFECT_VERTICAL = 6
+
+		init {
+			assert(AREA_OF_EFFECT_HORIZONTAL >= AREA_OF_EFFECT_VERTICAL) { "The area of effect of a tower must not be larger vertically than it is horizontally." }
+		}
+
 		val HALF: EnumProperty<DoubleBlockHalf>
 			get() = Properties.DOUBLE_BLOCK_HALF
 
