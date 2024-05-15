@@ -10,6 +10,7 @@ import com.carpercreative.preventthespread.block.ChillingTowerBlock
 import com.carpercreative.preventthespread.block.ProcessingTableBlock
 import com.carpercreative.preventthespread.block.SolidCancerBlock
 import com.carpercreative.preventthespread.block.TargetedDrugInjectorBlock
+import com.carpercreative.preventthespread.block.TowerBlock
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableResearchBlockEntity
 import com.carpercreative.preventthespread.controller.BossBarController
@@ -40,6 +41,7 @@ import net.minecraft.block.Blocks
 import net.minecraft.block.MapColor
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.block.enums.DoubleBlockHalf
 import net.minecraft.block.piston.PistonBehavior
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.SpawnGroup
@@ -49,6 +51,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.ToolMaterials
 import net.minecraft.registry.Registries
 import net.minecraft.registry.Registry
+import net.minecraft.registry.RegistryKey
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.registry.tag.TagKey
 import net.minecraft.resource.featuretoggle.FeatureFlags
@@ -57,6 +60,8 @@ import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
+import net.minecraft.world.poi.PointOfInterestType
+import net.minecraft.world.poi.PointOfInterestTypes
 
 @Suppress("MemberVisibilityCanBePrivate")
 object PreventTheSpread : ModInitializer {
@@ -184,6 +189,10 @@ object PreventTheSpread : ModInitializer {
 	val PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER = ScreenHandlerType(::ProcessingTableAnalyzerScreenHandler, FeatureFlags.VANILLA_FEATURES)
 	val PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER = ScreenHandlerType(::ProcessingTableResearchScreenHandler, FeatureFlags.VANILLA_FEATURES)
 
+	val CHILLING_TOWER_POI_TYPE: RegistryKey<PointOfInterestType> = RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, CHILLING_TOWER_ID)
+	lateinit var CHILLING_TOWER_POI: PointOfInterestType
+		private set
+
 	val SELECT_RESEARCH_PACKET_ID = identifier("select_research")
 
 	private val ITEM_GROUP = FabricItemGroup.builder()
@@ -309,6 +318,8 @@ object PreventTheSpread : ModInitializer {
 
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_analyzer"), PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER)
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_research"), PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER)
+
+		CHILLING_TOWER_POI = PointOfInterestTypes.register(Registries.POINT_OF_INTEREST_TYPE, CHILLING_TOWER_POI_TYPE, CHILLING_TOWER_BLOCK.stateManager.states.filter { it.get(TowerBlock.HALF) == DoubleBlockHalf.LOWER }.toSet(), 0, 1)
 
 		ServerPlayNetworking.registerGlobalReceiver(SELECT_RESEARCH_PACKET_ID, SelectResearchPacket::handle)
 
