@@ -1,7 +1,21 @@
 {
 	"variants": {
-		"": {
-			"model": "preventthespread:block/cancer_leaves"
-		}
+		"": [
+			{
+				"model": "preventthespread:block/cancer_leaves"
+			},
+			{
+				"model": "preventthespread:block/cancer_leaves_1"
+			},
+			{
+				"model": "preventthespread:block/cancer_leaves_2"
+			},
+			{
+				"model": "preventthespread:block/cancer_leaves_3"
+			},
+			{
+				"model": "preventthespread:block/cancer_leaves_4"
+			}
+		]
 	}
 }

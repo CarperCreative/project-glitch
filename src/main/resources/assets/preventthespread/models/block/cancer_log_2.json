@@ -1,0 +1,7 @@
+{
+	"parent": "minecraft:block/cube_column",
+	"textures": {
+		"end": "preventthespread:block/cancer_log_top_2",
+		"side": "preventthespread:block/cancer_log_2"
+	}
+}
