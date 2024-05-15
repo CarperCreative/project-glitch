@@ -14,7 +14,9 @@ import net.minecraft.loot.context.LootContextTypes
 import net.minecraft.loot.entry.ItemEntry
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider
 import net.minecraft.predicate.StatePredicate
+import net.minecraft.state.property.Property
 import net.minecraft.util.Identifier
+import net.minecraft.util.StringIdentifiable
 
 class BlockLootTableGenerator(
 	output: FabricDataOutput,
@@ -25,26 +27,11 @@ class BlockLootTableGenerator(
 				PreventTheSpread.identifier("blocks/chemotherapeutic_drug"),
 				PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM,
 			)
-			accept(
+			addBlockDropWithPropertyCondition(
 				PreventTheSpread.identifier("blocks/processing_table"),
-				LootTable.builder()
-					.type(LootContextTypes.BLOCK)
-					.randomSequenceId(PreventTheSpread.identifier("blocks/processing_table"))
-					.pool(
-						LootPool.builder()
-							.bonusRolls(ConstantLootNumberProvider.create(0f))
-							.conditionally(SurvivesExplosionLootCondition.builder())
-							.conditionally(
-								BlockStatePropertyLootCondition.builder(PreventTheSpread.PROCESSING_TABLE_BLOCK)
-									.properties(
-										StatePredicate.Builder.create()
-											.exactMatch(ProcessingTableBlock.PROCESSING_TABLE_PART, ProcessingTableBlock.ProcessingTablePart.LEFT)
-									)
-									.build()
-							)
-							.with(ItemEntry.builder(PreventTheSpread.PROCESSING_TABLE_BLOCK_ITEM))
-							.build()
-					)
+				PreventTheSpread.PROCESSING_TABLE_BLOCK_ITEM,
+				ProcessingTableBlock.PROCESSING_TABLE_PART,
+				ProcessingTableBlock.ProcessingTablePart.LEFT,
 			)
 			addBlockDrop(
 				PreventTheSpread.identifier("blocks/targeted_drug_injector"),
@@ -63,6 +50,35 @@ class BlockLootTableGenerator(
 					LootPool.builder()
 						.bonusRolls(ConstantLootNumberProvider.create(0f))
 						.conditionally(SurvivesExplosionLootCondition.builder())
+						.with(ItemEntry.builder(item))
+						.build()
+				)
+		)
+	}
+
+	private fun <T> BiConsumer<Identifier, LootTable.Builder>.addBlockDropWithPropertyCondition(
+		identifier: Identifier,
+		item: BlockItem,
+		property: Property<T>,
+		propertyValue: T,
+	) where T : Comparable<T>, T : StringIdentifiable {
+		accept(
+			identifier,
+			LootTable.builder()
+				.type(LootContextTypes.BLOCK)
+				.randomSequenceId(identifier)
+				.pool(
+					LootPool.builder()
+						.bonusRolls(ConstantLootNumberProvider.create(0f))
+						.conditionally(SurvivesExplosionLootCondition.builder())
+						.conditionally(
+							BlockStatePropertyLootCondition.builder(item.block)
+								.properties(
+									StatePredicate.Builder.create()
+										.exactMatch(property, propertyValue)
+								)
+								.build()
+						)
 						.with(ItemEntry.builder(item))
 						.build()
 				)
