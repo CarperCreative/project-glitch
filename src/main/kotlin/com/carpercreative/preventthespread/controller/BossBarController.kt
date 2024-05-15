@@ -29,10 +29,12 @@ object BossBarController {
 					color = BossBar.Color.RED
 				}
 
+			val dangerLevel = getDangerLevel()
+
 			bossBar.maxValue = 100
 			// TODO: value updates could be reactive to block events
-			bossBar.value = (getDangerLevel() * 100).roundToInt()
-			bossBar.name = Text.translatable("${PreventTheSpread.MOD_ID}.boss_bar_controller.text", (getDangerLevel() * 100).roundToInt())
+			bossBar.value = (dangerLevel * 100).roundToInt()
+			bossBar.name = Text.translatable("${PreventTheSpread.MOD_ID}.boss_bar_controller.text", (dangerLevel * 100).roundToInt())
 
 			// TODO: this could be reactive to player joins
 			bossBar.addPlayers(server.playerManager.playerList)
