@@ -18,6 +18,8 @@ import net.minecraft.state.property.Properties
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.MathHelper
+import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.random.Random
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 
@@ -86,6 +88,26 @@ abstract class TowerBlock(
 	override fun getRenderingSeed(state: BlockState, pos: BlockPos): Long {
 		return MathHelper.hashCode(pos.x, pos.down(if (state.get(TallPlantBlock.HALF) == DoubleBlockHalf.LOWER) 0 else 1).y, pos.z)
 	}
+
+	override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: Random) {
+		if (state.get(HALF) == DoubleBlockHalf.LOWER) {
+			for (index in 1..3) {
+				// TODO: use gaussian to bias towards outer edges
+				val particlePos = pos.toCenterPos()
+					.add(
+						random.nextDouble() * 2 * AREA_OF_EFFECT_HORIZONTAL - AREA_OF_EFFECT_HORIZONTAL,
+						random.nextDouble() * 2 * AREA_OF_EFFECT_VERTICAL - AREA_OF_EFFECT_VERTICAL,
+						random.nextDouble() * 2 * AREA_OF_EFFECT_HORIZONTAL - AREA_OF_EFFECT_HORIZONTAL,
+					)
+
+				spawnParticle(state, world, particlePos, random)
+			}
+		}
+
+		super.randomDisplayTick(state, world, pos, random)
+	}
+
+	protected abstract fun spawnParticle(state: BlockState, world: World, particlePos: Vec3d, random: Random)
 
 	companion object {
 		const val AREA_OF_EFFECT_HORIZONTAL = 8
