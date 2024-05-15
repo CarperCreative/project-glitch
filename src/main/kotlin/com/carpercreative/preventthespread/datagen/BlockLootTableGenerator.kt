@@ -2,9 +2,11 @@ package com.carpercreative.preventthespread.datagen
 
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.block.ProcessingTableBlock
+import com.carpercreative.preventthespread.block.TowerBlock
 import java.util.function.BiConsumer
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
+import net.minecraft.block.enums.DoubleBlockHalf
 import net.minecraft.item.BlockItem
 import net.minecraft.loot.LootPool
 import net.minecraft.loot.LootTable
@@ -26,6 +28,12 @@ class BlockLootTableGenerator(
 			addBlockDrop(
 				PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID,
 				PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM,
+			)
+			addBlockDropWithPropertyCondition(
+				PreventTheSpread.CHILLING_TOWER_ID,
+				PreventTheSpread.CHILLING_TOWER_BLOCK_ITEM,
+				TowerBlock.HALF,
+				DoubleBlockHalf.LOWER,
 			)
 			addBlockDropWithPropertyCondition(
 				PreventTheSpread.PROCESSING_TABLE_ID,

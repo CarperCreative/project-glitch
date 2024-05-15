@@ -1,0 +1,12 @@
+{
+	"variants": {
+		"half=upper": {
+			"model": "preventthespread:block/processing_table_left",
+			"x": 90
+		},
+		"half=lower": {
+			"model": "preventthespread:block/processing_table_right",
+			"x": 90
+		}
+	}
+}

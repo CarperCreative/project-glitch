@@ -6,6 +6,7 @@ import com.carpercreative.preventthespread.block.CancerSlabBlock
 import com.carpercreative.preventthespread.block.CancerStairsBlock
 import com.carpercreative.preventthespread.block.CancerousBlock
 import com.carpercreative.preventthespread.block.ChemotherapeuticDrugBlock
+import com.carpercreative.preventthespread.block.ChillingTowerBlock
 import com.carpercreative.preventthespread.block.ProcessingTableBlock
 import com.carpercreative.preventthespread.block.SolidCancerBlock
 import com.carpercreative.preventthespread.block.TargetedDrugInjectorBlock
@@ -111,6 +112,9 @@ object PreventTheSpread : ModInitializer {
 	val CHEMOTHERAPEUTIC_DRUG_ID = identifier("chemotherapeutic_drug")
 	val CHEMOTHERAPEUTIC_DRUG_BLOCK = ChemotherapeuticDrugBlock(FabricBlockSettings.create().mapColor(MapColor.LIGHT_BLUE).nonOpaque().breakInstantly().sounds(BlockSoundGroup.GRASS).solidBlock(Blocks::never))
 	val CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM = BlockItem(CHEMOTHERAPEUTIC_DRUG_BLOCK, FabricItemSettings())
+	val CHILLING_TOWER_ID = identifier("chilling_tower")
+	val CHILLING_TOWER_BLOCK = ChillingTowerBlock(FabricBlockSettings.create().mapColor(MapColor.BROWN).nonOpaque().sounds(BlockSoundGroup.METAL).solidBlock(Blocks::never))
+	val CHILLING_TOWER_BLOCK_ITEM = BlockItem(CHILLING_TOWER_BLOCK, FabricItemSettings())
 	val PROCESSING_TABLE_ID = identifier("processing_table")
 	val PROCESSING_TABLE_BLOCK = ProcessingTableBlock(
 		FabricBlockSettings.create()
@@ -279,6 +283,8 @@ object PreventTheSpread : ModInitializer {
 
 		Registry.register(Registries.BLOCK, CHEMOTHERAPEUTIC_DRUG_ID, CHEMOTHERAPEUTIC_DRUG_BLOCK)
 		Registry.register(Registries.ITEM, CHEMOTHERAPEUTIC_DRUG_ID, CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM)
+		Registry.register(Registries.BLOCK, CHILLING_TOWER_ID, CHILLING_TOWER_BLOCK)
+		Registry.register(Registries.ITEM, CHILLING_TOWER_ID, CHILLING_TOWER_BLOCK_ITEM)
 		Registry.register(Registries.BLOCK, PROCESSING_TABLE_ID, PROCESSING_TABLE_BLOCK)
 		Registry.register(Registries.ITEM, PROCESSING_TABLE_ID, PROCESSING_TABLE_BLOCK_ITEM)
 		Registry.register(Registries.BLOCK, TARGETED_DRUG_INJECTOR_ID, TARGETED_DRUG_INJECTOR_BLOCK)
