@@ -2,6 +2,7 @@ package com.carpercreative.preventthespread.cancer
 
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.Storage
+import com.carpercreative.preventthespread.block.TowerBlock
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
 import com.carpercreative.preventthespread.persistence.SpreadDifficultyPersistentState
 import com.carpercreative.preventthespread.util.contentsSequence
@@ -10,6 +11,7 @@ import com.carpercreative.preventthespread.util.nextOfList
 import com.carpercreative.preventthespread.util.nextOfListOrNull
 import java.util.LinkedList
 import kotlin.math.PI
+import kotlin.math.absoluteValue
 import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
@@ -24,6 +26,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.random.Random
 import net.minecraft.world.Heightmap
+import net.minecraft.world.poi.PointOfInterestStorage
 
 object CancerLogic {
 	private val WEIGHTED_DIRECTIONS = arrayOf(
@@ -270,6 +273,20 @@ object CancerLogic {
 
 		// Prefer spreading to existing blocks over growing out into empty space.
 		if (!bypassThrottling && targetCurrentBlockState.isAir && random.nextFloat() <= 0.8f) return
+
+		// 50% chance for a chilling tower to prevent the spread.
+		if (random.nextInt(2) == 0) {
+			val chillingTowerInRange = world.pointOfInterestStorage
+				.getInSquare(
+					{ type -> type.matchesKey(PreventTheSpread.CHILLING_TOWER_POI_TYPE) },
+					spreadPosition,
+					TowerBlock.AREA_OF_EFFECT_HORIZONTAL,
+					PointOfInterestStorage.OccupationStatus.ANY,
+				)
+				.anyMatch { (it.pos.y - spreadPosition.y).absoluteValue <= TowerBlock.AREA_OF_EFFECT_VERTICAL }
+
+			if (chillingTowerInRange) return
+		}
 
 		// Spread to blocks which already have a bunch of cancerous neighbors with a higher likelihood.
 		val cancerousNeighborCountOfTarget = Direction.entries
