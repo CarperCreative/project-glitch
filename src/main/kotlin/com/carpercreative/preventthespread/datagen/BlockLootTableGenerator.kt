@@ -24,28 +24,31 @@ class BlockLootTableGenerator(
 	override fun accept(exporter: BiConsumer<Identifier, LootTable.Builder>) {
 		exporter.run {
 			addBlockDrop(
-				PreventTheSpread.identifier("blocks/chemotherapeutic_drug"),
+				PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID,
 				PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM,
 			)
 			addBlockDropWithPropertyCondition(
-				PreventTheSpread.identifier("blocks/processing_table"),
+				PreventTheSpread.PROCESSING_TABLE_ID,
 				PreventTheSpread.PROCESSING_TABLE_BLOCK_ITEM,
 				ProcessingTableBlock.PROCESSING_TABLE_PART,
 				ProcessingTableBlock.ProcessingTablePart.LEFT,
 			)
 			addBlockDrop(
-				PreventTheSpread.identifier("blocks/targeted_drug_injector"),
+				PreventTheSpread.TARGETED_DRUG_INJECTOR_ID,
 				PreventTheSpread.TARGETED_DRUG_INJECTOR_BLOCK_ITEM,
 			)
 		}
 	}
 
+	private val Identifier.withBlocksPrefix: Identifier
+		get() = withPrefixedPath("blocks/")
+
 	private fun BiConsumer<Identifier, LootTable.Builder>.addBlockDrop(identifier: Identifier, item: BlockItem) {
 		accept(
-			identifier,
+			identifier.withBlocksPrefix,
 			LootTable.builder()
 				.type(LootContextTypes.BLOCK)
-				.randomSequenceId(identifier)
+				.randomSequenceId(identifier.withBlocksPrefix)
 				.pool(
 					LootPool.builder()
 						.bonusRolls(ConstantLootNumberProvider.create(0f))
@@ -63,10 +66,10 @@ class BlockLootTableGenerator(
 		propertyValue: T,
 	) where T : Comparable<T>, T : StringIdentifiable {
 		accept(
-			identifier,
+			identifier.withBlocksPrefix,
 			LootTable.builder()
 				.type(LootContextTypes.BLOCK)
-				.randomSequenceId(identifier)
+				.randomSequenceId(identifier.withBlocksPrefix)
 				.pool(
 					LootPool.builder()
 						.bonusRolls(ConstantLootNumberProvider.create(0f))
