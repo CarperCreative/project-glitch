@@ -1,5 +1,6 @@
 package com.carpercreative.preventthespread.controller
 
+import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
@@ -29,6 +30,8 @@ object CancerSpreadController {
 	}
 
 	private fun tryCreateNewBlob(world: ServerWorld) {
+		if (!world.gameRules.getBoolean(PreventTheSpread.DO_CANCER_SPAWNING_GAME_RULE)) return
+
 		val spreadDifficulty = Storage.spreadDifficulty
 
 		if (Storage.cancerBlob.getActiveCancerBlobCount() >= spreadDifficulty.maxActiveBlobs) return
@@ -38,6 +41,8 @@ object CancerSpreadController {
 	}
 
 	private fun tickBlobs(world: ServerWorld) {
+		if (!world.gameRules.getBoolean(PreventTheSpread.DO_CANCER_SPREAD_GAME_RULE)) return
+
 		val blobMembership = world.getBlobMembershipPersistentState()
 		val blobMemberships = blobMembership.getBlobMembershipsEntries()
 		if (blobMemberships.isEmpty()) return

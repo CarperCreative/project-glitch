@@ -32,6 +32,8 @@ import com.carpercreative.preventthespread.networking.SelectResearchPacket
 import com.carpercreative.preventthespread.screen.ProcessingTableAnalyzerScreenHandler
 import com.carpercreative.preventthespread.screen.ProcessingTableResearchScreenHandler
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
@@ -60,6 +62,7 @@ import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.Rarity
+import net.minecraft.world.GameRules
 import net.minecraft.world.poi.PointOfInterestType
 import net.minecraft.world.poi.PointOfInterestTypes
 
@@ -194,6 +197,9 @@ object PreventTheSpread : ModInitializer {
 		private set
 
 	val SELECT_RESEARCH_PACKET_ID = identifier("select_research")
+
+	val DO_CANCER_SPAWNING_GAME_RULE: GameRules.Key<GameRules.BooleanRule> = GameRuleRegistry.register("$MOD_ID:doCancerSpawning", GameRules.Category.UPDATES, GameRuleFactory.createBooleanRule(false))
+	val DO_CANCER_SPREAD_GAME_RULE: GameRules.Key<GameRules.BooleanRule> = GameRuleRegistry.register("$MOD_ID:doCancerSpread", GameRules.Category.UPDATES, GameRuleFactory.createBooleanRule(true))
 
 	private val ITEM_GROUP = FabricItemGroup.builder()
 		.icon { ItemStack(CANCER_DIRT_BLOCK_ITEM) }

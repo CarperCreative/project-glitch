@@ -266,6 +266,8 @@ object CancerLogic {
 	}
 
 	fun attemptSpread(world: ServerWorld, pos: BlockPos, random: Random, bypassThrottling: Boolean = false) {
+		if (!world.gameRules.getBoolean(PreventTheSpread.DO_CANCER_SPREAD_GAME_RULE)) return
+
 		val spreadPosition = getSpreadTargetPosition(world, pos, random)
 		val targetCurrentBlockState = world.getBlockState(spreadPosition)
 

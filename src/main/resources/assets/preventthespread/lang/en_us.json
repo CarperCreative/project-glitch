@@ -55,6 +55,8 @@
 	"container.preventthespread.processing_table_analyzer.empty_book_tooltip.1": "or a book containing previous analysis results.",
 	"container.preventthespread.processing_table_research": "Research Table",
 	"container.preventthespread.processing_table_research.research_button": "Research",
+	"gamerule.preventthespread:doCancerSpawning": "Spawn new cancerous blobs",
+	"gamerule.preventthespread:doCancerSpread": "Spread existing cancerous blobs",
 	"item.preventthespread.cancerous_material": "Cancerous Material",
 	"item.preventthespread.probe.empty": "Empty Probe",
 	"item.preventthespread.probe.full": "Probe with Sample",
