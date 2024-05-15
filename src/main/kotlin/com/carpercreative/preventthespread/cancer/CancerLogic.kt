@@ -3,6 +3,7 @@ package com.carpercreative.preventthespread.cancer
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.block.TowerBlock
+import com.carpercreative.preventthespread.cancer.CancerLogic.CancerSpreadEvent
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
 import com.carpercreative.preventthespread.persistence.SpreadDifficultyPersistentState
 import com.carpercreative.preventthespread.util.contentsSequence
@@ -15,6 +16,8 @@ import kotlin.math.absoluteValue
 import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
+import net.fabricmc.fabric.api.event.Event
+import net.fabricmc.fabric.api.event.EventFactory
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.SlabBlock
@@ -34,6 +37,16 @@ object CancerLogic {
 		Direction.WEST, Direction.EAST, Direction.NORTH, Direction.SOUTH,
 		Direction.DOWN, Direction.UP,
 	)
+
+	fun interface CancerSpreadEvent {
+		fun onCancerSpread(world: ServerWorld, fromPos: BlockPos?, toPos: BlockPos)
+	}
+
+	val cancerSpreadEvent: Event<CancerSpreadEvent> = EventFactory.createArrayBacked(CancerSpreadEvent::class.java) { callbacks ->
+		CancerSpreadEvent { world, fromPos, toPos ->
+			callbacks.forEach { it.onCancerSpread(world, fromPos, toPos) }
+		}
+	}
 
 	fun BlockState.isCancerous(): Boolean {
 		return isIn(PreventTheSpread.CANCEROUS_BLOCK_TAG)
@@ -194,6 +207,8 @@ object CancerLogic {
 		for (blockPos in getBlocksForBlobCreation(world, cancerSpawnPos, maxSize)) {
 			convertToCancer(world, blockPos)
 			blobMembershipPersistentState.setMembership(blockPos, cancerBlob)
+
+			cancerSpreadEvent.invoker().onCancerSpread(world, null, blockPos)
 		}
 
 		return cancerBlob
@@ -308,6 +323,8 @@ object CancerLogic {
 		if (blobId != null) {
 			blobMembershipPersistentState.setMembership(toPos, blobId)
 		}
+
+		cancerSpreadEvent.invoker().onCancerSpread(world, fromPos, toPos)
 	}
 
 	fun hastenSpread(world: ServerWorld, pos: BlockPos, random: Random, distance: Int = 3) {
