@@ -57,6 +57,26 @@ class RecipeGenerator(
 		)
 
 		exporter.accept(
+			PreventTheSpread.CHILLING_TOWER_ID,
+			ShapedRecipe(
+				PreventTheSpread.CHILLING_TOWER_ID.toString(),
+				CraftingRecipeCategory.EQUIPMENT,
+				RawShapedRecipe.create(
+					mutableMapOf(
+						'c' to Ingredient.ofItems(Items.COPPER_BLOCK),
+						'r' to Ingredient.ofItems(Items.REDSTONE_TORCH),
+						's' to Ingredient.ofItems(Items.SNOW_BLOCK),
+					),
+					"r",
+					"s",
+					"c",
+				),
+				ItemStack(PreventTheSpread.CHILLING_TOWER_BLOCK_ITEM, 2),
+			),
+			null,
+		)
+
+		exporter.accept(
 			PreventTheSpread.TARGETED_DRUG_INJECTOR_ID,
 			ShapedRecipe(
 				PreventTheSpread.TARGETED_DRUG_INJECTOR_ID.toString(),
