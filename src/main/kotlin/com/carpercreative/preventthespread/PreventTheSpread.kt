@@ -211,6 +211,7 @@ object PreventTheSpread : ModInitializer {
 			entries.add(SURGERY_PICKAXE_ITEM)
 			entries.add(SURGERY_SHOVEL_ITEM)
 			entries.add(TARGETED_DRUG_INJECTOR_BLOCK_ITEM)
+			entries.add(CHILLING_TOWER_BLOCK_ITEM)
 			entries.add(CANCER_DIRT_BLOCK_ITEM)
 			entries.add(CANCER_LOG_BLOCK_ITEM)
 			entries.add(CANCER_PLANKS_BLOCK_ITEM)
