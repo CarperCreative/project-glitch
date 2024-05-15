@@ -13,6 +13,7 @@ class ItemTagGenerator(
 	override fun configure(arg: WrapperLookup) {
 		getOrCreateTagBuilder(PreventTheSpread.REQUIRES_RECIPE_TO_CRAFT_ITEM_TAG)
 			.add(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID)
+			.add(PreventTheSpread.CHILLING_TOWER_ID)
 			.add(PreventTheSpread.RADIATION_STAFF_ITEM_ID)
 			.add(PreventTheSpread.TARGETED_DRUG_INJECTOR_ID)
 

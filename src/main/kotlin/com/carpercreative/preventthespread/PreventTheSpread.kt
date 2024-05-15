@@ -256,6 +256,7 @@ object PreventTheSpread : ModInitializer {
 		val CHEAPER_CHEMOTHERAPEUTIC_DRUG_ID = researchIdentifier("cheaper_${PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path}")
 		val CHEMOTHERAPEUTIC_DRUG_STRENGTH_1_ID = researchIdentifier("${PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path}_strength_1")
 		val CHEMOTHERAPEUTIC_DRUG_STRENGTH_2_ID = researchIdentifier("${PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path}_strength_2")
+		val CHILLING_TOWER_ID = researchIdentifier(PreventTheSpread.CHILLING_TOWER_ID.path)
 		val RADIATION_STAFF_ID = researchIdentifier(RADIATION_STAFF_ITEM_ID.path)
 		val RADIATION_STAFF_STRENGTH_1_ID = researchIdentifier("${RADIATION_STAFF_ITEM_ID.path}_strength_1")
 		val RADIATION_STAFF_STRENGTH_2_ID = researchIdentifier("${RADIATION_STAFF_ITEM_ID.path}_strength_2")
@@ -335,7 +336,6 @@ object PreventTheSpread : ModInitializer {
 
 		// TODO: add cancerous material and research item textures
 		// TODO: create research state store (per player?)
-		// TODO: implement towers/beacons
 		// TODO: implement radiation staff recharge rate and/or heat capacity research
 		// TODO: fix model transformations of surgery tools (on-ground is MASSIVE) .-.
 		// TODO: spawn mobs
