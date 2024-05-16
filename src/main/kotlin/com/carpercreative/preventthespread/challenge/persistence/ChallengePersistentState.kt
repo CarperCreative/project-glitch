@@ -43,7 +43,7 @@ class ChallengePersistentState(
 		if (cheated) return
 		cheated = true
 
-		server.playerManager.broadcast(Text.literal("Prevent the Spread challenge invalidated."), true)
+		server.playerManager.broadcast(Text.literal("Prevent the Spread challenge invalidated."), false)
 	}
 
 	override fun writeNbt(nbt: NbtCompound): NbtCompound {

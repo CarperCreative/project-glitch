@@ -125,7 +125,7 @@ object ChallengeStatusController {
 		)
 
 		if (challengePersistentState.cheated) {
-			server.playerManager.broadcast(Text.literal("This run was not valid.").formatted(Formatting.RED), true)
+			server.playerManager.broadcast(Text.literal("This run was not valid.").formatted(Formatting.RED), false)
 		}
 
 		for (world in server.worlds) {
