@@ -16,6 +16,9 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.sound.SoundCategory
+import net.minecraft.sound.SoundEvent
+import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.random.Random
 import net.minecraft.world.World
@@ -46,6 +49,8 @@ object CancerousBlock {
 					val itemPos = pos.toCenterPos()
 					world.spawnEntity(ItemEntity(world, itemPos.x, itemPos.y, itemPos.z, PreventTheSpread.CANCEROUS_MATERIAL_ITEM.defaultStack))
 				}
+
+				world.playSoundAtBlockCenter(pos, SoundEvent.of(Identifier("entity.player.levelup")), SoundCategory.BLOCKS, 1f, 1f, true)
 			}
 		}
 	}
