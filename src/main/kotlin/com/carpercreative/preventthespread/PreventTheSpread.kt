@@ -13,6 +13,8 @@ import com.carpercreative.preventthespread.block.TargetedDrugInjectorBlock
 import com.carpercreative.preventthespread.block.TowerBlock
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
 import com.carpercreative.preventthespread.blockEntity.ProcessingTableResearchBlockEntity
+import com.carpercreative.preventthespread.challenge.controller.ChallengeStatusController
+import com.carpercreative.preventthespread.challenge.controller.ChallengeValidityController
 import com.carpercreative.preventthespread.controller.BossBarController
 import com.carpercreative.preventthespread.controller.CancerSpreadController
 import com.carpercreative.preventthespread.controller.CancerTouchEffectController
@@ -336,6 +338,8 @@ object PreventTheSpread : ModInitializer {
 		BossBarController.init()
 		CancerSpreadController.init()
 		CancerTouchEffectController.init()
+		ChallengeStatusController.init()
+		ChallengeValidityController.init()
 		EveryoneTeamController.init()
 		ResearchSynchronizationController.init()
 		StoryRootUnlockController.init()
