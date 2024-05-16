@@ -5,6 +5,7 @@ import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.cancer.BlobIdentifier
 import com.carpercreative.preventthespread.cancer.CancerBlob
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
+import kotlin.math.sqrt
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
@@ -15,7 +16,9 @@ import net.minecraft.nbt.NbtHelper
 import net.minecraft.nbt.NbtInt
 import net.minecraft.nbt.NbtOps
 import net.minecraft.registry.RegistryKey
+import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
@@ -158,6 +161,19 @@ class ScannerItem(
 				setTrackedPosition(stack, world.registryKey, trackedPosition)
 			} else {
 				clearTrackedPosition(stack)
+			}
+
+			if (entity is ServerPlayerEntity && entity.isHolding { it == stack }) {
+				entity.sendMessage(
+					when (blobId) {
+						null -> Text.translatable("${stack.item.translationKey}.tracking_nearest_unknown")
+						else -> Text.translatable(
+							"${stack.item.translationKey}.tracking_known",
+							trackedPosition?.getSquaredDistance(entity.pos)?.let(::sqrt)?.let { "%.1f".format(it) } ?: "?",
+						)
+					},
+					true,
+				)
 			}
 		}
 	}

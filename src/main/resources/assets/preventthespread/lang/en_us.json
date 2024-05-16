@@ -68,6 +68,8 @@
 	"item.preventthespread.radiation_staff": "Radiation Staff",
 	"item.preventthespread.research": "Research",
 	"item.preventthespread.scanner": "Scanner",
+	"item.preventthespread.scanner.tracking_known": "Tracking known blob [%sm]",
+	"item.preventthespread.scanner.tracking_nearest_unknown": "Tracking nearest unknown blob",
 	"item.preventthespread.surgery_axe": "Surgery Axe",
 	"item.preventthespread.surgery_hoe": "Surgery Hoe",
 	"item.preventthespread.surgery_pickaxe": "Surgery Pickaxe",
