@@ -42,8 +42,10 @@ object CancerousBlock {
 			val cancerBlob = world.getBlobMembershipPersistentState().removeMembership(pos)
 
 			if (cancerBlob != null && cancerBlob.cancerousBlockCount == 0) {
-				val itemPos = pos.toCenterPos()
-				world.spawnEntity(ItemEntity(world, itemPos.x, itemPos.y, itemPos.z, PreventTheSpread.CANCEROUS_MATERIAL_ITEM.defaultStack))
+				if (cancerBlob.isAnalyzed) {
+					val itemPos = pos.toCenterPos()
+					world.spawnEntity(ItemEntity(world, itemPos.x, itemPos.y, itemPos.z, PreventTheSpread.CANCEROUS_MATERIAL_ITEM.defaultStack))
+				}
 			}
 		}
 	}
