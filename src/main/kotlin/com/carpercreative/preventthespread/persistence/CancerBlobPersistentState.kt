@@ -19,6 +19,10 @@ class CancerBlobPersistentState : PersistentState() {
 
 	private val cancerBlobs = hashMapOf<BlobIdentifier, CancerBlob>()
 
+	fun getCancerBlobs(): Map<BlobIdentifier, CancerBlob> {
+		return cancerBlobs
+	}
+
 	fun getCancerBlobByIdOrNull(id: BlobIdentifier): CancerBlob? {
 		return cancerBlobs[id]
 	}
