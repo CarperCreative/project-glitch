@@ -6,9 +6,13 @@ import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.challenge.persistence.ChallengePersistentState.ChallengeStatus
 import com.carpercreative.preventthespread.challenge.persistence.ChallengePersistentState.Companion.getChallengePersistentState
+import com.carpercreative.preventthespread.team.Team
+import com.carpercreative.preventthespread.team.TeamManager
 import com.mojang.logging.LogUtils
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
 import net.minecraft.util.Formatting
@@ -22,6 +26,14 @@ object ChallengeStatusController {
 	fun init() {
 		ServerTickEvents.END_WORLD_TICK.register(::onEndWorldTick)
 		CancerLogic.cancerSpreadEvent.register(::onCancerSpread)
+		Storage.teamManager.playerAddedEvent.register(::onTeamPlayerAdded)
+	}
+
+	private fun onTeamPlayerAdded(teamManager: TeamManager, team: Team, playerEntity: PlayerEntity) {
+		if (playerEntity !is ServerPlayerEntity) return
+		if (!playerEntity.server.getChallengePersistentState().isInProgress) return
+
+		playerEntity.sendMessage(Text.translatable("preventthespread.challenge.is_in_progress"))
 	}
 
 	private fun onEndWorldTick(world: ServerWorld) {

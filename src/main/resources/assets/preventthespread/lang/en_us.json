@@ -82,6 +82,7 @@
 	"preventthespread.cancer_type.early": "Early",
 	"preventthespread.cancer_type.pre_cancerous": "Pre-cancerous",
 	"preventthespread.challenge.ended": "Game over! You defeated %s cancerous blobs in %s.",
+	"preventthespread.challenge.is_in_progress": "Prevent the Spread Challenge is in progress.",
 	"preventthespread.treatment_type.chemotherapy": "Chemotherapy",
 	"preventthespread.treatment_type.radiation_therapy": "Radiation Therapy",
 	"preventthespread.treatment_type.surgery": "Surgery",
