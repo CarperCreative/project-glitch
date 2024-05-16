@@ -286,6 +286,8 @@ class ProcessingTableAnalyzerBlockEntity(
 					},
 				),
 			)
+
+			Storage.cancerBlob.setCancerBlobAnalyzed(cancerBlob)
 		}
 
 		private fun signBook(itemStack: ItemStack): ItemStack? {

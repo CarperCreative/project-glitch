@@ -165,6 +165,15 @@ class AdvancementGenerator(
 			)
 		}
 
+		// Chilling tower.
+		consumer.createResearchAdvancement(
+			ResearchAdvancement.CHILLING_TOWER_ID,
+			researchRoot,
+			PreventTheSpread.CHILLING_TOWER_BLOCK_ITEM.defaultStack,
+		) {
+			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.CHILLING_TOWER_ID))
+		}
+
 		// Radiation staff.
 		val radiationStaff = consumer.createResearchAdvancement(
 			ResearchAdvancement.RADIATION_STAFF_ID,

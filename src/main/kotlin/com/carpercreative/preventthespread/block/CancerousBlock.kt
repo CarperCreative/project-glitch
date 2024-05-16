@@ -16,6 +16,9 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.sound.SoundCategory
+import net.minecraft.sound.SoundEvent
+import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.random.Random
 import net.minecraft.world.World
@@ -26,10 +29,7 @@ import net.minecraft.world.explosion.Explosion
  */
 object CancerousBlock {
 	fun randomTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: Random) {
-		// Prevent spreading on every random tick to keep it manageable.
-		if (random.nextFloat() <= 0.5f) return
-
-		CancerLogic.attemptSpread(world, pos, random)
+		// NOOP
 	}
 
 	fun scheduledTick(state: BlockState, world: ServerWorld, pos: BlockPos, random: Random) {
@@ -45,8 +45,12 @@ object CancerousBlock {
 			val cancerBlob = world.getBlobMembershipPersistentState().removeMembership(pos)
 
 			if (cancerBlob != null && cancerBlob.cancerousBlockCount == 0) {
-				val itemPos = pos.toCenterPos()
-				world.spawnEntity(ItemEntity(world, itemPos.x, itemPos.y, itemPos.z, PreventTheSpread.CANCEROUS_MATERIAL_ITEM.defaultStack))
+				if (cancerBlob.isAnalyzed) {
+					val itemPos = pos.toCenterPos()
+					world.spawnEntity(ItemEntity(world, itemPos.x, itemPos.y, itemPos.z, PreventTheSpread.CANCEROUS_MATERIAL_ITEM.defaultStack))
+				}
+
+				world.playSoundAtBlockCenter(pos, SoundEvent.of(Identifier("entity.player.levelup")), SoundCategory.BLOCKS, 1f, 1f, true)
 			}
 		}
 	}

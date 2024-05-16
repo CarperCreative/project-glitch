@@ -1,5 +1,6 @@
 package com.carpercreative.preventthespread.controller
 
+import com.carpercreative.preventthespread.ChallengeConstants
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.Storage
 import kotlin.math.roundToInt
@@ -28,10 +29,14 @@ object BossBarController {
 					color = BossBar.Color.RED
 				}
 
+			val dangerLevel = getDangerLevel()
+
+			bossBar.isVisible = dangerLevel > 0
+
 			bossBar.maxValue = 100
 			// TODO: value updates could be reactive to block events
-			bossBar.value = (getDangerLevel() * 100).roundToInt()
-			bossBar.name = Text.translatable("${PreventTheSpread.MOD_ID}.boss_bar_controller.text", (getDangerLevel() * 100).roundToInt())
+			bossBar.value = (dangerLevel * 100).roundToInt()
+			bossBar.name = Text.translatable("${PreventTheSpread.MOD_ID}.boss_bar_controller.text", (dangerLevel * 100).roundToInt())
 
 			// TODO: this could be reactive to player joins
 			bossBar.addPlayers(server.playerManager.playerList)
@@ -41,6 +46,6 @@ object BossBarController {
 	private fun getDangerLevel(): Float {
 		val cancerousBlockCount = Storage.cancerBlob.getTotalCancerousBlockCount()
 
-		return cancerousBlockCount.toFloat() / CANCEROUS_BLOCK_LIMIT
+		return cancerousBlockCount.toFloat() / ChallengeConstants.CANCEROUS_BLOCK_LIMIT
 	}
 }

@@ -9,6 +9,7 @@ class CancerBlob(
 	val type: CancerType,
 	maxMetastaticJumpDistance: Int,
 	cancerousBlockCount: Int = 0,
+	var isAnalyzed: Boolean = false,
 ) {
 	val maxMetastaticJumpDistance: Int = maxMetastaticJumpDistance.coerceAtLeast(0)
 
@@ -26,6 +27,7 @@ class CancerBlob(
 		putString(KEY_TYPE, this@CancerBlob.type.name)
 		putInt(KEY_MAX_METASTATIC_JUMP_DISTANCE, maxMetastaticJumpDistance)
 		putInt(KEY_CANCEROUS_BLOCK_COUNT, cancerousBlockCount)
+		putBoolean(KEY_IS_ANALYZED, isAnalyzed)
 	}
 
 	companion object {
@@ -34,12 +36,14 @@ class CancerBlob(
 		private const val KEY_TYPE = "type"
 		private const val KEY_MAX_METASTATIC_JUMP_DISTANCE = "maxMetastaticJumpDistance"
 		private const val KEY_CANCEROUS_BLOCK_COUNT = "cancerousBlockCount"
+		private const val KEY_IS_ANALYZED = "isAnalyzed"
 
 		fun NbtCompound.toCancerBlob() = CancerBlob(
 			getInt(KEY_ID),
 			CancerType.valueOf(getString(KEY_TYPE)),
 			getInt(KEY_MAX_METASTATIC_JUMP_DISTANCE),
 			getInt(KEY_CANCEROUS_BLOCK_COUNT),
+			getBoolean(KEY_IS_ANALYZED),
 		)
 	}
 }

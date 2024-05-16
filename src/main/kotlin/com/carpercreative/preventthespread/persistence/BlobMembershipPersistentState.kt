@@ -15,6 +15,8 @@ import net.minecraft.world.PersistentState
 class BlobMembershipPersistentState : PersistentState() {
 	private val memberships = hashMapOf<BlockPos, BlobIdentifier>()
 
+	fun getBlobMembershipsEntries(): Set<Map.Entry<BlockPos, BlobIdentifier>> = memberships.entries
+
 	fun setMembership(blockPos: BlockPos, cancerBlob: CancerBlob) {
 		setMembership(blockPos, cancerBlob.id)
 	}
@@ -56,10 +58,20 @@ class BlobMembershipPersistentState : PersistentState() {
 		return memberships[blockPos]
 	}
 
-	fun getNearestMemberOrNull(blockPos: BlockPos): BlockPos? {
-		return memberships.keys.minByOrNull { cancerousBlockPos ->
-			cancerousBlockPos.getSquaredDistance(blockPos)
-		}
+	fun getNearestMemberOrNull(blockPos: BlockPos, blobPredicate: (cancerBlob: CancerBlob) -> Boolean): BlockPos? {
+		val validBlobIds = mutableMapOf<BlobIdentifier, Boolean>()
+
+		return memberships.entries
+			.asSequence()
+			.filter { (_, blobId) ->
+				validBlobIds.computeIfAbsent(blobId) {
+					blobPredicate(Storage.cancerBlob.getCancerBlobById(blobId))
+				}
+			}
+			.minByOrNull { (cancerousBlockPos) ->
+				cancerousBlockPos.getSquaredDistance(blockPos)
+			}
+			?.key
 	}
 
 	override fun writeNbt(nbt: NbtCompound): NbtCompound {

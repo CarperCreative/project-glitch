@@ -19,6 +19,10 @@ class CancerBlobPersistentState : PersistentState() {
 
 	private val cancerBlobs = hashMapOf<BlobIdentifier, CancerBlob>()
 
+	fun getCancerBlobs(): Map<BlobIdentifier, CancerBlob> {
+		return cancerBlobs
+	}
+
 	fun getCancerBlobByIdOrNull(id: BlobIdentifier): CancerBlob? {
 		return cancerBlobs[id]
 	}
@@ -62,6 +66,11 @@ class CancerBlobPersistentState : PersistentState() {
 	 */
 	fun getActiveCancerBlobCount(): Int {
 		return cancerBlobs.values.count { it.cancerousBlockCount > 0 }
+	}
+
+	fun setCancerBlobAnalyzed(cancerBlob: CancerBlob) {
+		cancerBlob.isAnalyzed = true
+		markDirty()
 	}
 
 	private fun getNextId(): BlobIdentifier {

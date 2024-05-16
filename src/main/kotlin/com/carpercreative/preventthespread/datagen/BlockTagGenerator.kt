@@ -19,8 +19,11 @@ class BlockTagGenerator(
 			.forceAddTag(BlockTags.BASE_STONE_OVERWORLD)
 			.add(Blocks.CAVE_AIR)
 			.forceAddTag(BlockTags.DIRT)
+			.add(Blocks.GRAVEL)
 			.forceAddTag(BlockTags.LEAVES)
 			.forceAddTag(BlockTags.LOGS)
+			.add(Blocks.SAND)
+			.addSandstoneBlocks()
 			.forceAddTag(BlockTags.SLABS)
 			.forceAddTag(BlockTags.STAIRS)
 			.forceAddTag(BlockTags.TERRACOTTA)
@@ -37,7 +40,6 @@ class BlockTagGenerator(
 			.add(PreventTheSpread.CANCER_PLANKS_BLOCK)
 			.add(PreventTheSpread.CANCER_PLANKS_SLAB_BLOCK)
 			.add(PreventTheSpread.CANCER_PLANKS_STAIRS_BLOCK)
-			.add(PreventTheSpread.PROCESSING_TABLE_BLOCK)
 		getOrCreateTagBuilder(PreventTheSpread.SURGERY_HOE_MINEABLE_BLOCK_TAG)
 			.add(PreventTheSpread.CANCER_LEAVES_BLOCK)
 		getOrCreateTagBuilder(PreventTheSpread.SURGERY_PICKAXE_MINEABLE_BLOCK_TAG)
@@ -48,5 +50,29 @@ class BlockTagGenerator(
 			.add(PreventTheSpread.CANCER_DIRT_BLOCK)
 			.add(PreventTheSpread.CANCER_DIRT_SLAB_BLOCK)
 			.add(PreventTheSpread.CANCER_DIRT_STAIRS_BLOCK)
+
+		getOrCreateTagBuilder(PreventTheSpread.VALID_CANCER_SEED_BLOCK_TAG)
+			.forceAddTag(BlockTags.BASE_STONE_NETHER)
+			.forceAddTag(BlockTags.BASE_STONE_OVERWORLD)
+			.forceAddTag(BlockTags.DIRT)
+			.add(Blocks.GRAVEL)
+			.add(Blocks.SAND)
+			.addSandstoneBlocks()
+			.forceAddTag(BlockTags.TERRACOTTA)
+
+		getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
+			.add(PreventTheSpread.PROCESSING_TABLE_BLOCK)
+	}
+
+	private fun FabricTagBuilder.addSandstoneBlocks(): FabricTagBuilder {
+		add(Blocks.CHISELED_RED_SANDSTONE)
+		add(Blocks.CHISELED_SANDSTONE)
+		add(Blocks.CUT_SANDSTONE)
+		add(Blocks.CUT_RED_SANDSTONE)
+		add(Blocks.RED_SANDSTONE)
+		add(Blocks.SANDSTONE)
+		add(Blocks.SMOOTH_RED_SANDSTONE)
+		add(Blocks.SMOOTH_SANDSTONE)
+		return this
 	}
 }

@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:block/cube_all",
+	"textures": {
+		"all": "preventthespread:block/cancer_planks_2"
+	}
+}

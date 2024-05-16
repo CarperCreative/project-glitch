@@ -2,6 +2,8 @@ package com.carpercreative.preventthespread.cancer
 
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.Storage
+import com.carpercreative.preventthespread.block.TowerBlock
+import com.carpercreative.preventthespread.cancer.CancerLogic.CancerSpreadEvent
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
 import com.carpercreative.preventthespread.persistence.SpreadDifficultyPersistentState
 import com.carpercreative.preventthespread.util.contentsSequence
@@ -10,9 +12,12 @@ import com.carpercreative.preventthespread.util.nextOfList
 import com.carpercreative.preventthespread.util.nextOfListOrNull
 import java.util.LinkedList
 import kotlin.math.PI
+import kotlin.math.absoluteValue
 import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
+import net.fabricmc.fabric.api.event.Event
+import net.fabricmc.fabric.api.event.EventFactory
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.SlabBlock
@@ -24,6 +29,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.random.Random
 import net.minecraft.world.Heightmap
+import net.minecraft.world.poi.PointOfInterestStorage
 
 object CancerLogic {
 	private val WEIGHTED_DIRECTIONS = arrayOf(
@@ -32,8 +38,27 @@ object CancerLogic {
 		Direction.DOWN, Direction.UP,
 	)
 
+	fun interface CancerSpreadEvent {
+		fun onCancerSpread(world: ServerWorld, fromPos: BlockPos?, toPos: BlockPos)
+	}
+
+	val cancerSpreadEvent: Event<CancerSpreadEvent> = EventFactory.createArrayBacked(CancerSpreadEvent::class.java) { callbacks ->
+		CancerSpreadEvent { world, fromPos, toPos ->
+			callbacks.forEach { it.onCancerSpread(world, fromPos, toPos) }
+		}
+	}
+
 	fun BlockState.isCancerous(): Boolean {
 		return isIn(PreventTheSpread.CANCEROUS_BLOCK_TAG)
+	}
+
+	private fun BlockState.isCancerModifiable(): Boolean {
+		// No point spreading to already cancer infested blocks.
+		return !isCancerous()
+			// Spreading to block entities could have unintended consequences, like dropping the entire contents of a chest.
+			&& !hasBlockEntity()
+			// Prevent spreading to unbreakable blocks like bedrock.
+			&& block.hardness >= 0f
 	}
 
 	/**
@@ -41,14 +66,21 @@ object CancerLogic {
 	 * This excludes all cancer blocks and block entities.
 	 */
 	fun BlockState.isCancerSpreadable(): Boolean {
-		// No point spreading to already cancer infested blocks.
-		return !isCancerous()
-			// Spreading to block entities could have unintended consequences, like dropping the entire contents of a chest.
-			&& !hasBlockEntity()
+		return isCancerModifiable()
 			// Allow spreading only to explicitly whitelisted blocks.
 			&& isIn(PreventTheSpread.CANCER_SPREADABLE_BLOCK_TAG)
-			// Prevent spreading to unbreakable blocks like bedrock.
-			&& block.hardness >= 0f
+	}
+
+	/**
+	 * @return `true` for blocks which are valid targets for a cancer blob to get spawned from.
+	 * This excludes all cancer blocks and block entities.
+	 */
+	fun BlockState.isValidCancerSeed(): Boolean {
+		return isCancerModifiable()
+			// Never spawn a blob in air.
+			&& !isAir
+			// Allow spreading only to explicitly whitelisted blocks.
+			&& isIn(PreventTheSpread.VALID_CANCER_SEED_BLOCK_TAG)
 	}
 
 	fun generateCancerSpawnPos(world: ServerWorld, maxRadius: Float, maxDepth: Int): BlockPos {
@@ -60,7 +92,8 @@ object CancerLogic {
 		// Attempt to generate a valid position multiple times.
 		// Returns the last position if none were deemed valid.
 		var attempt = 1
-		while (attempt <= 5) {
+		var invalidAttempts = 0
+		nextAttempt@while (attempt <= 5) {
 			attempt++
 
 			val angle = random.nextDouble() * PI * 2
@@ -70,33 +103,63 @@ object CancerLogic {
 			cancerSpawnPos.x += (sin(angle) * distance).roundToInt()
 			cancerSpawnPos.z += (cos(angle) * distance).roundToInt()
 
-			// Find surface position, ignoring leaves, trees, and fluids.
 			cancerSpawnPos.y = world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, cancerSpawnPos.x, cancerSpawnPos.z) - 1
+
+			if (invalidAttempts > 5) {
+				// Fallback in case of worlds where no blocks are valid seed locations.
+				// Go up until...
+				while (
+					// hitting air or a valid cancer seed block,
+					!world.getBlockState(cancerSpawnPos).run { isAir || isValidCancerSeed() }
+					// or reaching the height limit (disregards all validity checks).
+					&& !world.isOutOfHeightLimit(cancerSpawnPos.y + 1)
+				) {
+					cancerSpawnPos.y++
+				}
+				return cancerSpawnPos
+			}
+
+			// Find surface position, ignoring leaves, trees, and fluids.
+			var blocksDescendedToFindSurface = 0
 			while (cancerSpawnPos.y > minimumY) {
-				val blockState = world.getBlockState(cancerSpawnPos)
-				if (!blockState.isAir && blockState.isCancerSpreadable() && !blockState.isIn(BlockTags.LOGS)) break
+				if (world.getBlockState(cancerSpawnPos).isValidCancerSeed()) break
 
 				cancerSpawnPos.y--
+
+				// Prevent descending too far below the surface to avoid compounding depth with the max depth from spread difficulty.
+				if (blocksDescendedToFindSurface++ > 15) continue@nextAttempt
 			}
 
 			if (maxDepth > 0 && random.nextFloat() < 0.5f) {
-				cancerSpawnPos.y = (cancerSpawnPos.y - (random.nextFloat() * maxDepth).roundToInt())
+				// Hide below the ground, up to the max depth.
+				// While descending, check every block, and use the last one which is a valid spawn location.
+				var maxDescent = (random.nextFloat() * maxDepth).roundToInt()
+				var lastValidY = cancerSpawnPos.y
+				while (maxDescent > 0) {
+					maxDescent--
+					cancerSpawnPos.y--
+
+					if (world.getBlockState(cancerSpawnPos).isValidCancerSeed()) {
+						lastValidY = cancerSpawnPos.y
+					}
+				}
+				cancerSpawnPos.y = lastValidY
 			}
 
-			// Avoid pockets surrounded by bedrock by always starting above bedrock.
 			cancerSpawnPos.y = cancerSpawnPos.y.coerceAtLeast(minimumY)
 
-			if (!world.getBlockState(cancerSpawnPos).isCancerSpreadable()) {
-				// FIXME: this will cause an infinite loop on worlds with weird generators or blocks
+			if (!world.getBlockState(cancerSpawnPos).isValidCancerSeed()) {
 				attempt--
-				continue
+				invalidAttempts++
+				continue@nextAttempt
 			}
 
 			// Try not to spawn cancer under fluids.
+			// If a position under a fluid is reached every attempt, the last one will be returned.
 			if (!world.getFluidState(cancerSpawnPos.offset(Direction.UP)).isEmpty) continue
 
 			// Position passed all checks.
-			break
+			break@nextAttempt
 		}
 
 		return cancerSpawnPos
@@ -144,6 +207,8 @@ object CancerLogic {
 		for (blockPos in getBlocksForBlobCreation(world, cancerSpawnPos, maxSize)) {
 			convertToCancer(world, blockPos)
 			blobMembershipPersistentState.setMembership(blockPos, cancerBlob)
+
+			cancerSpreadEvent.invoker().onCancerSpread(world, null, blockPos)
 		}
 
 		return cancerBlob
@@ -216,6 +281,8 @@ object CancerLogic {
 	}
 
 	fun attemptSpread(world: ServerWorld, pos: BlockPos, random: Random, bypassThrottling: Boolean = false) {
+		if (!world.gameRules.getBoolean(PreventTheSpread.DO_CANCER_SPREAD_GAME_RULE)) return
+
 		val spreadPosition = getSpreadTargetPosition(world, pos, random)
 		val targetCurrentBlockState = world.getBlockState(spreadPosition)
 
@@ -223,6 +290,20 @@ object CancerLogic {
 
 		// Prefer spreading to existing blocks over growing out into empty space.
 		if (!bypassThrottling && targetCurrentBlockState.isAir && random.nextFloat() <= 0.8f) return
+
+		// 50% chance for a chilling tower to prevent the spread.
+		if (random.nextInt(2) == 0) {
+			val chillingTowerInRange = world.pointOfInterestStorage
+				.getInSquare(
+					{ type -> type.matchesKey(PreventTheSpread.CHILLING_TOWER_POI_TYPE) },
+					spreadPosition,
+					TowerBlock.AREA_OF_EFFECT_HORIZONTAL,
+					PointOfInterestStorage.OccupationStatus.ANY,
+				)
+				.anyMatch { (it.pos.y - spreadPosition.y).absoluteValue <= TowerBlock.AREA_OF_EFFECT_VERTICAL }
+
+			if (chillingTowerInRange) return
+		}
 
 		// Spread to blocks which already have a bunch of cancerous neighbors with a higher likelihood.
 		val cancerousNeighborCountOfTarget = Direction.entries
@@ -242,6 +323,8 @@ object CancerLogic {
 		if (blobId != null) {
 			blobMembershipPersistentState.setMembership(toPos, blobId)
 		}
+
+		cancerSpreadEvent.invoker().onCancerSpread(world, fromPos, toPos)
 	}
 
 	fun hastenSpread(world: ServerWorld, pos: BlockPos, random: Random, distance: Int = 3) {
