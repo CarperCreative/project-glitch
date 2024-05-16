@@ -87,7 +87,7 @@ class ScannerItem(
 			world as ServerWorld
 
 			val blobMembershipPersistentState = world.getBlobMembershipPersistentState()
-			val trackedPosition = blobMembershipPersistentState.getNearestMemberOrNull(entity.blockPos)
+			val trackedPosition = blobMembershipPersistentState.getNearestMemberOrNull(entity.blockPos) { true }
 			if (trackedPosition != null) {
 				setTrackedPosition(stack, world.registryKey, trackedPosition)
 			} else {
