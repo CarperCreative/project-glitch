@@ -49,15 +49,28 @@ object ChallengeStatusController {
 
 		if (challengePersistentState.status != ChallengeStatus.UNKNOWN) return
 
-		if (ChallengeValidityController.isValid(server)) {
-			challengePersistentState.status = ChallengeStatus.IN_PROGRESS
+		if (server.dataPackManager.enabledProfiles.none { it.name == ChallengeConstants.DATA_PACK_ID.toString() }) {
+			challengePersistentState.status = ChallengeStatus.DISABLED
+			return
+		}
 
-			LOGGER.info("Prevent the Spread Challenge started.")
-		} else {
+		server.overworld.gameRules.apply {
+			get(PreventTheSpread.DO_CANCER_SPAWNING_GAME_RULE).set(true, server)
+			get(PreventTheSpread.DO_CANCER_SPREAD_GAME_RULE).set(true, server)
+		}
+
+		if (!ChallengeValidityController.isValid(server)) {
 			challengePersistentState.status = ChallengeStatus.DISABLED
 
 			LOGGER.info("World is ineligible to start the Prevent the Spread Challenge.")
+			return
 		}
+
+		challengePersistentState.status = ChallengeStatus.IN_PROGRESS
+
+		server.setDifficultyLocked(true)
+
+		LOGGER.info("Prevent the Spread Challenge started.")
 	}
 
 	private fun onCancerSpread(world: ServerWorld, fromPos: BlockPos?, toPos: BlockPos) {

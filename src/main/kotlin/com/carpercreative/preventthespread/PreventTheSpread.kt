@@ -40,6 +40,9 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType
+import net.fabricmc.fabric.impl.resource.loader.ResourceManagerHelperImpl
+import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.block.MapColor
@@ -343,6 +346,15 @@ object PreventTheSpread : ModInitializer {
 		EveryoneTeamController.init()
 		ResearchSynchronizationController.init()
 		StoryRootUnlockController.init()
+
+		@Suppress("UnstableApiUsage")
+		ResourceManagerHelperImpl.registerBuiltinResourcePack(
+			ChallengeConstants.DATA_PACK_ID,
+			"data/$MOD_ID/datapacks/" + ChallengeConstants.DATA_PACK_ID.path,
+			FabricLoader.getInstance().getModContainer(MOD_ID).get(),
+			Text.translatable("dataPack.preventthespread.challenge.displayName"),
+			ResourcePackActivationType.NORMAL,
+		)
 
 		// TODO: add cancerous material and research item textures
 		// TODO: create research state store (per player?)

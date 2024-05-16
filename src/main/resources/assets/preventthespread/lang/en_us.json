@@ -55,6 +55,8 @@
 	"container.preventthespread.processing_table_analyzer.empty_book_tooltip.1": "or a book containing previous analysis results.",
 	"container.preventthespread.processing_table_research": "Research Table",
 	"container.preventthespread.processing_table_research.research_button": "Research",
+	"dataPack.preventthespread.challenge.description": "Fight cancer for as long as you can manage",
+	"dataPack.preventthespread.challenge.displayName": "Prevent the Spread Challenge",
 	"gamerule.preventthespread:doCancerSpawning": "Spawn new cancerous blobs",
 	"gamerule.preventthespread:doCancerSpread": "Spread existing cancerous blobs",
 	"item.preventthespread.cancerous_material": "Cancerous Material",
