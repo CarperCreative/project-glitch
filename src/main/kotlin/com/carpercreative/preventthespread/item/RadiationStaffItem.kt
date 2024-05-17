@@ -5,9 +5,11 @@ import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
 import com.carpercreative.preventthespread.cancer.TreatmentType
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
-import com.carpercreative.preventthespread.util.BlockSearch
 import com.carpercreative.preventthespread.util.getRadiationStaffStrength
 import java.util.function.Consumer
+import kotlin.math.pow
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
 import net.fabricmc.fabric.api.item.v1.CustomDamageHandler
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
@@ -17,6 +19,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.projectile.ProjectileUtil
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.particle.DustColorTransitionParticleEffect
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Hand
@@ -26,7 +29,9 @@ import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.hit.EntityHitResult
 import net.minecraft.util.hit.HitResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.RaycastContext
 import net.minecraft.world.World
+import org.joml.Vector3f
 
 class RadiationStaffItem(
 	settings: Settings,
@@ -88,51 +93,95 @@ class RadiationStaffItem(
 	}
 
 	private fun doHit(world: ServerWorld, user: LivingEntity, stack: ItemStack) {
+		val strength = (user as? PlayerEntity)?.getRadiationStaffStrength() ?: 0
+
+		sendRay(
+			world,
+			user,
+			range = 10.0,
+			penetrationDepth = 1 + strength * 2,
+		)
+	}
+
+	/**
+	 * @return Depth of hit from the camera position, or `-1` if nothing was hit.
+	 */
+	private fun sendRay(world: ServerWorld, user: LivingEntity, range: Double, startRange: Double = 0.0, penetrationDepth: Int = 1, yRotationOffset: Float = 0f): Double {
+		if (startRange >= range) return -1.0
+
 		// TODO: tickDelta should be set to prevent quick movements from being ignored
-		val range = 10.0
+		val tickDelta = 1f
 
-		val blockHitResult = user.raycast(range, 1f, true)
+		val cameraPosVector = user.getCameraPosVec(tickDelta)
+		val lookVector = user.run { getRotationVector(getPitch(tickDelta), getYaw(tickDelta) + yRotationOffset) }
 
-		val cameraPosVector = user.getCameraPosVec(1f)
-		val lookVector = user.getRotationVec(1f).multiply(range)
-		val searchBBox = user.getBoundingBox().stretch(lookVector).expand(1.0, 1.0, 1.0)
+		val rayStart = lookVector.multiply(startRange).add(cameraPosVector)
+		val rayEnd = lookVector.multiply(range).add(cameraPosVector)
+
+		val blockHitResult = world.raycast(
+			RaycastContext(
+				rayStart,
+				rayEnd,
+				RaycastContext.ShapeType.OUTLINE,
+				RaycastContext.FluidHandling.ANY,
+				user,
+			)
+		)
+
+		val searchBBox = user.boundingBox.stretch(lookVector).expand(1.0, 1.0, 1.0)
 		// Check if there's an entity closer to the player than the block.
 		val entityHitResult = ProjectileUtil.raycast(
 			user,
-			cameraPosVector,
-			lookVector.add(cameraPosVector),
+			rayStart,
+			rayEnd,
 			searchBBox,
 			{ it is LivingEntity },
-			if (blockHitResult.type != HitResult.Type.MISS) blockHitResult.pos.squaredDistanceTo(cameraPosVector) else range * range,
+			if (blockHitResult.type != HitResult.Type.MISS) blockHitResult.pos.squaredDistanceTo(rayStart) else (range - startRange).pow(2),
 		)
 
 		val hitResult = entityHitResult ?: blockHitResult
 
+		// Spawn particles.
+		val rayHitDistance = sqrt(hitResult.pos.squaredDistanceTo(rayStart))
+		for (distanceStep in (startRange.coerceAtLeast(1.0) * 10).roundToInt() until (rayHitDistance * 10).roundToInt() step 5) {
+			val distance = distanceStep / 10f
+			val size = 0.5f * (distance / rayHitDistance.toFloat())
+			world.spawnParticles(
+				DustColorTransitionParticleEffect(Vector3f(100f, 0f, 1f), Vector3f(1f, 0f, 1f), size),
+				rayStart.x + lookVector.x * distance,
+				rayStart.y + lookVector.y * distance,
+				rayStart.z + lookVector.z * distance,
+				1,
+				0.02, 0.02, 0.02,
+				0.0,
+			)
+		}
+
 		when (hitResult) {
 			is BlockHitResult -> {
-				if (hitResult.type == HitResult.Type.MISS) return
+				if (hitResult.type == HitResult.Type.MISS) return -1.0
 
 				val targetPos = hitResult.blockPos
 				val targetBlockState = world.getBlockState(targetPos)
-				if (!targetBlockState.isCancerous()) return
+				if (!targetBlockState.isCancerous()) return -1.0
 
-				val strength = (user as? PlayerEntity)?.getRadiationStaffStrength() ?: 0
-				val affectedBlockCount = getAffectedBlockCount(strength)
-				val affectedBlockPositions = BlockSearch.findCancerousBlocks(world, targetPos, affectedBlockCount)
-
-				for (affectedBlockPos in affectedBlockPositions) {
-					breakBlock(world, affectedBlockPos, user)
-				}
+				breakBlock(world, targetPos, user)
 			}
 			is EntityHitResult -> {
 				val entity = hitResult.entity
-				if (entity !is LivingEntity) return
+				if (entity !is LivingEntity) return -1.0
 
 				val inFireDamageTypeEntry = world.registryManager.get(RegistryKeys.DAMAGE_TYPE).entryOf(DamageTypes.IN_FIRE)
 				entity.damage(DamageSource(inFireDamageTypeEntry, user), 4f)
 			}
 			else -> {}
 		}
+
+		if (penetrationDepth > 1) {
+			sendRay(world, user, range, startRange + rayHitDistance, penetrationDepth - 1, yRotationOffset)
+		}
+
+		return startRange + rayHitDistance
 	}
 
 	private fun breakBlock(world: ServerWorld, pos: BlockPos, user: LivingEntity) {
