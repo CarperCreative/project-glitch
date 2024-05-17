@@ -102,7 +102,7 @@ class RadiationStaffItem(
 			world,
 			user,
 			range = 10.0,
-			penetrationDepth = 1 + strength * 2,
+			penetrationDepth = 2 + strength * 2,
 		)
 
 		for (rayOffset in -sideRays..sideRays step 2) {
