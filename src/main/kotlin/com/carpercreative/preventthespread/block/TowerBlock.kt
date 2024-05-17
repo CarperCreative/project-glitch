@@ -103,7 +103,7 @@ abstract class TowerBlock(
 	}
 
 	override fun getAmbientOcclusionLightLevel(state: BlockState, world: BlockView, pos: BlockPos): Float {
-		return 0.8f
+		return if (state.get(PART) == TowerPart.BOTTOM) 0.8f else 1f
 	}
 
 	override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: Random) {
