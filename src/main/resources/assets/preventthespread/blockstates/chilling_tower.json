@@ -1,12 +1,55 @@
 {
 	"variants": {
-		"half=upper": {
-			"model": "preventthespread:block/processing_table_left",
-			"x": 90
-		},
-		"half=lower": {
-			"model": "preventthespread:block/processing_table_right",
-			"x": 90
-		}
+		"part=top": [
+			{
+				"model": "preventthespread:block/chilling_tower_top"
+			},
+			{
+				"model": "preventthespread:block/chilling_tower_top",
+				"z": 90
+			},
+			{
+				"model": "preventthespread:block/chilling_tower_top",
+				"z": 180
+			},
+			{
+				"model": "preventthespread:block/chilling_tower_top",
+				"z": 270
+			}
+		],
+		"part=middle": [
+			{
+				"model": "preventthespread:block/chilling_tower_middle"
+			},
+			{
+				"model": "preventthespread:block/chilling_tower_middle",
+				"z": 90
+			},
+			{
+				"model": "preventthespread:block/chilling_tower_middle",
+				"z": 180
+			},
+			{
+				"model": "preventthespread:block/chilling_tower_middle",
+				"z": 270
+			}
+		],
+		"part=bottom": [
+			{
+				"model": "preventthespread:block/chilling_tower_bottom"
+			},
+			{
+				"model": "preventthespread:block/chilling_tower_bottom",
+				"z": 90
+			},
+			{
+				"model": "preventthespread:block/chilling_tower_bottom",
+				"z": 180
+			},
+			{
+				"model": "preventthespread:block/chilling_tower_bottom",
+				"z": 270
+			}
+		]
 	}
 }

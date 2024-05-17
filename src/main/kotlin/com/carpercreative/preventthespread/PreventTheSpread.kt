@@ -48,7 +48,6 @@ import net.minecraft.block.Blocks
 import net.minecraft.block.MapColor
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
-import net.minecraft.block.enums.DoubleBlockHalf
 import net.minecraft.block.piston.PistonBehavior
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.SpawnGroup
@@ -332,7 +331,7 @@ object PreventTheSpread : ModInitializer {
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_analyzer"), PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER)
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_research"), PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER)
 
-		CHILLING_TOWER_POI = PointOfInterestTypes.register(Registries.POINT_OF_INTEREST_TYPE, CHILLING_TOWER_POI_TYPE, CHILLING_TOWER_BLOCK.stateManager.states.filter { it.get(TowerBlock.HALF) == DoubleBlockHalf.LOWER }.toSet(), 0, 1)
+		CHILLING_TOWER_POI = PointOfInterestTypes.register(Registries.POINT_OF_INTEREST_TYPE, CHILLING_TOWER_POI_TYPE, CHILLING_TOWER_BLOCK.stateManager.states.filter { it.get(TowerBlock.PART) == TowerBlock.TowerPart.MIDDLE }.toSet(), 0, 1)
 
 		ServerPlayNetworking.registerGlobalReceiver(SELECT_RESEARCH_PACKET_ID, SelectResearchPacket::handle)
 
