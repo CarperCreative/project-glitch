@@ -1,5 +1,6 @@
 package com.carpercreative.preventthespread.block
 
+import kotlin.math.pow
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
@@ -109,12 +110,11 @@ abstract class TowerBlock(
 	override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: Random) {
 		if (state.get(PART) == TowerPart.MIDDLE) {
 			for (index in 1..3) {
-				// TODO: use gaussian to bias towards outer edges
 				val particlePos = pos.toCenterPos()
 					.add(
-						random.nextDouble() * 2 * AREA_OF_EFFECT_HORIZONTAL - AREA_OF_EFFECT_HORIZONTAL,
-						random.nextDouble() * 2 * AREA_OF_EFFECT_VERTICAL - AREA_OF_EFFECT_VERTICAL,
-						random.nextDouble() * 2 * AREA_OF_EFFECT_HORIZONTAL - AREA_OF_EFFECT_HORIZONTAL,
+						random.nextDouble().pow(2) * 2 * AREA_OF_EFFECT_HORIZONTAL - AREA_OF_EFFECT_HORIZONTAL,
+						random.nextDouble().pow(2) * 2 * AREA_OF_EFFECT_VERTICAL - AREA_OF_EFFECT_VERTICAL,
+						random.nextDouble().pow(2) * 2 * AREA_OF_EFFECT_HORIZONTAL - AREA_OF_EFFECT_HORIZONTAL,
 					)
 
 				spawnParticle(state, world, particlePos, random)
