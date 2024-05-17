@@ -49,9 +49,9 @@ object CancerTouchEffectController {
 		val random = world.random
 
 		when (random.nextInt(1024)) {
-			0 -> entity.addStatusEffect(StatusEffectInstance(StatusEffects.HUNGER, random.nextBetween(10, 40)))
-			1 -> entity.addStatusEffect(StatusEffectInstance(StatusEffects.POISON, random.nextBetween(10, 60)))
-			2 -> entity.addStatusEffect(StatusEffectInstance(StatusEffects.WITHER, random.nextBetween(10, 25)))
+			0 -> entity.addStatusEffect(StatusEffectInstance(StatusEffects.HUNGER, random.nextBetween(40, 80)))
+			1 -> entity.addStatusEffect(StatusEffectInstance(StatusEffects.POISON, random.nextBetween(30, 100)))
+			2 -> entity.addStatusEffect(StatusEffectInstance(StatusEffects.WITHER, random.nextBetween(30, 80)))
 		}
 	}
 }
