@@ -31,8 +31,6 @@ object BossBarController {
 
 			val dangerLevel = getDangerLevel()
 
-			bossBar.isVisible = dangerLevel > 0
-
 			bossBar.maxValue = 100
 			// TODO: value updates could be reactive to block events
 			bossBar.value = (dangerLevel * 100).roundToInt()
