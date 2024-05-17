@@ -121,7 +121,7 @@ object ChallengeStatusController {
 				Storage.spreadDifficulty.defeatedBlobs,
 				challengePersistentState.playTime.formatTime(),
 			),
-			true,
+			false,
 		)
 
 		if (challengePersistentState.cheated) {
