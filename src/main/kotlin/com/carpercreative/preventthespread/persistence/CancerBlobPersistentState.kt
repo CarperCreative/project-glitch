@@ -65,7 +65,7 @@ class CancerBlobPersistentState : PersistentState() {
 	 * @return Amount of cancer blobs which have at least one cancerous block.
 	 */
 	fun getActiveCancerBlobCount(): Int {
-		return cancerBlobs.values.count { it.cancerousBlockCount > 0 }
+		return cancerBlobs.values.count { it.isActive }
 	}
 
 	fun setCancerBlobAnalyzed(cancerBlob: CancerBlob) {
