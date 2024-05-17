@@ -49,7 +49,8 @@ object CancerSpreadController {
 
 		val random = world.random
 
-		val blocksToTick = (0.01f * blobMemberships.size)
+		// Prevent players from slowing down the spread to a crawl by leaving a single cancerous block on the map.
+		val blocksToTick = (0.01f * blobMemberships.size.coerceAtLeast(Storage.spreadDifficulty.blobStartingSize))
 			.let { if (random.nextFloat() > it % 1f) floor(it) else ceil(it) }
 			.roundToInt()
 
