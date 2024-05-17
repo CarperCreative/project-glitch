@@ -108,17 +108,16 @@ abstract class TowerBlock(
 	}
 
 	override fun randomDisplayTick(state: BlockState, world: World, pos: BlockPos, random: Random) {
-		if (state.get(PART) == TowerPart.MIDDLE) {
-			for (index in 1..3) {
-				val particlePos = pos.toCenterPos()
-					.add(
-						random.nextDouble().pow(2) * 2 * AREA_OF_EFFECT_HORIZONTAL - AREA_OF_EFFECT_HORIZONTAL,
-						random.nextDouble().pow(2) * 2 * AREA_OF_EFFECT_VERTICAL - AREA_OF_EFFECT_VERTICAL,
-						random.nextDouble().pow(2) * 2 * AREA_OF_EFFECT_HORIZONTAL - AREA_OF_EFFECT_HORIZONTAL,
-					)
+		val yOffset = TowerPart.MIDDLE.y - state.get(PART).y
+		for (index in 1..3) {
+			val particlePos = pos.toCenterPos()
+				.add(
+					random.nextDouble().pow(2) * 2 * AREA_OF_EFFECT_HORIZONTAL - AREA_OF_EFFECT_HORIZONTAL,
+					yOffset + random.nextDouble().pow(2) * 2 * AREA_OF_EFFECT_VERTICAL - AREA_OF_EFFECT_VERTICAL,
+					random.nextDouble().pow(2) * 2 * AREA_OF_EFFECT_HORIZONTAL - AREA_OF_EFFECT_HORIZONTAL,
+				)
 
-				spawnParticle(state, world, particlePos, random)
-			}
+			spawnParticle(state, world, particlePos, random)
 		}
 
 		super.randomDisplayTick(state, world, pos, random)
