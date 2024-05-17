@@ -170,15 +170,22 @@ class RadiationStaffItem(
 			)
 		}
 
+		var fluidPenalty = 0.0
+
 		when (hitResult) {
 			is BlockHitResult -> {
 				if (hitResult.type == HitResult.Type.MISS) return -1.0
 
 				val targetPos = hitResult.blockPos
 				val targetBlockState = world.getBlockState(targetPos)
-				if (!targetBlockState.isCancerous()) return -1.0
-
-				breakBlock(world, targetPos, user)
+				if (!targetBlockState.fluidState.isEmpty) {
+					// We hit a liquid - reduce penetration depth without breaking anything, but continue.
+					fluidPenalty = sqrt(3.0)
+				} else if (targetBlockState.isCancerous()) {
+					breakBlock(world, targetPos, user)
+				} else {
+					return -1.0
+				}
 			}
 			is EntityHitResult -> {
 				val entity = hitResult.entity
@@ -191,7 +198,7 @@ class RadiationStaffItem(
 		}
 
 		if (penetrationDepth > 1) {
-			sendRay(world, user, range, startRange + rayHitDistance, penetrationDepth - 1, yRotationOffset)
+			sendRay(world, user, range, startRange + rayHitDistance + fluidPenalty, penetrationDepth - 1, yRotationOffset)
 		}
 
 		return startRange + rayHitDistance
