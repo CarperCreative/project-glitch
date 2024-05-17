@@ -5,6 +5,7 @@ import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
 import com.carpercreative.preventthespread.cancer.TreatmentType
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
+import com.carpercreative.preventthespread.util.getRadiationStaffSideRayCount
 import com.carpercreative.preventthespread.util.getRadiationStaffStrength
 import java.util.function.Consumer
 import kotlin.math.pow
@@ -93,7 +94,9 @@ class RadiationStaffItem(
 	}
 
 	private fun doHit(world: ServerWorld, user: LivingEntity, stack: ItemStack) {
-		val strength = (user as? PlayerEntity)?.getRadiationStaffStrength() ?: 0
+		val player = user as? PlayerEntity
+		val strength = player?.getRadiationStaffStrength() ?: 0
+		val sideRays = player?.getRadiationStaffSideRayCount() ?: 0
 
 		sendRay(
 			world,
@@ -101,6 +104,16 @@ class RadiationStaffItem(
 			range = 10.0,
 			penetrationDepth = 1 + strength * 2,
 		)
+
+		for (rayOffset in -sideRays..sideRays step 2) {
+			sendRay(
+				world,
+				user,
+				range = 10.0,
+				penetrationDepth = 1 + (strength * 1.5f).toInt(),
+				yRotationOffset = rayOffset * 15f,
+			)
+		}
 	}
 
 	/**

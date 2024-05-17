@@ -184,6 +184,12 @@ class AdvancementGenerator(
 		}
 
 		consumer.createResearchAdvancement(
+			ResearchAdvancement.RADIATION_STAFF_RAYS_1_ID,
+			radiationStaff,
+			PreventTheSpread.RADIATION_STAFF_ITEM.defaultStack,
+		)
+
+		consumer.createResearchAdvancement(
 			ResearchAdvancement.RADIATION_STAFF_STRENGTH_1_ID,
 			radiationStaff,
 			PreventTheSpread.RADIATION_STAFF_ITEM.defaultStack,
