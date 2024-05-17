@@ -355,8 +355,7 @@ object PreventTheSpread : ModInitializer {
 			ResourcePackActivationType.NORMAL,
 		)
 
-		// TODO: add cancerous material and research item textures
-		// TODO: create research state store (per player?)
+		// TODO: create research state store (per team)
 		// TODO: implement radiation staff recharge rate and/or heat capacity research
 		// TODO: fix model transformations of surgery tools (on-ground is MASSIVE) .-.
 		// TODO: spawn mobs
