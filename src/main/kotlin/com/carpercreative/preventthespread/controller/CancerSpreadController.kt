@@ -43,9 +43,10 @@ object CancerSpreadController {
 		}
 
 		// Do nothing until we hit the scheduled time.
-		if (spreadDifficulty.nextSpawnAt.let { it >= 0 && overworld.time > it }) return
+		if (spreadDifficulty.nextSpawnAt.let { it >= 0 && overworld.time <= it }) return
 
 		// Create the cancer blob.
+		spreadDifficulty.nextSpawnAt = -1L
 		CancerLogic.createCancerBlob(overworld)
 	}
 
