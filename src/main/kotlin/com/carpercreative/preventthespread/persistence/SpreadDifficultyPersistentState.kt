@@ -31,7 +31,10 @@ class SpreadDifficultyPersistentState(
 		get() = (1 + (ceil((defeatedBlobs - 2).coerceAtLeast(0) / 4f).roundToInt())).coerceAtMost(6)
 
 	val blobSpawnDelayTicks: Int
-		get() = (120 - defeatedBlobs * 10).coerceAtLeast(60) * 20
+		get() = when (defeatedBlobs) {
+			0 -> 120
+			else -> (60 - defeatedBlobs * 5).coerceAtLeast(30)
+		} * 20
 
 	val blobSpawnRadius: Float
 		get() = 50f + 100f * defeatedBlobs.toFloat().pow(0.6f)
