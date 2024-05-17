@@ -48,7 +48,6 @@ import net.minecraft.block.Blocks
 import net.minecraft.block.MapColor
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
-import net.minecraft.block.enums.DoubleBlockHalf
 import net.minecraft.block.piston.PistonBehavior
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.SpawnGroup
@@ -269,6 +268,7 @@ object PreventTheSpread : ModInitializer {
 		val CHEMOTHERAPEUTIC_DRUG_STRENGTH_2_ID = researchIdentifier("${PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path}_strength_2")
 		val CHILLING_TOWER_ID = researchIdentifier(PreventTheSpread.CHILLING_TOWER_ID.path)
 		val RADIATION_STAFF_ID = researchIdentifier(RADIATION_STAFF_ITEM_ID.path)
+		val RADIATION_STAFF_RAYS_1_ID = researchIdentifier("${RADIATION_STAFF_ITEM_ID.path}_rays_1")
 		val RADIATION_STAFF_STRENGTH_1_ID = researchIdentifier("${RADIATION_STAFF_ITEM_ID.path}_strength_1")
 		val RADIATION_STAFF_STRENGTH_2_ID = researchIdentifier("${RADIATION_STAFF_ITEM_ID.path}_strength_2")
 		val TARGETED_DRUG_ID = researchIdentifier(TARGETED_DRUG_INJECTOR_ID.path)
@@ -332,7 +332,7 @@ object PreventTheSpread : ModInitializer {
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_analyzer"), PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER)
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_research"), PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER)
 
-		CHILLING_TOWER_POI = PointOfInterestTypes.register(Registries.POINT_OF_INTEREST_TYPE, CHILLING_TOWER_POI_TYPE, CHILLING_TOWER_BLOCK.stateManager.states.filter { it.get(TowerBlock.HALF) == DoubleBlockHalf.LOWER }.toSet(), 0, 1)
+		CHILLING_TOWER_POI = PointOfInterestTypes.register(Registries.POINT_OF_INTEREST_TYPE, CHILLING_TOWER_POI_TYPE, CHILLING_TOWER_BLOCK.stateManager.states.filter { it.get(TowerBlock.PART) == TowerBlock.TowerPart.MIDDLE }.toSet(), 0, 1)
 
 		ServerPlayNetworking.registerGlobalReceiver(SELECT_RESEARCH_PACKET_ID, SelectResearchPacket::handle)
 
@@ -356,8 +356,7 @@ object PreventTheSpread : ModInitializer {
 			ResourcePackActivationType.NORMAL,
 		)
 
-		// TODO: add cancerous material and research item textures
-		// TODO: create research state store (per player?)
+		// TODO: create research state store (per team)
 		// TODO: implement radiation staff recharge rate and/or heat capacity research
 		// TODO: fix model transformations of surgery tools (on-ground is MASSIVE) .-.
 		// TODO: spawn mobs

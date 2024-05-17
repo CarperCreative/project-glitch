@@ -131,5 +131,18 @@
 				"down": {"uv": [2, 14, 2.5, 15], "texture": "#1"}
 			}
 		}
-	]
+	],
+	"gui_light": "front",
+	"display": {
+		"gui": {
+			"rotation": [31, 41, -35],
+			"translation": [-0.25, -0.75, 0],
+			"scale": [0.45, 0.45, 0.45]
+		},
+		"fixed": {
+			"rotation": [31, -31, 44],
+			"translation": [0, -1.5, 0],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	}
 }

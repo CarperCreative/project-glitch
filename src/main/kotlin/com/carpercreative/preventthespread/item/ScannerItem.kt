@@ -87,10 +87,10 @@ class ScannerItem(
 		fun cycleTrackedCancerBlob(stack: ItemStack, backwards: Boolean) {
 			val currentBlobId = getTrackedCancerBlob(stack)
 			val predicate: (cancerBlob: CancerBlob) -> Boolean = when (currentBlobId) {
-				null -> ({ it.isAnalyzed })
+				null -> ({ it.isAnalyzed && it.isActive })
 				else -> when (backwards) {
-					false -> ({ it.id > currentBlobId && it.isAnalyzed })
-					true -> ({ it.id < currentBlobId && it.isAnalyzed })
+					false -> ({ it.id > currentBlobId && it.isAnalyzed && it.isActive })
+					true -> ({ it.id < currentBlobId && it.isAnalyzed && it.isActive })
 				}
 			}
 
@@ -161,6 +161,11 @@ class ScannerItem(
 				setTrackedPosition(stack, world.registryKey, trackedPosition)
 			} else {
 				clearTrackedPosition(stack)
+
+				if (blobId != null && Storage.cancerBlob.getCancerBlobById(blobId).cancerousBlockCount == 0) {
+					// Stop tracking a blob once it's been defeated.
+					setTrackedCancerBlob(stack, null)
+				}
 			}
 
 			if (entity is ServerPlayerEntity && entity.isHolding { it == stack }) {

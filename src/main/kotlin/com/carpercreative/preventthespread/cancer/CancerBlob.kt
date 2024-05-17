@@ -21,6 +21,9 @@ class CancerBlob(
 			field = value.coerceAtLeast(0)
 		}
 
+	val isActive: Boolean
+		get() = cancerousBlockCount > 0
+
 	fun toNbt() = NbtCompound().apply {
 		putInt(KEY_VERSION, 1)
 		putInt(KEY_ID, id)

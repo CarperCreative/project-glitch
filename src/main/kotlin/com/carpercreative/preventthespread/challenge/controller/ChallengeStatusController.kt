@@ -106,7 +106,7 @@ object ChallengeStatusController {
 		val seconds = (time % 60).toString().padStart(2, '0')
 		val fractions = (this % 20) / 10f
 
-		return "${ hours.takeIf { it > 0 }?.let { "$it:" } }$minutes:$seconds.$fractions"
+		return "${ hours.takeIf { it > 0 }?.let { "$it:" } ?: "" }$minutes:$seconds.$fractions"
 	}
 
 	private fun endChallenge(server: MinecraftServer) {
@@ -121,7 +121,7 @@ object ChallengeStatusController {
 				Storage.spreadDifficulty.defeatedBlobs,
 				challengePersistentState.playTime.formatTime(),
 			),
-			true,
+			false,
 		)
 
 		if (challengePersistentState.cheated) {

@@ -289,7 +289,8 @@ object CancerLogic {
 		if (!targetCurrentBlockState.isCancerSpreadable()) return
 
 		// Prefer spreading to existing blocks over growing out into empty space.
-		if (!bypassThrottling && targetCurrentBlockState.isAir && random.nextFloat() <= 0.8f) return
+		// Exception for spreading into air below us, to make cheesing a little more difficult.
+		if (!bypassThrottling && targetCurrentBlockState.isAir && random.nextFloat() <= 0.8f && pos.down() != spreadPosition) return
 
 		// 50% chance for a chilling tower to prevent the spread.
 		if (random.nextInt(2) == 0) {
