@@ -29,15 +29,24 @@ object CancerSpreadController {
 		tickBlobs(world)
 	}
 
-	private fun tryCreateNewBlob(world: ServerWorld) {
-		if (!world.gameRules.getBoolean(PreventTheSpread.DO_CANCER_SPAWNING_GAME_RULE)) return
+	private fun tryCreateNewBlob(overworld: ServerWorld) {
+		if (!overworld.gameRules.getBoolean(PreventTheSpread.DO_CANCER_SPAWNING_GAME_RULE)) return
 
 		val spreadDifficulty = Storage.spreadDifficulty
 
 		if (Storage.cancerBlob.getActiveCancerBlobCount() >= spreadDifficulty.maxActiveBlobs) return
 
+		if (spreadDifficulty.nextSpawnAt == -1L) {
+			// Schedule the next cancer blob spawn in the future.
+			spreadDifficulty.nextSpawnAt = overworld.time + spreadDifficulty.blobSpawnDelayTicks
+			return
+		}
+
+		// Do nothing until we hit the scheduled time.
+		if (spreadDifficulty.nextSpawnAt.let { it >= 0 && overworld.time > it }) return
+
 		// Create the cancer blob.
-		CancerLogic.createCancerBlob(world)
+		CancerLogic.createCancerBlob(overworld)
 	}
 
 	private fun tickBlobs(world: ServerWorld) {
