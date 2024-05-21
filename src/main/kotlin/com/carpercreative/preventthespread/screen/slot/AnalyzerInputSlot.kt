@@ -19,7 +19,7 @@ class AnalyzerInputSlot(
 	companion object {
 		fun isValid(stack: ItemStack): Boolean {
 			return (stack.isOf(PreventTheSpread.PROBE_ITEM) && ProbeItem.containsSample(stack))
-				|| stack.isOf(PreventTheSpread.CANCEROUS_MATERIAL_ITEM)
+				|| stack.isOf(PreventTheSpread.GLITCH_MATERIAL_ITEM)
 		}
 	}
 }

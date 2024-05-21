@@ -159,8 +159,8 @@ object PreventTheSpread : ModInitializer {
 		} as BlockEntity
 	}, PROCESSING_TABLE_BLOCK).build()
 
-	val CANCEROUS_MATERIAL_ID = identifier("cancerous_material")
-	val CANCEROUS_MATERIAL_ITEM = Item(Item.Settings())
+	val GLITCH_MATERIAL_ID = identifier("glitch_material")
+	val GLITCH_MATERIAL_ITEM = Item(Item.Settings())
 	val DEBUG_TOOL_ITEM_ID = identifier("debug_tool")
 	val DEBUG_TOOL_ITEM = DebugToolItem(FabricItemSettings().maxCount(1).rarity(Rarity.EPIC))
 	val PROBE_ITEM_ID = identifier("probe")
@@ -212,7 +212,7 @@ object PreventTheSpread : ModInitializer {
 			entries.add(SCANNER_ITEM)
 			entries.add(PROBE_ITEM)
 			entries.add(PROCESSING_TABLE_BLOCK_ITEM)
-			entries.add(CANCEROUS_MATERIAL_ITEM)
+			entries.add(GLITCH_MATERIAL_ITEM)
 			entries.add(RESEARCH_ITEM)
 			entries.add(CHEMOTHERAPEUTIC_DRUG_BLOCK_ITEM)
 			entries.add(RADIATION_STAFF_ITEM)
@@ -314,7 +314,7 @@ object PreventTheSpread : ModInitializer {
 
 		Registry.register(Registries.BLOCK_ENTITY_TYPE, PROCESSING_TABLE_ID, PROCESSING_TABLE_BLOCK_ENTITY)
 
-		Registry.register(Registries.ITEM, CANCEROUS_MATERIAL_ID, CANCEROUS_MATERIAL_ITEM)
+		Registry.register(Registries.ITEM, GLITCH_MATERIAL_ID, GLITCH_MATERIAL_ITEM)
 		Registry.register(Registries.ITEM, DEBUG_TOOL_ITEM_ID, DEBUG_TOOL_ITEM)
 		Registry.register(Registries.ITEM, PROBE_ITEM_ID, PROBE_ITEM)
 		Registry.register(Registries.ITEM, RADIATION_STAFF_ITEM_ID, RADIATION_STAFF_ITEM)

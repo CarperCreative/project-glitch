@@ -61,7 +61,7 @@
 	"dataPack.preventthespread.challenge.displayName": "Prevent the Spread Challenge",
 	"gamerule.preventthespread:doCancerSpawning": "Spawn new cancerous blobs",
 	"gamerule.preventthespread:doCancerSpread": "Spread existing cancerous blobs",
-	"item.preventthespread.cancerous_material": "Cancerous Material",
+	"item.preventthespread.glitch_material": "Glitch Material",
 	"item.preventthespread.probe.empty": "Empty Probe",
 	"item.preventthespread.probe.full": "Probe with Sample",
 	"item.preventthespread.probe.tooltip.empty": "Use on a Glitch Block to take a sample.",

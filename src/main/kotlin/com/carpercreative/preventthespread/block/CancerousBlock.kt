@@ -47,7 +47,7 @@ object CancerousBlock {
 			if (cancerBlob != null && cancerBlob.cancerousBlockCount == 0) {
 				if (cancerBlob.isAnalyzed) {
 					val itemPos = pos.toCenterPos()
-					world.spawnEntity(ItemEntity(world, itemPos.x, itemPos.y, itemPos.z, PreventTheSpread.CANCEROUS_MATERIAL_ITEM.defaultStack))
+					world.spawnEntity(ItemEntity(world, itemPos.x, itemPos.y, itemPos.z, PreventTheSpread.GLITCH_MATERIAL_ITEM.defaultStack))
 				}
 
 				world.playSoundAtBlockCenter(pos, SoundEvent.of(Identifier("entity.player.levelup")), SoundCategory.BLOCKS, 1f, 1f, true)
