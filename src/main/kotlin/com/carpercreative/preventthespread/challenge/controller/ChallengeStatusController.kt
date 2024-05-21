@@ -68,8 +68,8 @@ object ChallengeStatusController {
 		}
 
 		server.overworld.gameRules.apply {
-			get(PreventTheSpread.DO_CANCER_SPAWNING_GAME_RULE).set(true, server)
-			get(PreventTheSpread.DO_CANCER_SPREAD_GAME_RULE).set(true, server)
+			get(PreventTheSpread.DO_GLITCH_SPAWNING_GAME_RULE).set(true, server)
+			get(PreventTheSpread.DO_GLITCH_SPREAD_GAME_RULE).set(true, server)
 		}
 
 		if (!ChallengeValidityController.isValid(server)) {
@@ -131,8 +131,8 @@ object ChallengeStatusController {
 
 		for (world in server.worlds) {
 			val gameRules = world.gameRules
-			gameRules.get(PreventTheSpread.DO_CANCER_SPAWNING_GAME_RULE).set(false, server)
-			gameRules.get(PreventTheSpread.DO_CANCER_SPREAD_GAME_RULE).set(false, server)
+			gameRules.get(PreventTheSpread.DO_GLITCH_SPAWNING_GAME_RULE).set(false, server)
+			gameRules.get(PreventTheSpread.DO_GLITCH_SPREAD_GAME_RULE).set(false, server)
 		}
 	}
 }

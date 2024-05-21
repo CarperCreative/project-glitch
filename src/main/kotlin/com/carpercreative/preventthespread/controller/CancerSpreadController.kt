@@ -30,7 +30,7 @@ object CancerSpreadController {
 	}
 
 	private fun tryCreateNewBlob(overworld: ServerWorld) {
-		if (!overworld.gameRules.getBoolean(PreventTheSpread.DO_CANCER_SPAWNING_GAME_RULE)) return
+		if (!overworld.gameRules.getBoolean(PreventTheSpread.DO_GLITCH_SPAWNING_GAME_RULE)) return
 
 		val spreadDifficulty = Storage.spreadDifficulty
 
@@ -51,7 +51,7 @@ object CancerSpreadController {
 	}
 
 	private fun tickBlobs(world: ServerWorld) {
-		if (!world.gameRules.getBoolean(PreventTheSpread.DO_CANCER_SPREAD_GAME_RULE)) return
+		if (!world.gameRules.getBoolean(PreventTheSpread.DO_GLITCH_SPREAD_GAME_RULE)) return
 
 		val blobMembership = world.getBlobMembershipPersistentState()
 		val blobMemberships = blobMembership.getBlobMembershipsEntries()

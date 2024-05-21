@@ -202,8 +202,8 @@ object PreventTheSpread : ModInitializer {
 
 	val SELECT_RESEARCH_PACKET_ID = identifier("select_research")
 
-	val DO_CANCER_SPAWNING_GAME_RULE: GameRules.Key<GameRules.BooleanRule> = GameRuleRegistry.register("$MOD_ID:doCancerSpawning", GameRules.Category.UPDATES, GameRuleFactory.createBooleanRule(false))
-	val DO_CANCER_SPREAD_GAME_RULE: GameRules.Key<GameRules.BooleanRule> = GameRuleRegistry.register("$MOD_ID:doCancerSpread", GameRules.Category.UPDATES, GameRuleFactory.createBooleanRule(true))
+	val DO_GLITCH_SPAWNING_GAME_RULE: GameRules.Key<GameRules.BooleanRule> = GameRuleRegistry.register("$MOD_ID:doGlitchSpawning", GameRules.Category.UPDATES, GameRuleFactory.createBooleanRule(false))
+	val DO_GLITCH_SPREAD_GAME_RULE: GameRules.Key<GameRules.BooleanRule> = GameRuleRegistry.register("$MOD_ID:doGlitchSpread", GameRules.Category.UPDATES, GameRuleFactory.createBooleanRule(true))
 
 	private val ITEM_GROUP = FabricItemGroup.builder()
 		.icon { ItemStack(GLITCH_DIRT_BLOCK_ITEM) }
