@@ -48,13 +48,13 @@ object CancerLogic {
 		}
 	}
 
-	fun BlockState.isCancerous(): Boolean {
-		return isIn(PreventTheSpread.CANCEROUS_BLOCK_TAG)
+	fun BlockState.isGlitched(): Boolean {
+		return isIn(PreventTheSpread.GLITCHED_BLOCK_TAG)
 	}
 
-	private fun BlockState.isCancerModifiable(): Boolean {
+	private fun BlockState.isGlitchModifiable(): Boolean {
 		// No point spreading to already cancer infested blocks.
-		return !isCancerous()
+		return !isGlitched()
 			// Spreading to block entities could have unintended consequences, like dropping the entire contents of a chest.
 			&& !hasBlockEntity()
 			// Prevent spreading to unbreakable blocks like bedrock.
@@ -62,25 +62,25 @@ object CancerLogic {
 	}
 
 	/**
-	 * @return `true` for blocks which are valid targets for cancer to spread to.
-	 * This excludes all cancer blocks and block entities.
+	 * @return `true` for blocks which are valid targets for glitch to spread to.
+	 * This excludes all glitch blocks and block entities.
 	 */
-	fun BlockState.isCancerSpreadable(): Boolean {
-		return isCancerModifiable()
+	fun BlockState.isGlitchable(): Boolean {
+		return isGlitchModifiable()
 			// Allow spreading only to explicitly whitelisted blocks.
-			&& isIn(PreventTheSpread.CANCER_SPREADABLE_BLOCK_TAG)
+			&& isIn(PreventTheSpread.GLITCHABLE_BLOCK_TAG)
 	}
 
 	/**
-	 * @return `true` for blocks which are valid targets for a cancer blob to get spawned from.
-	 * This excludes all cancer blocks and block entities.
+	 * @return `true` for blocks which are valid targets for a glitch cluster to get spawned from.
+	 * This excludes all glitch blocks and block entities.
 	 */
-	fun BlockState.isValidCancerSeed(): Boolean {
-		return isCancerModifiable()
-			// Never spawn a blob in air.
+	fun BlockState.isValidGlitchSeed(): Boolean {
+		return isGlitchModifiable()
+			// Never spawn a cluster in air.
 			&& !isAir
 			// Allow spreading only to explicitly whitelisted blocks.
-			&& isIn(PreventTheSpread.VALID_CANCER_SEED_BLOCK_TAG)
+			&& isIn(PreventTheSpread.VALID_GLITCH_SEED_BLOCK_TAG)
 	}
 
 	fun generateCancerSpawnPos(world: ServerWorld, maxRadius: Float, maxDepth: Int): BlockPos {
@@ -110,7 +110,7 @@ object CancerLogic {
 				// Go up until...
 				while (
 					// hitting air or a valid cancer seed block,
-					!world.getBlockState(cancerSpawnPos).run { isAir || isValidCancerSeed() }
+					!world.getBlockState(cancerSpawnPos).run { isAir || isValidGlitchSeed() }
 					// or reaching the height limit (disregards all validity checks).
 					&& !world.isOutOfHeightLimit(cancerSpawnPos.y + 1)
 				) {
@@ -122,7 +122,7 @@ object CancerLogic {
 			// Find surface position, ignoring leaves, trees, and fluids.
 			var blocksDescendedToFindSurface = 0
 			while (cancerSpawnPos.y > minimumY) {
-				if (world.getBlockState(cancerSpawnPos).isValidCancerSeed()) break
+				if (world.getBlockState(cancerSpawnPos).isValidGlitchSeed()) break
 
 				cancerSpawnPos.y--
 
@@ -139,7 +139,7 @@ object CancerLogic {
 					maxDescent--
 					cancerSpawnPos.y--
 
-					if (world.getBlockState(cancerSpawnPos).isValidCancerSeed()) {
+					if (world.getBlockState(cancerSpawnPos).isValidGlitchSeed()) {
 						lastValidY = cancerSpawnPos.y
 					}
 				}
@@ -148,7 +148,7 @@ object CancerLogic {
 
 			cancerSpawnPos.y = cancerSpawnPos.y.coerceAtLeast(minimumY)
 
-			if (!world.getBlockState(cancerSpawnPos).isValidCancerSeed()) {
+			if (!world.getBlockState(cancerSpawnPos).isValidGlitchSeed()) {
 				attempt--
 				invalidAttempts++
 				continue@nextAttempt
@@ -200,7 +200,7 @@ object CancerLogic {
 	fun createCancerBlob(world: ServerWorld, cancerSpawnPos: BlockPos, maxSize: Int, cancerType: CancerType, maxMetastaticJumpDistance: Int): CancerBlob? {
 		val blobMembershipPersistentState = world.getBlobMembershipPersistentState()
 
-		if (world.getBlockState(cancerSpawnPos).isCancerous() || blobMembershipPersistentState.getMembershipOrNull(cancerSpawnPos) != null) return null
+		if (world.getBlockState(cancerSpawnPos).isGlitched() || blobMembershipPersistentState.getMembershipOrNull(cancerSpawnPos) != null) return null
 
 		val cancerBlob = Storage.cancerBlob.createCancerBlob { CancerBlob(it, cancerType, maxMetastaticJumpDistance) }
 
@@ -233,7 +233,7 @@ object CancerLogic {
 			val blockState = world.getBlockState(pos)
 			if (
 				(blockState.isAir && random.nextFloat() < 0.8f)
-				|| !blockState.isCancerSpreadable()
+				|| !blockState.isGlitchable()
 			) continue
 
 			out.add(pos)
@@ -268,7 +268,7 @@ object CancerLogic {
 					candidatePos.y = fromPos.y + random.nextBetweenExclusive(-maxJumpDistance / 2, maxJumpDistance / 3)
 					candidatePos.z = fromPos.z + random.nextBetweenExclusive(-maxJumpDistance, maxJumpDistance)
 
-					if (world.getBlockState(candidatePos).isCancerSpreadable()) {
+					if (world.getBlockState(candidatePos).isGlitchable()) {
 						return candidatePos.toImmutable()
 					}
 				}
@@ -286,7 +286,7 @@ object CancerLogic {
 		val spreadPosition = getSpreadTargetPosition(world, pos, random)
 		val targetCurrentBlockState = world.getBlockState(spreadPosition)
 
-		if (!targetCurrentBlockState.isCancerSpreadable()) return
+		if (!targetCurrentBlockState.isGlitchable()) return
 
 		// Prefer spreading to existing blocks over growing out into empty space.
 		// Exception for spreading into air below us, to make cheesing a little more difficult.
@@ -310,7 +310,7 @@ object CancerLogic {
 		val cancerousNeighborCountOfTarget = Direction.entries
 			.asSequence()
 			.map { spreadPosition.offset(it) }
-			.count { world.getBlockState(it).isCancerous() }
+			.count { world.getBlockState(it).isGlitched() }
 		if (!bypassThrottling && random.nextFloat() <= 0.5f - (cancerousNeighborCountOfTarget / 6f * 0.5f)) return
 
 		spreadCancer(world, pos, spreadPosition)
@@ -332,7 +332,7 @@ object CancerLogic {
 		val box = BlockBox(pos).expand(distance)
 
 		val cancerBlockPositions = box.contentsSequence()
-			.filter { world.getBlockState(it).isCancerous() }
+			.filter { world.getBlockState(it).isGlitched() }
 			.map { it.toImmutable() }
 			.toList()
 
@@ -347,7 +347,7 @@ object CancerLogic {
 	}
 
 	fun getDefaultCancerBlockState(): BlockState {
-		return PreventTheSpread.CANCER_STONE_BLOCK.defaultState
+		return PreventTheSpread.GLITCH_STONE_BLOCK.defaultState
 	}
 
 	fun convertToCancer(world: ServerWorld, pos: BlockPos, variantForAir: BlockState = getDefaultCancerBlockState()) {
@@ -368,7 +368,7 @@ object CancerLogic {
 		if (state.isAir) return variantForAir
 
 		// Do not convert block states which are already cancerous.
-		if (state.isIn(PreventTheSpread.CANCEROUS_BLOCK_TAG)) return state
+		if (state.isIn(PreventTheSpread.GLITCHED_BLOCK_TAG)) return state
 
 		val material = when {
 			state.isIn(BlockTags.LEAVES) -> StateMaterial.LEAVES
@@ -385,23 +385,23 @@ object CancerLogic {
 		return when (material) {
 			StateMaterial.DIRT -> convertBlockStateToCancer(
 				state,
-				PreventTheSpread.CANCER_DIRT_BLOCK,
-				PreventTheSpread.CANCER_DIRT_SLAB_BLOCK,
-				PreventTheSpread.CANCER_DIRT_STAIRS_BLOCK,
+				PreventTheSpread.GLITCH_DIRT_BLOCK,
+				PreventTheSpread.GLITCH_DIRT_SLAB_BLOCK,
+				PreventTheSpread.GLITCH_DIRT_STAIRS_BLOCK,
 			)
-			StateMaterial.LEAVES -> PreventTheSpread.CANCER_LEAVES_BLOCK.getStateWithProperties(state)
-			StateMaterial.LOG -> PreventTheSpread.CANCER_LOG_BLOCK.getStateWithProperties(state)
+			StateMaterial.LEAVES -> PreventTheSpread.GLITCH_LEAVES_BLOCK.getStateWithProperties(state)
+			StateMaterial.LOG -> PreventTheSpread.GLITCH_LOG_BLOCK.getStateWithProperties(state)
 			StateMaterial.PLANKS -> convertBlockStateToCancer(
 				state,
-				PreventTheSpread.CANCER_PLANKS_BLOCK,
-				PreventTheSpread.CANCER_PLANKS_SLAB_BLOCK,
-				PreventTheSpread.CANCER_PLANKS_STAIRS_BLOCK,
+				PreventTheSpread.GLITCH_PLANKS_BLOCK,
+				PreventTheSpread.GLITCH_PLANKS_SLAB_BLOCK,
+				PreventTheSpread.GLITCH_PLANKS_STAIRS_BLOCK,
 			)
 			StateMaterial.STONE -> convertBlockStateToCancer(
 				state,
-				PreventTheSpread.CANCER_STONE_BLOCK,
-				PreventTheSpread.CANCER_STONE_SLAB_BLOCK,
-				PreventTheSpread.CANCER_STONE_STAIRS_BLOCK,
+				PreventTheSpread.GLITCH_STONE_BLOCK,
+				PreventTheSpread.GLITCH_STONE_SLAB_BLOCK,
+				PreventTheSpread.GLITCH_STONE_STAIRS_BLOCK,
 			)
 		}
 	}

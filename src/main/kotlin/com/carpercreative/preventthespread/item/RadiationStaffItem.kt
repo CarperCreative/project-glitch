@@ -2,7 +2,7 @@ package com.carpercreative.preventthespread.item
 
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.cancer.CancerLogic
-import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
+import com.carpercreative.preventthespread.cancer.CancerLogic.isGlitched
 import com.carpercreative.preventthespread.cancer.TreatmentType
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
 import com.carpercreative.preventthespread.util.getRadiationStaffSideRayCount
@@ -181,7 +181,7 @@ class RadiationStaffItem(
 				if (!targetBlockState.fluidState.isEmpty) {
 					// We hit a liquid - reduce penetration depth without breaking anything, but continue.
 					fluidPenalty = sqrt(3.0)
-				} else if (targetBlockState.isCancerous()) {
+				} else if (targetBlockState.isGlitched()) {
 					breakBlock(world, targetPos, user)
 				} else {
 					return -1.0

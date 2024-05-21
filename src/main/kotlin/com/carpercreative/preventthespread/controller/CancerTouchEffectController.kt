@@ -1,6 +1,6 @@
 package com.carpercreative.preventthespread.controller
 
-import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
+import com.carpercreative.preventthespread.cancer.CancerLogic.isGlitched
 import com.carpercreative.preventthespread.util.contentsSequence
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.entity.LivingEntity
@@ -35,7 +35,7 @@ object CancerTouchEffectController {
 			for (mutable in BlockBox.create(fromPos, toPos).contentsSequence()) {
 				val blockState = world.getBlockState(mutable)
 
-				if (blockState.isCancerous()) {
+				if (blockState.isGlitched()) {
 					onCancerousBlockTouched(world, mutable.toImmutable(), entity)
 				}
 			}
