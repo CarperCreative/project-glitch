@@ -2,7 +2,7 @@ package com.carpercreative.preventthespread.item
 
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.cancer.BlobIdentifier
-import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
+import com.carpercreative.preventthespread.cancer.CancerLogic.isGlitched
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.player.PlayerEntity
@@ -53,7 +53,7 @@ class ProbeItem(
 		if (world.isClient) {
 			// Heuristics for whether the item use animation should be triggered.
 			val targetBlockState = context.world.getBlockState(context.blockPos)
-			if (targetBlockState?.isCancerous() == true) return ActionResult.SUCCESS
+			if (targetBlockState?.isGlitched() == true) return ActionResult.SUCCESS
 
 			return ActionResult.FAIL
 		}

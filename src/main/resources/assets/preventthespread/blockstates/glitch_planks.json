@@ -1,0 +1,21 @@
+{
+	"variants": {
+		"": [
+			{
+				"model": "preventthespread:block/glitch_planks"
+			},
+			{
+				"model": "preventthespread:block/glitch_planks_1"
+			},
+			{
+				"model": "preventthespread:block/glitch_planks_2"
+			},
+			{
+				"model": "preventthespread:block/glitch_planks_3"
+			},
+			{
+				"model": "preventthespread:block/glitch_planks_4"
+			}
+		]
+	}
+}

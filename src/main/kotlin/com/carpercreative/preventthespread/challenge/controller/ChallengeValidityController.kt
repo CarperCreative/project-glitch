@@ -16,7 +16,7 @@ object ChallengeValidityController {
 
 		if (overworld.difficulty.let { it != Difficulty.NORMAL && it != Difficulty.HARD }) return false
 
-		if (!overworld.gameRules.run { getBoolean(PreventTheSpread.DO_CANCER_SPAWNING_GAME_RULE) && getBoolean(PreventTheSpread.DO_CANCER_SPREAD_GAME_RULE) }) return false
+		if (!overworld.gameRules.run { getBoolean(PreventTheSpread.DO_GLITCH_SPAWNING_GAME_RULE) && getBoolean(PreventTheSpread.DO_GLITCH_SPREAD_GAME_RULE) }) return false
 
 		return true
 	}

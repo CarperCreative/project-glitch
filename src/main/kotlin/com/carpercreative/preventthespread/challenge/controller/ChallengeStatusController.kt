@@ -9,6 +9,7 @@ import com.carpercreative.preventthespread.challenge.persistence.ChallengePersis
 import com.carpercreative.preventthespread.team.Team
 import com.carpercreative.preventthespread.team.TeamManager
 import com.mojang.logging.LogUtils
+import kotlin.math.roundToInt
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.server.MinecraftServer
@@ -67,8 +68,8 @@ object ChallengeStatusController {
 		}
 
 		server.overworld.gameRules.apply {
-			get(PreventTheSpread.DO_CANCER_SPAWNING_GAME_RULE).set(true, server)
-			get(PreventTheSpread.DO_CANCER_SPREAD_GAME_RULE).set(true, server)
+			get(PreventTheSpread.DO_GLITCH_SPAWNING_GAME_RULE).set(true, server)
+			get(PreventTheSpread.DO_GLITCH_SPREAD_GAME_RULE).set(true, server)
 		}
 
 		if (!ChallengeValidityController.isValid(server)) {
@@ -104,7 +105,7 @@ object ChallengeStatusController {
 		val hours = time / 3600
 		val minutes = ((time / 60) % 60).toString().run { if (hours > 0) padStart(2, '0') else this }
 		val seconds = (time % 60).toString().padStart(2, '0')
-		val fractions = (this % 20) / 10f
+		val fractions = ((this % 20) / 20f).roundToInt()
 
 		return "${ hours.takeIf { it > 0 }?.let { "$it:" } ?: "" }$minutes:$seconds.$fractions"
 	}
@@ -130,8 +131,8 @@ object ChallengeStatusController {
 
 		for (world in server.worlds) {
 			val gameRules = world.gameRules
-			gameRules.get(PreventTheSpread.DO_CANCER_SPAWNING_GAME_RULE).set(false, server)
-			gameRules.get(PreventTheSpread.DO_CANCER_SPREAD_GAME_RULE).set(false, server)
+			gameRules.get(PreventTheSpread.DO_GLITCH_SPAWNING_GAME_RULE).set(false, server)
+			gameRules.get(PreventTheSpread.DO_GLITCH_SPREAD_GAME_RULE).set(false, server)
 		}
 	}
 }

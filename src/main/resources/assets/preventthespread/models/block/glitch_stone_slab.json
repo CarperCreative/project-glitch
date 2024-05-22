@@ -1,0 +1,8 @@
+{
+	"parent": "minecraft:block/slab",
+	"textures": {
+		"bottom": "preventthespread:block/glitch_stone",
+		"side": "preventthespread:block/glitch_stone",
+		"top": "preventthespread:block/glitch_stone"
+	}
+}

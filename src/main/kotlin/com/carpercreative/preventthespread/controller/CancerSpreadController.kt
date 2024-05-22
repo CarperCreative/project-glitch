@@ -3,6 +3,7 @@ package com.carpercreative.preventthespread.controller
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.cancer.CancerLogic
+import com.carpercreative.preventthespread.cancer.CancerLogic.isGlitched
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -30,7 +31,7 @@ object CancerSpreadController {
 	}
 
 	private fun tryCreateNewBlob(overworld: ServerWorld) {
-		if (!overworld.gameRules.getBoolean(PreventTheSpread.DO_CANCER_SPAWNING_GAME_RULE)) return
+		if (!overworld.gameRules.getBoolean(PreventTheSpread.DO_GLITCH_SPAWNING_GAME_RULE)) return
 
 		val spreadDifficulty = Storage.spreadDifficulty
 
@@ -51,7 +52,7 @@ object CancerSpreadController {
 	}
 
 	private fun tickBlobs(world: ServerWorld) {
-		if (!world.gameRules.getBoolean(PreventTheSpread.DO_CANCER_SPREAD_GAME_RULE)) return
+		if (!world.gameRules.getBoolean(PreventTheSpread.DO_GLITCH_SPREAD_GAME_RULE)) return
 
 		val blobMembership = world.getBlobMembershipPersistentState()
 		val blobMemberships = blobMembership.getBlobMembershipsEntries()
@@ -92,6 +93,12 @@ object CancerSpreadController {
 		// Tick after iterating over blob memberships to prevent concurrent modification.
 		for (blockPos in blockPositionsToTick) {
 			if (blockPos == null) continue
+
+			if (!world.getBlockState(blockPos).isGlitched()) {
+				// Remove invalid memberships.
+				blobMembership.removeMembership(blockPos)
+				continue
+			}
 
 			CancerLogic.attemptSpread(world, blockPos, world.random)
 		}

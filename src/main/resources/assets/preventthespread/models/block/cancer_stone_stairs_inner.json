@@ -1,8 +1,0 @@
-{
-	"parent": "minecraft:block/inner_stairs",
-	"textures": {
-		"bottom": "preventthespread:block/cancer_stone",
-		"side": "preventthespread:block/cancer_stone",
-		"top": "preventthespread:block/cancer_stone"
-	}
-}
