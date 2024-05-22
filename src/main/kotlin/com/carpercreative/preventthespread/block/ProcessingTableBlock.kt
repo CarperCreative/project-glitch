@@ -32,6 +32,7 @@ import net.minecraft.util.StringIdentifiable
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.MathHelper
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
@@ -168,6 +169,16 @@ class ProcessingTableBlock(
 
 	override fun getAmbientOcclusionLightLevel(state: BlockState?, world: BlockView?, pos: BlockPos?): Float {
 		return 1f
+	}
+
+	override fun getRenderingSeed(state: BlockState, pos: BlockPos): Long {
+		return when (val part = state.get(PROCESSING_TABLE_PART)) {
+			ProcessingTablePart.LEFT -> MathHelper.hashCode(pos.x, pos.y, pos.z)
+			ProcessingTablePart.RIGHT -> {
+				val counterpartPos = part.getCounterpartBlockPos(state.get(FACING), pos)
+				MathHelper.hashCode(counterpartPos)
+			}
+		}
 	}
 
 	enum class ProcessingTablePart(
