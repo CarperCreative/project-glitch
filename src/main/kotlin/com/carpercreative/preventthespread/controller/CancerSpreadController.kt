@@ -3,6 +3,7 @@ package com.carpercreative.preventthespread.controller
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.cancer.CancerLogic
+import com.carpercreative.preventthespread.cancer.CancerLogic.isGlitched
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -92,6 +93,12 @@ object CancerSpreadController {
 		// Tick after iterating over blob memberships to prevent concurrent modification.
 		for (blockPos in blockPositionsToTick) {
 			if (blockPos == null) continue
+
+			if (!world.getBlockState(blockPos).isGlitched()) {
+				// Remove invalid memberships.
+				blobMembership.removeMembership(blockPos)
+				continue
+			}
 
 			CancerLogic.attemptSpread(world, blockPos, world.random)
 		}
