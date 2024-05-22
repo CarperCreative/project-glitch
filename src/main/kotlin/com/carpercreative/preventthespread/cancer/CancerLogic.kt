@@ -14,6 +14,7 @@ import java.util.LinkedList
 import kotlin.math.PI
 import kotlin.math.absoluteValue
 import kotlin.math.cos
+import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sin
 import net.fabricmc.fabric.api.event.Event
@@ -157,6 +158,15 @@ object CancerLogic {
 			// Try not to spawn cancer under fluids.
 			// If a position under a fluid is reached every attempt, the last one will be returned.
 			if (!world.getFluidState(cancerSpawnPos.offset(Direction.UP)).isEmpty) continue
+
+			// Try to spawn away from any players.
+			val minimumSquaredDistanceToPlayer = 64.0.pow(2)
+			val distanceToClosestPlayer = world.players
+				.asSequence()
+				.filter { it.interactionManager.isSurvivalLike }
+				// Distance on the XZ plane.
+				.minOfOrNull { (it.x - cancerSpawnPos.x).pow(2) + (it.z - cancerSpawnPos.z).pow(2)}
+			if (distanceToClosestPlayer?.let { it < minimumSquaredDistanceToPlayer } == true) continue@nextAttempt
 
 			// Position passed all checks.
 			break@nextAttempt
