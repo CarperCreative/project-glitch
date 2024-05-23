@@ -11,4 +11,7 @@ object SkyBoxHelper {
 	val cloudColorShift: Float
 		// 0.0..0.4
 		get() = (ClientStorage.glitchProgress - 0.5f).coerceAtLeast(0f) * 2f * 0.4f
+
+	val minimumSkyDarkness: Float
+		get() = (ClientStorage.glitchProgress - 0.6f).coerceAtLeast(0f) * 2f
 }
