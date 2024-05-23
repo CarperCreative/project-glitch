@@ -18,6 +18,7 @@ import com.carpercreative.preventthespread.challenge.controller.ChallengeValidit
 import com.carpercreative.preventthespread.controller.BossBarController
 import com.carpercreative.preventthespread.controller.CancerSpreadController
 import com.carpercreative.preventthespread.controller.CancerTouchEffectController
+import com.carpercreative.preventthespread.controller.ClientStateSynchronizationController
 import com.carpercreative.preventthespread.controller.EveryoneTeamController
 import com.carpercreative.preventthespread.controller.ResearchSynchronizationController
 import com.carpercreative.preventthespread.controller.StoryRootUnlockController
@@ -200,6 +201,7 @@ object PreventTheSpread : ModInitializer {
 	lateinit var CHILLING_TOWER_POI: PointOfInterestType
 		private set
 
+	val GLITCH_PROGRESS_PACKET_ID = identifier("glitch_progress")
 	val SELECT_RESEARCH_PACKET_ID = identifier("select_research")
 
 	val DO_GLITCH_SPAWNING_GAME_RULE: GameRules.Key<GameRules.BooleanRule> = GameRuleRegistry.register("$MOD_ID:doGlitchSpawning", GameRules.Category.UPDATES, GameRuleFactory.createBooleanRule(false))
@@ -343,6 +345,7 @@ object PreventTheSpread : ModInitializer {
 		CancerTouchEffectController.init()
 		ChallengeStatusController.init()
 		ChallengeValidityController.init()
+		ClientStateSynchronizationController.init()
 		EveryoneTeamController.init()
 		ResearchSynchronizationController.init()
 		StoryRootUnlockController.init()
