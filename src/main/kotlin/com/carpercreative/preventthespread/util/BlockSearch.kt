@@ -1,6 +1,6 @@
 package com.carpercreative.preventthespread.util
 
-import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
+import com.carpercreative.preventthespread.cancer.CancerLogic.isGlitched
 import java.util.LinkedList
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
@@ -46,6 +46,6 @@ object BlockSearch {
 	}
 
 	fun findCancerousBlocks(world: WorldAccess, startPos: BlockPos, limit: Int): List<BlockPos> {
-		return findBlocks(world, startPos, limit) { state -> state.isCancerous() }
+		return findBlocks(world, startPos, limit) { state -> state.isGlitched() }
 	}
 }

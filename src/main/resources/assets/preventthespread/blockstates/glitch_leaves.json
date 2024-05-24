@@ -1,0 +1,21 @@
+{
+	"variants": {
+		"": [
+			{
+				"model": "preventthespread:block/glitch_leaves"
+			},
+			{
+				"model": "preventthespread:block/glitch_leaves_1"
+			},
+			{
+				"model": "preventthespread:block/glitch_leaves_2"
+			},
+			{
+				"model": "preventthespread:block/glitch_leaves_3"
+			},
+			{
+				"model": "preventthespread:block/glitch_leaves_4"
+			}
+		]
+	}
+}

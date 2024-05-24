@@ -65,7 +65,7 @@ class AdvancementGenerator(
 	override fun generateAdvancement(consumer: Consumer<AdvancementEntry>) {
 		val storyRoot = Advancement.Builder.createUntelemetered()
 			.display(
-				PreventTheSpread.CANCER_STONE_BLOCK_ITEM.defaultStack,
+				PreventTheSpread.GLITCH_STONE_BLOCK_ITEM.defaultStack,
 				StoryAdvancement.ROOT_ID.titleText,
 				StoryAdvancement.ROOT_ID.descriptionText,
 				Identifier("textures/gui/advancements/backgrounds/adventure.png"),
@@ -91,11 +91,11 @@ class AdvancementGenerator(
 		val getSample = consumer.createAdvancement(
 			StoryAdvancement.GET_SAMPLE_ID,
 			obtainProbe,
-			PreventTheSpread.CANCER_STONE_BLOCK_ITEM.defaultStack,
+			PreventTheSpread.GLITCH_STONE_BLOCK_ITEM.defaultStack,
 		) {
 			criterion("obtained_sample", ItemCriterion.Conditions.createItemUsedOnBlock(
 				LocationPredicate.Builder.create()
-					.block(BlockPredicate.Builder.create().tag(PreventTheSpread.CANCEROUS_BLOCK_TAG)),
+					.block(BlockPredicate.Builder.create().tag(PreventTheSpread.GLITCHED_BLOCK_TAG)),
 				ItemPredicate.Builder.create().items(PreventTheSpread.PROBE_ITEM),
 			))
 
@@ -182,6 +182,18 @@ class AdvancementGenerator(
 		) {
 			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.RADIATION_STAFF_ITEM_ID))
 		}
+
+		consumer.createResearchAdvancement(
+			ResearchAdvancement.RADIATION_STAFF_HEAT_1_ID,
+			radiationStaff,
+			PreventTheSpread.RADIATION_STAFF_ITEM.defaultStack,
+		)
+
+		consumer.createResearchAdvancement(
+			ResearchAdvancement.RADIATION_STAFF_RAYS_1_ID,
+			radiationStaff,
+			PreventTheSpread.RADIATION_STAFF_ITEM.defaultStack,
+		)
 
 		consumer.createResearchAdvancement(
 			ResearchAdvancement.RADIATION_STAFF_STRENGTH_1_ID,

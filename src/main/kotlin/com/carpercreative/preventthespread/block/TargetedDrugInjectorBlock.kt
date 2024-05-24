@@ -1,7 +1,7 @@
 package com.carpercreative.preventthespread.block
 
 import com.carpercreative.preventthespread.cancer.CancerLogic
-import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
+import com.carpercreative.preventthespread.cancer.CancerLogic.isGlitched
 import com.carpercreative.preventthespread.cancer.TreatmentType
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
 import com.carpercreative.preventthespread.util.BlockSearch
@@ -156,7 +156,7 @@ class TargetedDrugInjectorBlock(
 	 */
 	private fun checkInjectionTarget(state: BlockState, world: WorldAccess, pos: BlockPos): BlockState {
 		val attachedToPosition = pos.offset(state.get(FACING).opposite)
-		val attachedToCancerous = world.getBlockState(attachedToPosition).isCancerous()
+		val attachedToCancerous = world.getBlockState(attachedToPosition).isGlitched()
 
 		return when (attachedToCancerous) {
 			true -> when (state.get(PROGRESS) == 0) {

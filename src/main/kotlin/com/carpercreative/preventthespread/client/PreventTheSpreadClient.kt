@@ -7,8 +7,10 @@ import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
 import com.carpercreative.preventthespread.item.RadiationStaffItem
 import com.carpercreative.preventthespread.item.ScannerItem
+import com.carpercreative.preventthespread.networking.GlitchProgressPacket
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.minecraft.client.gui.screen.ingame.HandledScreens
 import net.minecraft.client.item.CompassAnglePredicateProvider
@@ -48,5 +50,7 @@ object PreventTheSpreadClient : ClientModInitializer {
 
 		HandledScreens.register(PreventTheSpread.PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER, ::ProcessingTableAnalyzerScreen)
 		HandledScreens.register(PreventTheSpread.PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER, ::ProcessingTableResearchScreen)
+
+		ClientPlayNetworking.registerGlobalReceiver(PreventTheSpread.GLITCH_PROGRESS_PACKET_ID, GlitchProgressPacket::handle)
 	}
 }

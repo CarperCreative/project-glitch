@@ -1,6 +1,6 @@
 package com.carpercreative.preventthespread.controller
 
-import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
+import com.carpercreative.preventthespread.cancer.CancerLogic.isGlitched
 import com.carpercreative.preventthespread.util.contentsSequence
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.entity.LivingEntity
@@ -35,7 +35,7 @@ object CancerTouchEffectController {
 			for (mutable in BlockBox.create(fromPos, toPos).contentsSequence()) {
 				val blockState = world.getBlockState(mutable)
 
-				if (blockState.isCancerous()) {
+				if (blockState.isGlitched()) {
 					onCancerousBlockTouched(world, mutable.toImmutable(), entity)
 				}
 			}
@@ -49,9 +49,9 @@ object CancerTouchEffectController {
 		val random = world.random
 
 		when (random.nextInt(1024)) {
-			0 -> entity.addStatusEffect(StatusEffectInstance(StatusEffects.HUNGER, random.nextBetween(10, 40)))
-			1 -> entity.addStatusEffect(StatusEffectInstance(StatusEffects.POISON, random.nextBetween(10, 60)))
-			2 -> entity.addStatusEffect(StatusEffectInstance(StatusEffects.WITHER, random.nextBetween(10, 25)))
+			0 -> entity.addStatusEffect(StatusEffectInstance(StatusEffects.HUNGER, random.nextBetween(40, 80)))
+			1 -> entity.addStatusEffect(StatusEffectInstance(StatusEffects.POISON, random.nextBetween(30, 100)))
+			2 -> entity.addStatusEffect(StatusEffectInstance(StatusEffects.WITHER, random.nextBetween(30, 80)))
 		}
 	}
 }

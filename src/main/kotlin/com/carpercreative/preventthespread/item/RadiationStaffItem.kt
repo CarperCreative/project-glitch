@@ -2,12 +2,16 @@ package com.carpercreative.preventthespread.item
 
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.cancer.CancerLogic
-import com.carpercreative.preventthespread.cancer.CancerLogic.isCancerous
+import com.carpercreative.preventthespread.cancer.CancerLogic.isGlitched
 import com.carpercreative.preventthespread.cancer.TreatmentType
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
-import com.carpercreative.preventthespread.util.BlockSearch
+import com.carpercreative.preventthespread.util.getRadiationStaffHeat
+import com.carpercreative.preventthespread.util.getRadiationStaffSideRayCount
 import com.carpercreative.preventthespread.util.getRadiationStaffStrength
 import java.util.function.Consumer
+import kotlin.math.pow
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
 import net.fabricmc.fabric.api.item.v1.CustomDamageHandler
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
@@ -17,6 +21,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.projectile.ProjectileUtil
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.particle.DustColorTransitionParticleEffect
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Hand
@@ -26,7 +31,9 @@ import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.hit.EntityHitResult
 import net.minecraft.util.hit.HitResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.RaycastContext
 import net.minecraft.world.World
+import org.joml.Vector3f
 
 class RadiationStaffItem(
 	settings: Settings,
@@ -45,9 +52,12 @@ class RadiationStaffItem(
 			return TypedActionResult.fail(stack)
 		}
 
+		val heatResearch = user.getRadiationStaffHeat()
+		val triggerFrequency = getTriggerFrequency(heatResearch)
+
 		// Prevent repeatedly shooting by spamming use right after the action point.
 		// This does nothing in creative due to the game resetting the damage back to its pre-use value.
-		stack.damage += (TRIGGER_FREQUENCY - 1) - ((stack.damage + (TRIGGER_FREQUENCY - 1)) % TRIGGER_FREQUENCY)
+		stack.damage += (triggerFrequency - 1) - ((stack.damage + (triggerFrequency - 1)) % triggerFrequency)
 
 		user.setCurrentHand(hand)
 		return TypedActionResult.consume(stack)
@@ -57,8 +67,14 @@ class RadiationStaffItem(
 		if (world.isClient) return
 		world as ServerWorld
 
+		val player = user as? PlayerEntity
+
+		val oldDamage = stack.damage
+
+		val heatResearch = player?.getRadiationStaffHeat() ?: 0
+
 		val maxDamage = stack.maxDamage
-		stack.damage = (stack.damage + 1).coerceAtMost(maxDamage)
+		stack.damage = (stack.damage + getHeatingPerTick(heatResearch)).coerceAtMost(maxDamage)
 
 		if (stack.damage >= maxDamage) {
 			setOverheated(stack, true)
@@ -68,7 +84,8 @@ class RadiationStaffItem(
 			return
 		}
 
-		if (stack.damage % TRIGGER_FREQUENCY == 0) {
+		val triggerFrequency = getTriggerFrequency(heatResearch)
+		if (stack.damage / triggerFrequency != oldDamage / triggerFrequency) {
 			doHit(world, user, stack)
 		}
 	}
@@ -77,10 +94,15 @@ class RadiationStaffItem(
 		// Ignore radiation staffs without damage as those don't require cooling down.
 		if (stack.damage <= 0) return
 
-		// Don't do cooldown if the radiation staff is currently in use.
-		if (stack == (entity as? PlayerEntity)?.activeItem) return
+		val player = entity as? PlayerEntity
 
-		stack.damage -= if (isOverheated(stack)) 1 else 2
+		// Don't do cooldown if the radiation staff is currently in use.
+		if (stack == player?.activeItem) return
+
+		val heatResearch = player?.getRadiationStaffHeat() ?: 0
+		val coolingPerTick = getCoolingPerTick(heatResearch)
+
+		stack.damage -= if (isOverheated(stack)) (coolingPerTick / 2) else coolingPerTick
 
 		if (stack.damage <= 0) {
 			setOverheated(stack, false)
@@ -88,51 +110,114 @@ class RadiationStaffItem(
 	}
 
 	private fun doHit(world: ServerWorld, user: LivingEntity, stack: ItemStack) {
+		val player = user as? PlayerEntity
+		val strength = player?.getRadiationStaffStrength() ?: 0
+		val sideRays = player?.getRadiationStaffSideRayCount() ?: 0
+
+		sendRay(
+			world,
+			user,
+			range = 10.0,
+			penetrationDepth = 2 + strength * 2,
+		)
+
+		for (rayOffset in -sideRays..sideRays step 2) {
+			sendRay(
+				world,
+				user,
+				range = 10.0,
+				penetrationDepth = 1 + (strength * 1.5f).toInt(),
+				yRotationOffset = rayOffset * 15f,
+			)
+		}
+	}
+
+	/**
+	 * @return Depth of hit from the camera position, or `-1` if nothing was hit.
+	 */
+	private fun sendRay(world: ServerWorld, user: LivingEntity, range: Double, startRange: Double = 0.0, penetrationDepth: Int = 1, yRotationOffset: Float = 0f): Double {
+		if (startRange >= range) return -1.0
+
 		// TODO: tickDelta should be set to prevent quick movements from being ignored
-		val range = 10.0
+		val tickDelta = 1f
 
-		val blockHitResult = user.raycast(range, 1f, true)
+		val cameraPosVector = user.getCameraPosVec(tickDelta)
+		val lookVector = user.run { getRotationVector(getPitch(tickDelta), getYaw(tickDelta) + yRotationOffset) }
 
-		val cameraPosVector = user.getCameraPosVec(1f)
-		val lookVector = user.getRotationVec(1f).multiply(range)
-		val searchBBox = user.getBoundingBox().stretch(lookVector).expand(1.0, 1.0, 1.0)
+		val rayStart = lookVector.multiply(startRange).add(cameraPosVector)
+		val rayEnd = lookVector.multiply(range).add(cameraPosVector)
+
+		val blockHitResult = world.raycast(
+			RaycastContext(
+				rayStart,
+				rayEnd,
+				RaycastContext.ShapeType.OUTLINE,
+				RaycastContext.FluidHandling.ANY,
+				user,
+			)
+		)
+
+		val searchBBox = user.boundingBox.stretch(lookVector).expand(1.0, 1.0, 1.0)
 		// Check if there's an entity closer to the player than the block.
 		val entityHitResult = ProjectileUtil.raycast(
 			user,
-			cameraPosVector,
-			lookVector.add(cameraPosVector),
+			rayStart,
+			rayEnd,
 			searchBBox,
 			{ it is LivingEntity },
-			if (blockHitResult.type != HitResult.Type.MISS) blockHitResult.pos.squaredDistanceTo(cameraPosVector) else range * range,
+			if (blockHitResult.type != HitResult.Type.MISS) blockHitResult.pos.squaredDistanceTo(rayStart) else (range - startRange).pow(2),
 		)
 
 		val hitResult = entityHitResult ?: blockHitResult
 
+		// Spawn particles.
+		val rayHitDistance = sqrt(hitResult.pos.squaredDistanceTo(rayStart))
+		for (distanceStep in (startRange.coerceAtLeast(1.0) * 10).roundToInt() until (rayHitDistance * 10).roundToInt() step 5) {
+			val distance = distanceStep / 10f
+			val size = 0.5f * (distance / rayHitDistance.toFloat())
+			world.spawnParticles(
+				DustColorTransitionParticleEffect(Vector3f(100f, 0f, 1f), Vector3f(1f, 0f, 1f), size),
+				rayStart.x + lookVector.x * distance,
+				rayStart.y + lookVector.y * distance,
+				rayStart.z + lookVector.z * distance,
+				1,
+				0.02, 0.02, 0.02,
+				0.0,
+			)
+		}
+
+		var fluidPenalty = 0.0
+
 		when (hitResult) {
 			is BlockHitResult -> {
-				if (hitResult.type == HitResult.Type.MISS) return
+				if (hitResult.type == HitResult.Type.MISS) return -1.0
 
 				val targetPos = hitResult.blockPos
 				val targetBlockState = world.getBlockState(targetPos)
-				if (!targetBlockState.isCancerous()) return
-
-				val strength = (user as? PlayerEntity)?.getRadiationStaffStrength() ?: 0
-				val affectedBlockCount = getAffectedBlockCount(strength)
-				val affectedBlockPositions = BlockSearch.findCancerousBlocks(world, targetPos, affectedBlockCount)
-
-				for (affectedBlockPos in affectedBlockPositions) {
-					breakBlock(world, affectedBlockPos, user)
+				if (!targetBlockState.fluidState.isEmpty) {
+					// We hit a liquid - reduce penetration depth without breaking anything, but continue.
+					fluidPenalty = sqrt(3.0)
+				} else if (targetBlockState.isGlitched()) {
+					breakBlock(world, targetPos, user)
+				} else {
+					return -1.0
 				}
 			}
 			is EntityHitResult -> {
 				val entity = hitResult.entity
-				if (entity !is LivingEntity) return
+				if (entity !is LivingEntity) return -1.0
 
 				val inFireDamageTypeEntry = world.registryManager.get(RegistryKeys.DAMAGE_TYPE).entryOf(DamageTypes.IN_FIRE)
 				entity.damage(DamageSource(inFireDamageTypeEntry, user), 4f)
 			}
 			else -> {}
 		}
+
+		if (penetrationDepth > 1) {
+			sendRay(world, user, range, startRange + rayHitDistance + fluidPenalty, penetrationDepth - 1, yRotationOffset)
+		}
+
+		return startRange + rayHitDistance
 	}
 
 	private fun breakBlock(world: ServerWorld, pos: BlockPos, user: LivingEntity) {
@@ -164,7 +249,21 @@ class RadiationStaffItem(
 		 */
 		private const val TRIGGER_FREQUENCY = 10
 
+		fun getTriggerFrequency(heatResearch: Int): Int {
+			return getHeatingPerTick(heatResearch) * TRIGGER_FREQUENCY
+		}
+
 		private const val KEY_OVERHEATED = "${PreventTheSpread.MOD_ID}:overheated"
+
+		fun getHeatingPerTick(heatResearch: Int) = when (heatResearch) {
+			1 -> 3
+			else -> 5
+		}
+
+		fun getCoolingPerTick(heatResearch: Int) = when (heatResearch) {
+			1 -> 6
+			else -> 5
+		}
 
 		fun isOverheated(stack: ItemStack): Boolean {
 			return stack.nbt?.contains(KEY_OVERHEATED) == true
@@ -176,10 +275,6 @@ class RadiationStaffItem(
 			} else {
 				stack.nbt?.remove(KEY_OVERHEATED)
 			}
-		}
-
-		fun getAffectedBlockCount(strength: Int): Int {
-			return 1 + strength * 4
 		}
 	}
 

@@ -1,8 +1,0 @@
-{
-	"parent": "minecraft:block/stairs",
-	"textures": {
-		"bottom": "preventthespread:block/cancer_dirt",
-		"side": "preventthespread:block/cancer_dirt",
-		"top": "preventthespread:block/cancer_dirt"
-	}
-}

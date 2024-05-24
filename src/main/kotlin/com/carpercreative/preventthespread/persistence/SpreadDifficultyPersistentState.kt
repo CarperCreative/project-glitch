@@ -10,6 +10,7 @@ import net.minecraft.world.PersistentState
 
 class SpreadDifficultyPersistentState(
 	defeatedBlobs: Int,
+	nextSpawnAt: Long,
 ) : PersistentState() {
 	var defeatedBlobs: Int = defeatedBlobs
 		private set(value) {
@@ -18,11 +19,22 @@ class SpreadDifficultyPersistentState(
 
 	fun incrementDefeatedBlobs() {
 		defeatedBlobs++
-		markDirty()
 	}
+
+	var nextSpawnAt: Long = nextSpawnAt
+		set(value) {
+			field = value.coerceAtLeast(-1)
+			markDirty()
+		}
 
 	val maxActiveBlobs: Int
 		get() = (1 + (ceil((defeatedBlobs - 2).coerceAtLeast(0) / 4f).roundToInt())).coerceAtMost(6)
+
+	val blobSpawnDelayTicks: Int
+		get() = when (defeatedBlobs) {
+			0 -> 120
+			else -> (60 - defeatedBlobs * 5).coerceAtLeast(30)
+		} * 20
 
 	val blobSpawnRadius: Float
 		get() = 50f + 100f * defeatedBlobs.toFloat().pow(0.6f)
@@ -43,6 +55,7 @@ class SpreadDifficultyPersistentState(
 		nbt.putInt(KEY_VERSION, 1)
 
 		nbt.putInt(KEY_DEFEATED_BLOBS, defeatedBlobs)
+		nbt.putLong(KEY_NEXT_SPAWN_AT, nextSpawnAt)
 
 		return nbt
 	}
@@ -50,9 +63,10 @@ class SpreadDifficultyPersistentState(
 	companion object {
 		private const val KEY_VERSION = "version"
 		private const val KEY_DEFEATED_BLOBS = "defeatedBlobs"
+		private const val KEY_NEXT_SPAWN_AT = "nextSpawnAt"
 
 		private val type = Type(
-			{ SpreadDifficultyPersistentState(0) },
+			{ SpreadDifficultyPersistentState(0, -1) },
 			SpreadDifficultyPersistentState::createFromNbt,
 			null,
 		)
@@ -60,6 +74,7 @@ class SpreadDifficultyPersistentState(
 		fun createFromNbt(nbt: NbtCompound): SpreadDifficultyPersistentState {
 			return SpreadDifficultyPersistentState(
 				nbt.getInt(KEY_DEFEATED_BLOBS),
+				nextSpawnAt = nbt.getLong(KEY_NEXT_SPAWN_AT),
 			)
 		}
 

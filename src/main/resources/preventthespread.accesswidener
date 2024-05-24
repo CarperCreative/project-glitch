@@ -7,6 +7,8 @@ accessible field net/minecraft/client/gui/screen/advancement/AdvancementsScreen 
 accessible field net/minecraft/client/gui/screen/advancement/AdvancementWidget parent Lnet/minecraft/client/gui/screen/advancement/AdvancementWidget;
 accessible field net/minecraft/client/gui/screen/advancement/AdvancementWidget progress Lnet/minecraft/advancement/AdvancementProgress;
 accessible field net/minecraft/client/network/ClientAdvancementManager advancementProgresses Ljava/util/Map;
+accessible field net/minecraft/client/render/GameRenderer skyDarkness F
 accessible field net/minecraft/entity/TntEntity BLOCK_STATE Lnet/minecraft/entity/data/TrackedData;
 
+accessible method net/minecraft/entity/Entity getRotationVector (FF)Lnet/minecraft/util/math/Vec3d;
 accessible method net/minecraft/world/poi/PointOfInterestTypes register (Lnet/minecraft/registry/Registry;Lnet/minecraft/registry/RegistryKey;Ljava/util/Set;II)Lnet/minecraft/world/poi/PointOfInterestType;

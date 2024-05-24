@@ -22,9 +22,19 @@ fun PlayerEntity.getChemotherapeuticDrugStrength(): Int {
 	return 0
 }
 
+fun PlayerEntity.getRadiationStaffHeat(): Int {
+	if (hasAdvancement(PreventTheSpread.ResearchAdvancement.RADIATION_STAFF_HEAT_1_ID)) return 1
+	return 0
+}
+
 fun PlayerEntity.getRadiationStaffStrength(): Int {
 	if (hasAdvancement(PreventTheSpread.ResearchAdvancement.RADIATION_STAFF_STRENGTH_2_ID)) return 2
 	if (hasAdvancement(PreventTheSpread.ResearchAdvancement.RADIATION_STAFF_STRENGTH_1_ID)) return 1
+	return 0
+}
+
+fun PlayerEntity.getRadiationStaffSideRayCount(): Int {
+	if (hasAdvancement(PreventTheSpread.ResearchAdvancement.RADIATION_STAFF_RAYS_1_ID)) return 1
 	return 0
 }
 
