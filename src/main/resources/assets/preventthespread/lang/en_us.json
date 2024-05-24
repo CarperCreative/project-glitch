@@ -13,6 +13,8 @@
 	"advancement.preventthespread.research.chilling_tower.title": "Chilling Tower",
 	"advancement.preventthespread.research.radiation_staff.description": "Unlock the Radiation Therapy treatment.",
 	"advancement.preventthespread.research.radiation_staff.title": "Radiation Staff",
+	"advancement.preventthespread.research.radiation_staff_heat_1.description": "Use the staff for longer periods.",
+	"advancement.preventthespread.research.radiation_staff_heat_1.title": "Heat Management",
 	"advancement.preventthespread.research.radiation_staff_rays_1.description": "Increase area of effect.",
 	"advancement.preventthespread.research.radiation_staff_rays_1.title": "Wider Beam",
 	"advancement.preventthespread.research.radiation_staff_strength_1.description": "Increase penetration depth.",
