@@ -246,10 +246,6 @@ class RadiationStaffItem(
 				stack.nbt?.remove(KEY_OVERHEATED)
 			}
 		}
-
-		fun getAffectedBlockCount(strength: Int): Int {
-			return 1 + strength * 4
-		}
 	}
 
 	object RadiationBeamGunDamageHandler : CustomDamageHandler {
