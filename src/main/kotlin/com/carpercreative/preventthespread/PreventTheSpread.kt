@@ -18,6 +18,7 @@ import com.carpercreative.preventthespread.challenge.controller.ChallengeValidit
 import com.carpercreative.preventthespread.controller.BossBarController
 import com.carpercreative.preventthespread.controller.CancerSpreadController
 import com.carpercreative.preventthespread.controller.CancerTouchEffectController
+import com.carpercreative.preventthespread.controller.ClientStateSynchronizationController
 import com.carpercreative.preventthespread.controller.EveryoneTeamController
 import com.carpercreative.preventthespread.controller.ResearchSynchronizationController
 import com.carpercreative.preventthespread.controller.StoryRootUnlockController
@@ -166,7 +167,7 @@ object PreventTheSpread : ModInitializer {
 	val PROBE_ITEM_ID = identifier("probe")
 	val PROBE_ITEM = ProbeItem(FabricItemSettings().maxCount(1))
 	val RADIATION_STAFF_ITEM_ID = identifier("radiation_staff")
-	val RADIATION_STAFF_ITEM = RadiationStaffItem(FabricItemSettings().maxCount(1).maxDamage(60).customDamage(RadiationStaffItem.RadiationBeamGunDamageHandler))
+	val RADIATION_STAFF_ITEM = RadiationStaffItem(FabricItemSettings().maxCount(1).maxDamage(60 * RadiationStaffItem.getHeatingPerTick(0)).customDamage(RadiationStaffItem.RadiationBeamGunDamageHandler))
 	val RESEARCH_ID = identifier("research")
 	val RESEARCH_ITEM = Item(Item.Settings())
 	val SCANNER_ITEM_ID = identifier("scanner")
@@ -200,6 +201,7 @@ object PreventTheSpread : ModInitializer {
 	lateinit var CHILLING_TOWER_POI: PointOfInterestType
 		private set
 
+	val GLITCH_PROGRESS_PACKET_ID = identifier("glitch_progress")
 	val SELECT_RESEARCH_PACKET_ID = identifier("select_research")
 
 	val DO_GLITCH_SPAWNING_GAME_RULE: GameRules.Key<GameRules.BooleanRule> = GameRuleRegistry.register("$MOD_ID:doGlitchSpawning", GameRules.Category.UPDATES, GameRuleFactory.createBooleanRule(false))
@@ -268,6 +270,7 @@ object PreventTheSpread : ModInitializer {
 		val CHEMOTHERAPEUTIC_DRUG_STRENGTH_2_ID = researchIdentifier("${PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path}_strength_2")
 		val CHILLING_TOWER_ID = researchIdentifier(PreventTheSpread.CHILLING_TOWER_ID.path)
 		val RADIATION_STAFF_ID = researchIdentifier(RADIATION_STAFF_ITEM_ID.path)
+		val RADIATION_STAFF_HEAT_1_ID = researchIdentifier("${RADIATION_STAFF_ITEM_ID.path}_heat_1")
 		val RADIATION_STAFF_RAYS_1_ID = researchIdentifier("${RADIATION_STAFF_ITEM_ID.path}_rays_1")
 		val RADIATION_STAFF_STRENGTH_1_ID = researchIdentifier("${RADIATION_STAFF_ITEM_ID.path}_strength_1")
 		val RADIATION_STAFF_STRENGTH_2_ID = researchIdentifier("${RADIATION_STAFF_ITEM_ID.path}_strength_2")
@@ -343,6 +346,7 @@ object PreventTheSpread : ModInitializer {
 		CancerTouchEffectController.init()
 		ChallengeStatusController.init()
 		ChallengeValidityController.init()
+		ClientStateSynchronizationController.init()
 		EveryoneTeamController.init()
 		ResearchSynchronizationController.init()
 		StoryRootUnlockController.init()
@@ -357,7 +361,6 @@ object PreventTheSpread : ModInitializer {
 		)
 
 		// TODO: create research state store (per team)
-		// TODO: implement radiation staff recharge rate and/or heat capacity research
 		// TODO: fix model transformations of surgery tools (on-ground is MASSIVE) .-.
 		// TODO: spawn mobs
 		// TODO: stretch goal: liquid cancer

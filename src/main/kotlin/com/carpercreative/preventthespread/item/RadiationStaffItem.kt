@@ -5,6 +5,7 @@ import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isGlitched
 import com.carpercreative.preventthespread.cancer.TreatmentType
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
+import com.carpercreative.preventthespread.util.getRadiationStaffHeat
 import com.carpercreative.preventthespread.util.getRadiationStaffSideRayCount
 import com.carpercreative.preventthespread.util.getRadiationStaffStrength
 import java.util.function.Consumer
@@ -51,9 +52,12 @@ class RadiationStaffItem(
 			return TypedActionResult.fail(stack)
 		}
 
+		val heatResearch = user.getRadiationStaffHeat()
+		val triggerFrequency = getTriggerFrequency(heatResearch)
+
 		// Prevent repeatedly shooting by spamming use right after the action point.
 		// This does nothing in creative due to the game resetting the damage back to its pre-use value.
-		stack.damage += (TRIGGER_FREQUENCY - 1) - ((stack.damage + (TRIGGER_FREQUENCY - 1)) % TRIGGER_FREQUENCY)
+		stack.damage += (triggerFrequency - 1) - ((stack.damage + (triggerFrequency - 1)) % triggerFrequency)
 
 		user.setCurrentHand(hand)
 		return TypedActionResult.consume(stack)
@@ -63,8 +67,14 @@ class RadiationStaffItem(
 		if (world.isClient) return
 		world as ServerWorld
 
+		val player = user as? PlayerEntity
+
+		val oldDamage = stack.damage
+
+		val heatResearch = player?.getRadiationStaffHeat() ?: 0
+
 		val maxDamage = stack.maxDamage
-		stack.damage = (stack.damage + 1).coerceAtMost(maxDamage)
+		stack.damage = (stack.damage + getHeatingPerTick(heatResearch)).coerceAtMost(maxDamage)
 
 		if (stack.damage >= maxDamage) {
 			setOverheated(stack, true)
@@ -74,7 +84,8 @@ class RadiationStaffItem(
 			return
 		}
 
-		if (stack.damage % TRIGGER_FREQUENCY == 0) {
+		val triggerFrequency = getTriggerFrequency(heatResearch)
+		if (stack.damage / triggerFrequency != oldDamage / triggerFrequency) {
 			doHit(world, user, stack)
 		}
 	}
@@ -83,10 +94,15 @@ class RadiationStaffItem(
 		// Ignore radiation staffs without damage as those don't require cooling down.
 		if (stack.damage <= 0) return
 
-		// Don't do cooldown if the radiation staff is currently in use.
-		if (stack == (entity as? PlayerEntity)?.activeItem) return
+		val player = entity as? PlayerEntity
 
-		stack.damage -= if (isOverheated(stack)) 1 else 2
+		// Don't do cooldown if the radiation staff is currently in use.
+		if (stack == player?.activeItem) return
+
+		val heatResearch = player?.getRadiationStaffHeat() ?: 0
+		val coolingPerTick = getCoolingPerTick(heatResearch)
+
+		stack.damage -= if (isOverheated(stack)) (coolingPerTick / 2) else coolingPerTick
 
 		if (stack.damage <= 0) {
 			setOverheated(stack, false)
@@ -233,7 +249,21 @@ class RadiationStaffItem(
 		 */
 		private const val TRIGGER_FREQUENCY = 10
 
+		fun getTriggerFrequency(heatResearch: Int): Int {
+			return getHeatingPerTick(heatResearch) * TRIGGER_FREQUENCY
+		}
+
 		private const val KEY_OVERHEATED = "${PreventTheSpread.MOD_ID}:overheated"
+
+		fun getHeatingPerTick(heatResearch: Int) = when (heatResearch) {
+			1 -> 3
+			else -> 5
+		}
+
+		fun getCoolingPerTick(heatResearch: Int) = when (heatResearch) {
+			1 -> 6
+			else -> 5
+		}
 
 		fun isOverheated(stack: ItemStack): Boolean {
 			return stack.nbt?.contains(KEY_OVERHEATED) == true
@@ -245,10 +275,6 @@ class RadiationStaffItem(
 			} else {
 				stack.nbt?.remove(KEY_OVERHEATED)
 			}
-		}
-
-		fun getAffectedBlockCount(strength: Int): Int {
-			return 1 + strength * 4
 		}
 	}
 
