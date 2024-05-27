@@ -35,6 +35,7 @@ class AdvancementGenerator(
 		identifier: Identifier,
 		parent: AdvancementEntry,
 		displayStack: ItemStack,
+		hidden: Boolean = false,
 		callback: (Advancement.Builder.() -> Unit)? = null,
 	): AdvancementEntry {
 		return Advancement.Builder.createUntelemetered()
@@ -47,7 +48,7 @@ class AdvancementGenerator(
 				AdvancementFrame.TASK,
 				true,
 				false,
-				false,
+				hidden,
 			)
 			.also { callback?.invoke(it) }
 			.build(this, identifier)
