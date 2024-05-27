@@ -1,4 +1,10 @@
 {
+	"cancer_blob.defeated": {
+		"subtitle": "subtitles.cancer_blob.defeated",
+		"sounds": [
+			"minecraft:random/levelup"
+		]
+	},
 	"item.radiation_staff.overheated": {
 		"subtitle": "subtitles.item.preventthespread.radiation_staff.overheated",
 		"sounds": [

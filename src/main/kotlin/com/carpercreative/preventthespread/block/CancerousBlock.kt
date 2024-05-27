@@ -18,7 +18,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvent
-import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.random.Random
 import net.minecraft.world.World
@@ -37,6 +36,8 @@ object CancerousBlock {
 		CancerLogic.attemptSpread(world, pos, random, bypassThrottling = true)
 	}
 
+	private val CANCER_BLOB_DEFEATED_SOUND = SoundEvent.of(PreventTheSpread.identifier("cancer_blob.defeated"))
+
 	fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
 		if (world.isClient()) return
 		world as ServerWorld
@@ -50,7 +51,7 @@ object CancerousBlock {
 					world.spawnEntity(ItemEntity(world, itemPos.x, itemPos.y, itemPos.z, PreventTheSpread.GLITCH_MATERIAL_ITEM.defaultStack))
 				}
 
-				world.playSoundAtBlockCenter(pos, SoundEvent.of(Identifier("entity.player.levelup")), SoundCategory.BLOCKS, 1f, 1f, true)
+				world.playSound(null, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, CANCER_BLOB_DEFEATED_SOUND, SoundCategory.BLOCKS, 1f, 1f)
 			}
 		}
 	}
