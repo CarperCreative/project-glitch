@@ -245,6 +245,11 @@ object PreventTheSpread : ModInitializer {
 		val ROOT_ID = storyIdentifier("root")
 		val OBTAIN_PROBE_ID = storyIdentifier("obtain_probe")
 		val GET_SAMPLE_ID = storyIdentifier("get_sample")
+		val CRAFT_PROCESSING_TABLE_ID = storyIdentifier("craft_processing_table")
+		val ANALYZE_SAMPLE_ID = storyIdentifier("analyze_sample")
+		val DEFEAT_BLOB_ID = storyIdentifier("defeat_blob")
+		val PROCESS_GLITCH_MATERIAL_ID = storyIdentifier("process_glitch_material")
+		val UNLOCK_TREATMENT_ID = storyIdentifier("unlock_treatment")
 	}
 
 	object ResearchAdvancement {

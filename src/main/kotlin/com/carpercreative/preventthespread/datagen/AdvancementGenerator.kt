@@ -3,18 +3,25 @@ package com.carpercreative.preventthespread.datagen
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.PreventTheSpread.ResearchAdvancement
 import com.carpercreative.preventthespread.PreventTheSpread.StoryAdvancement
+import com.carpercreative.preventthespread.blockEntity.ProcessingTableAnalyzerBlockEntity
+import java.util.Optional
 import java.util.function.Consumer
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider
 import net.minecraft.advancement.Advancement
 import net.minecraft.advancement.AdvancementEntry
 import net.minecraft.advancement.AdvancementFrame
+import net.minecraft.advancement.AdvancementRequirements
 import net.minecraft.advancement.AdvancementRewards
 import net.minecraft.advancement.criterion.Criteria
 import net.minecraft.advancement.criterion.ImpossibleCriterion
 import net.minecraft.advancement.criterion.InventoryChangedCriterion
 import net.minecraft.advancement.criterion.ItemCriterion
+import net.minecraft.advancement.criterion.RecipeUnlockedCriterion
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
+import net.minecraft.item.WrittenBookItem
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.predicate.BlockPredicate
 import net.minecraft.predicate.entity.LocationPredicate
 import net.minecraft.predicate.item.ItemPredicate
@@ -99,14 +106,70 @@ class AdvancementGenerator(
 				ItemPredicate.Builder.create().items(PreventTheSpread.PROBE_ITEM),
 			))
 
+			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.PROCESSING_TABLE_ID))
+		}
+
+		val craftProcessingTable = consumer.createAdvancement(
+			StoryAdvancement.CRAFT_PROCESSING_TABLE_ID,
+			getSample,
+			PreventTheSpread.PROCESSING_TABLE_BLOCK_ITEM.defaultStack,
+		) {
+			criterion("obtained_processing_table", InventoryChangedCriterion.Conditions.items(PreventTheSpread.PROCESSING_TABLE_BLOCK_ITEM))
+
 			rewards(
 				AdvancementRewards.Builder()
-					.addRecipe(PreventTheSpread.PROCESSING_TABLE_ID)
 					.addRecipe(PreventTheSpread.SURGERY_AXE_ITEM_ID)
 					.addRecipe(PreventTheSpread.SURGERY_HOE_ITEM_ID)
 					.addRecipe(PreventTheSpread.SURGERY_PICKAXE_ITEM_ID)
 					.addRecipe(PreventTheSpread.SURGERY_SHOVEL_ITEM_ID)
 			)
+		}
+
+		val analyzeSample = consumer.createAdvancement(
+			StoryAdvancement.ANALYZE_SAMPLE_ID,
+			craftProcessingTable,
+			Items.WRITTEN_BOOK.defaultStack,
+		) {
+			criterion(
+				"obtained_analysis_results",
+				InventoryChangedCriterion.Conditions.items(
+					ItemPredicate.Builder.create()
+						.items(Items.WRITTEN_BOOK)
+						.nbt(
+							NbtCompound().apply {
+								putString(WrittenBookItem.AUTHOR_KEY, ProcessingTableAnalyzerBlockEntity.BOOK_AUTHOR)
+								putString(WrittenBookItem.TITLE_KEY, ProcessingTableAnalyzerBlockEntity.BOOK_TITLE)
+							}
+						)
+				)
+			)
+		}
+
+		val defeatBlob = consumer.createAdvancement(
+			StoryAdvancement.DEFEAT_BLOB_ID,
+			analyzeSample,
+			PreventTheSpread.SURGERY_PICKAXE_ITEM.defaultStack,
+		) {
+			criterion("obtained_glitch_material", InventoryChangedCriterion.Conditions.items(PreventTheSpread.GLITCH_MATERIAL_ITEM))
+		}
+
+		val processGlitchMaterial = consumer.createAdvancement(
+			StoryAdvancement.PROCESS_GLITCH_MATERIAL_ID,
+			defeatBlob,
+			PreventTheSpread.GLITCH_MATERIAL_ITEM.defaultStack,
+		) {
+			criterion("obtained_research", InventoryChangedCriterion.Conditions.items(PreventTheSpread.RESEARCH_ITEM))
+		}
+
+		val unlockTreatment = consumer.createAdvancement(
+			StoryAdvancement.UNLOCK_TREATMENT_ID,
+			processGlitchMaterial,
+			PreventTheSpread.PROCESSING_TABLE_BLOCK_ITEM.defaultStack,
+		) {
+			criteriaMerger(AdvancementRequirements.CriterionMerger.OR)
+			criterion("unlocked_${PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID.path}", Criteria.RECIPE_UNLOCKED.create(RecipeUnlockedCriterion.Conditions(Optional.empty(), PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ID)))
+			criterion("unlocked_${PreventTheSpread.RADIATION_STAFF_ITEM_ID.path}", Criteria.RECIPE_UNLOCKED.create(RecipeUnlockedCriterion.Conditions(Optional.empty(), PreventTheSpread.RADIATION_STAFF_ITEM_ID)))
+			criterion("unlocked_${PreventTheSpread.TARGETED_DRUG_INJECTOR_ID.path}", Criteria.RECIPE_UNLOCKED.create(RecipeUnlockedCriterion.Conditions(Optional.empty(), PreventTheSpread.TARGETED_DRUG_INJECTOR_ID)))
 		}
 
 		val researchRoot = Advancement.Builder.createUntelemetered()
