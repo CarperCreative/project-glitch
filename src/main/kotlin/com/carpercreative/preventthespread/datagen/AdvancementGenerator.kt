@@ -173,6 +173,15 @@ class AdvancementGenerator(
 			criterion("unlocked_${PreventTheSpread.TARGETED_DRUG_INJECTOR_ID.path}", Criteria.RECIPE_UNLOCKED.create(RecipeUnlockedCriterion.Conditions(Optional.empty(), PreventTheSpread.TARGETED_DRUG_INJECTOR_ID)))
 		}
 
+		consumer.createAdvancement(
+			StoryAdvancement.GAME_OVER_ID,
+			unlockTreatment,
+			PreventTheSpread.GLITCH_STONE_BLOCK_ITEM.defaultStack,
+			hidden = true,
+		) {
+			criterion("never", Criteria.IMPOSSIBLE.create(ImpossibleCriterion.Conditions()))
+		}
+
 		val researchRoot = Advancement.Builder.createUntelemetered()
 			.display(
 				PreventTheSpread.PROCESSING_TABLE_BLOCK_ITEM.defaultStack,

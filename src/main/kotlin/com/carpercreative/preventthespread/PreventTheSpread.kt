@@ -250,6 +250,7 @@ object PreventTheSpread : ModInitializer {
 		val DEFEAT_BLOB_ID = storyIdentifier("defeat_blob")
 		val PROCESS_GLITCH_MATERIAL_ID = storyIdentifier("process_glitch_material")
 		val UNLOCK_TREATMENT_ID = storyIdentifier("unlock_treatment")
+		val GAME_OVER_ID = storyIdentifier("game_over")
 	}
 
 	object ResearchAdvancement {

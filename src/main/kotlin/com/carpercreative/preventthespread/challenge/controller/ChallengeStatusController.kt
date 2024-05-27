@@ -8,6 +8,7 @@ import com.carpercreative.preventthespread.challenge.persistence.ChallengePersis
 import com.carpercreative.preventthespread.challenge.persistence.ChallengePersistentState.Companion.getChallengePersistentState
 import com.carpercreative.preventthespread.team.Team
 import com.carpercreative.preventthespread.team.TeamManager
+import com.carpercreative.preventthespread.util.grantAdvancement
 import com.mojang.logging.LogUtils
 import kotlin.math.roundToInt
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
@@ -133,6 +134,12 @@ object ChallengeStatusController {
 			val gameRules = world.gameRules
 			gameRules.get(PreventTheSpread.DO_GLITCH_SPAWNING_GAME_RULE).set(false, server)
 			gameRules.get(PreventTheSpread.DO_GLITCH_SPREAD_GAME_RULE).set(false, server)
+		}
+
+		for (team in Storage.teamManager.getTeams()) {
+			for (player in team.players) {
+				(player as ServerPlayerEntity).grantAdvancement(PreventTheSpread.StoryAdvancement.GAME_OVER_ID)
+			}
 		}
 	}
 }
