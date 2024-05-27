@@ -1,0 +1,14 @@
+{
+	"item.radiation_staff.overheated": {
+		"subtitle": "subtitles.item.preventthespread.radiation_staff.overheated",
+		"sounds": [
+			"minecraft:random/fizz"
+		]
+	},
+	"item.radiation_staff.ray": {
+		"subtitle": "subtitles.item.preventthespread.radiation_staff.ray",
+		"sounds": [
+			"preventthespread:item/radiation_staff/ray"
+		]
+	}
+}

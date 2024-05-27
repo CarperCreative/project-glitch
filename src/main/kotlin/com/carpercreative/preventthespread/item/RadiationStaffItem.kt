@@ -24,6 +24,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.particle.DustColorTransitionParticleEffect
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.sound.SoundCategory
+import net.minecraft.sound.SoundEvent
 import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
 import net.minecraft.util.UseAction
@@ -81,6 +83,13 @@ class RadiationStaffItem(
 
 			// Interrupt the item usage.
 			user.clearActiveItem()
+
+			playSound(
+				world,
+				user,
+				OVERHEATED_SOUND,
+				1f,
+			)
 			return
 		}
 
@@ -130,6 +139,19 @@ class RadiationStaffItem(
 				yRotationOffset = rayOffset * 15f,
 			)
 		}
+
+		val heatResearch = player?.getRadiationStaffHeat() ?: 0
+		val triggerFrequency = getTriggerFrequency(heatResearch)
+		val lastShot = stack.damage + triggerFrequency >= stack.maxDamage
+		playSound(
+			world,
+			user,
+			RAY_SOUND,
+			when (lastShot) {
+				true -> 1.28f
+				false -> 0.85f + (stack.damage / stack.maxDamage.toFloat()) * 0.3f
+			},
+		)
 	}
 
 	/**
@@ -276,6 +298,23 @@ class RadiationStaffItem(
 				stack.nbt?.remove(KEY_OVERHEATED)
 			}
 		}
+
+		private fun playSound(world: World, user: LivingEntity, sound: SoundEvent, pitch: Float) {
+			world.playSound(
+				// Keep source null because this code never runs on the client.
+				null,
+				user.x,
+				user.y + user.getEyeHeight(user.pose),
+				user.z,
+				sound,
+				if (user is PlayerEntity) SoundCategory.PLAYERS else SoundCategory.HOSTILE,
+				1f,
+				pitch,
+			)
+		}
+
+		private val OVERHEATED_SOUND = SoundEvent.of(PreventTheSpread.identifier("item.radiation_staff.overheated"), 24f)
+		private val RAY_SOUND = SoundEvent.of(PreventTheSpread.identifier("item.radiation_staff.ray"), 32f)
 	}
 
 	object RadiationBeamGunDamageHandler : CustomDamageHandler {
