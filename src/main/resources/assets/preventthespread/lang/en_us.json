@@ -71,6 +71,7 @@
 	"container.preventthespread.processing_table_research.research_button": "Research",
 	"dataPack.preventthespread.challenge.description": "Fight the glitch for as long as you can manage",
 	"dataPack.preventthespread.challenge.displayName": "Prevent the Spread Challenge",
+	"entity.preventthespread.chemotherapeutic_drug": "Chemotherapeutic Drug",
 	"gamerule.preventthespread:doGlitchSpawning": "Spawn new glitch clusters",
 	"gamerule.preventthespread:doGlitchSpread": "Spread existing glitch clusters",
 	"item.preventthespread.glitch_material": "Glitch Material",
