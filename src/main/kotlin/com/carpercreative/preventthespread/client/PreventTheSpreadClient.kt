@@ -3,6 +3,8 @@ package com.carpercreative.preventthespread.client
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.client.gui.screen.ProcessingTableAnalyzerScreen
 import com.carpercreative.preventthespread.client.gui.screen.ProcessingTableResearchScreen
+import com.carpercreative.preventthespread.client.render.entity.RobotEntityRenderer
+import com.carpercreative.preventthespread.client.render.entity.model.RobotEntityModel
 import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
 import com.carpercreative.preventthespread.item.RadiationStaffItem
@@ -11,18 +13,22 @@ import com.carpercreative.preventthespread.networking.GlitchProgressPacket
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.minecraft.client.gui.screen.ingame.HandledScreens
 import net.minecraft.client.item.CompassAnglePredicateProvider
 import net.minecraft.client.item.ModelPredicateProviderRegistry
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.entity.TntEntityRenderer
+import net.minecraft.client.render.entity.model.EntityModelLayer
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 
 object PreventTheSpreadClient : ClientModInitializer {
+	val ROBOT_ENTITY_MODEL_LAYER = EntityModelLayer(PreventTheSpread.ROBOT_ENTITY_ID, "main")
+
 	override fun onInitializeClient() {
 		BlockRenderLayerMap.INSTANCE.putBlock(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_BLOCK, RenderLayer.getCutout())
 		BlockRenderLayerMap.INSTANCE.putBlock(PreventTheSpread.PROCESSING_TABLE_BLOCK, RenderLayer.getCutout())
@@ -47,6 +53,9 @@ object PreventTheSpreadClient : ClientModInitializer {
 		})
 
 		EntityRendererRegistry.register(PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE) { context -> TntEntityRenderer(context) }
+		EntityRendererRegistry.register(PreventTheSpread.ROBOT_ENTITY_TYPE) { context -> RobotEntityRenderer(context) }
+
+		EntityModelLayerRegistry.registerModelLayer(ROBOT_ENTITY_MODEL_LAYER, RobotEntityModel::getTexturedModelData)
 
 		HandledScreens.register(PreventTheSpread.PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER, ::ProcessingTableAnalyzerScreen)
 		HandledScreens.register(PreventTheSpread.PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER, ::ProcessingTableResearchScreen)

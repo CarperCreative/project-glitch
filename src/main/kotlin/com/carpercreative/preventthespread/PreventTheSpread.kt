@@ -23,6 +23,7 @@ import com.carpercreative.preventthespread.controller.EveryoneTeamController
 import com.carpercreative.preventthespread.controller.ResearchSynchronizationController
 import com.carpercreative.preventthespread.controller.StoryRootUnlockController
 import com.carpercreative.preventthespread.entity.ChemotherapeuticDrugEntity
+import com.carpercreative.preventthespread.entity.RobotEntity
 import com.carpercreative.preventthespread.item.DebugToolItem
 import com.carpercreative.preventthespread.item.ProbeItem
 import com.carpercreative.preventthespread.item.RadiationStaffItem
@@ -41,6 +42,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType
 import net.fabricmc.fabric.impl.resource.loader.ResourceManagerHelperImpl
 import net.fabricmc.loader.api.FabricLoader
@@ -193,6 +195,8 @@ object PreventTheSpread : ModInitializer {
 	val SURGERY_TOOL_ITEM_TAG: TagKey<Item> = TagKey.of(RegistryKeys.ITEM, identifier("surgery_tool"))
 
 	val CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE: EntityType<ChemotherapeuticDrugEntity> = EntityType.Builder.create({ entityType, world -> ChemotherapeuticDrugEntity(entityType, world) }, SpawnGroup.MISC).makeFireImmune().setDimensions(0.98f, 0.98f).maxTrackingRange(10).trackingTickInterval(10).build()
+	val ROBOT_ENTITY_ID = identifier("robot")
+	val ROBOT_ENTITY_TYPE: EntityType<RobotEntity> = EntityType.Builder.create({ entityType, world -> RobotEntity(entityType, world) }, SpawnGroup.MISC).makeFireImmune().setDimensions(0.8f, 0.8f).maxTrackingRange(2).trackingTickInterval(2).build()
 
 	val PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER = ScreenHandlerType(::ProcessingTableAnalyzerScreenHandler, FeatureFlags.VANILLA_FEATURES)
 	val PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER = ScreenHandlerType(::ProcessingTableResearchScreenHandler, FeatureFlags.VANILLA_FEATURES)
@@ -337,6 +341,8 @@ object PreventTheSpread : ModInitializer {
 		Registry.register(Registries.ITEM_GROUP, identifier("default"), ITEM_GROUP)
 
 		Registry.register(Registries.ENTITY_TYPE, CHEMOTHERAPEUTIC_DRUG_ID, CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE)
+		Registry.register(Registries.ENTITY_TYPE, ROBOT_ENTITY_ID, ROBOT_ENTITY_TYPE)
+		FabricDefaultAttributeRegistry.register(ROBOT_ENTITY_TYPE, RobotEntity.createRobotAttributes())
 
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_analyzer"), PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER)
 		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_research"), PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER)
