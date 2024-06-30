@@ -109,7 +109,7 @@ class RobotEntity(
 		fun createRobotAttributes(): DefaultAttributeContainer.Builder {
 			return MobEntity.createMobAttributes()
 				.add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
-				.add(EntityAttributes.GENERIC_FLYING_SPEED, 0.1)
+				.add(EntityAttributes.GENERIC_FLYING_SPEED, 0.5)
 				.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.1)
 				.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0)
 				.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48.0)
