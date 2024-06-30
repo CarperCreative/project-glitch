@@ -3,6 +3,7 @@ package com.carpercreative.preventthespread.entity
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.google.common.collect.ImmutableList
 import com.mojang.serialization.Dynamic
+import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ai.brain.Brain
 import net.minecraft.entity.ai.brain.MemoryModuleType
@@ -21,6 +22,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 
@@ -76,6 +78,10 @@ class RobotEntity(
 	override fun interactMob(player: PlayerEntity, hand: Hand): ActionResult {
 		// TODO
 		return super.interactMob(player, hand)
+	}
+
+	override fun fall(heightDifference: Double, onGround: Boolean, state: BlockState?, landedPosition: BlockPos?) {
+		// Disable fall damage.
 	}
 
 	override fun getSwimHeight(): Double {
