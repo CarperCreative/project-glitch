@@ -5,6 +5,7 @@
 	"mixins": [
 		"CraftingScreenHandlerMixin",
 		"ExampleMixin",
+		"PlayerAdvancementTrackerMixin",
 		"PlayerEntityMixin",
 		"TntEntityMixin"
 	],
