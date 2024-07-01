@@ -4,6 +4,7 @@
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
 		"CraftingScreenHandlerMixin",
+		"EntityMixin",
 		"ExampleMixin",
 		"PlayerAdvancementTrackerMixin",
 		"PlayerEntityMixin",
