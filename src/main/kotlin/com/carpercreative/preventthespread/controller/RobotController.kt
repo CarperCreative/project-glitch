@@ -3,8 +3,11 @@ package com.carpercreative.preventthespread.controller
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.entity.RobotEntity.Companion.setLikedPlayer
 import com.mojang.logging.LogUtils
+import kotlin.math.cos
+import kotlin.math.sin
 import net.minecraft.advancement.AdvancementEntry
 import net.minecraft.entity.SpawnReason
+import net.minecraft.entity.ai.NoPenaltySolidTargeting
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
@@ -28,7 +31,15 @@ object RobotController {
 		val world = player.world as ServerWorld
 		// TODO: use existing robot if one exists nearby and is focused on our player
 
-		val robot = PreventTheSpread.ROBOT_ENTITY_TYPE.spawn(world, player.blockPos, SpawnReason.COMMAND)
+		val robot = PreventTheSpread.ROBOT_ENTITY_TYPE.spawn(world, null, { robot ->
+			// Try to teleport the robot to a nearby location in front of the player to prevent putting it inside the player.
+			NoPenaltySolidTargeting.find(robot, 10, 2, 0, cos(player.yaw).toDouble(), sin(player.yaw).toDouble(), Math.PI * 0.4)?.also { spawnPos ->
+				// Prevent robot getting lerped out of the player.
+				robot.refreshPositionAndAngles(spawnPos.x, spawnPos.y, spawnPos.z, 0f, 0f)
+				robot.lookAtEntity(player, Float.MAX_VALUE, Float.MAX_VALUE)
+				robot.refreshPositionAndAngles(spawnPos.x, spawnPos.y + 1.0, spawnPos.z, robot.yaw, robot.pitch)
+			}
+		}, player.blockPos, SpawnReason.COMMAND, false, false)
 			?: return logger.warn("Spawning robot returned null")
 
 		robot.setLikedPlayer(player.uuid)
