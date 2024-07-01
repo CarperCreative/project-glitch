@@ -3,6 +3,8 @@ package com.carpercreative.preventthespread.entity
 import com.carpercreative.preventthespread.PreventTheSpread
 import com.google.common.collect.ImmutableList
 import com.mojang.serialization.Dynamic
+import java.util.UUID
+import kotlin.jvm.optionals.getOrNull
 import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityType
 import net.minecraft.entity.ai.brain.Brain
@@ -76,7 +78,13 @@ class RobotEntity(
 	}
 
 	override fun interactMob(player: PlayerEntity, hand: Hand): ActionResult {
-		// TODO
+		if (!world.isClient && brain.getOptionalRegisteredMemory(MemoryModuleType.LIKED_PLAYER).getOrNull() != player.uuid) {
+			setLikedPlayer(player.uuid)
+			return ActionResult.CONSUME
+		}
+
+		// TODO: dialogue?
+
 		return super.interactMob(player, hand)
 	}
 
@@ -95,15 +103,16 @@ class RobotEntity(
 	companion object {
 		private val SENSORS = ImmutableList.of(
 			// TODO
-			SensorType.NEAREST_PLAYERS,
+			SensorType.NEAREST_LIVING_ENTITIES,
 		)
 		private val MEMORY_MODULES = ImmutableList.of(
 			// TODO
 			MemoryModuleType.PATH,
 			MemoryModuleType.LOOK_TARGET,
-			MemoryModuleType.VISIBLE_MOBS,
 			MemoryModuleType.WALK_TARGET,
 			MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE,
+			MemoryModuleType.LIKED_PLAYER,
+			MemoryModuleType.VISIBLE_MOBS,
 		)
 
 		fun createRobotAttributes(): DefaultAttributeContainer.Builder {
@@ -113,6 +122,10 @@ class RobotEntity(
 				.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.1)
 				.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.0)
 				.add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48.0)
+		}
+
+		fun RobotEntity.setLikedPlayer(playerUuid: UUID) {
+			brain.remember(MemoryModuleType.LIKED_PLAYER, playerUuid)
 		}
 	}
 }

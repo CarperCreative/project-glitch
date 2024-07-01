@@ -1,6 +1,7 @@
 package com.carpercreative.preventthespread.controller
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.entity.RobotEntity.Companion.setLikedPlayer
 import com.mojang.logging.LogUtils
 import net.minecraft.advancement.AdvancementEntry
 import net.minecraft.entity.SpawnReason
@@ -29,6 +30,8 @@ object RobotController {
 
 		val robot = PreventTheSpread.ROBOT_ENTITY_TYPE.spawn(world, player.blockPos, SpawnReason.COMMAND)
 			?: return logger.warn("Spawning robot returned null")
+
+		robot.setLikedPlayer(player.uuid)
 	}
 
 	private fun sendRobotMessage(player: ServerPlayerEntity, message: Text) {
