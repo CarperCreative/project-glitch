@@ -1,5 +1,6 @@
 package com.carpercreative.preventthespread.entity
 
+import com.carpercreative.preventthespread.entity.ai.brain.task.DiscardEntityTask
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableSet
 import com.mojang.datafixers.util.Pair
@@ -33,6 +34,7 @@ object RobotBrain {
 				StayAboveWaterTask(1f),
 				LookAroundTask(45, 90),
 				WanderAroundTask(),
+				DiscardEntityTask(15 * 20),
 			),
 		)
 	}
