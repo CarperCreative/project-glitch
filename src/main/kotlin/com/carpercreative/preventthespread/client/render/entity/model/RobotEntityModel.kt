@@ -59,6 +59,7 @@ class RobotEntityModel(
 
 			val bone2: ModelPartData = ye.addChild("bone2", ModelPartBuilder.create().uv(76, 43).cuboid(-7.2f, -1.9657f, -0.4101f, 14.4f, 4.8f, 0.0f, Dilation(0.0f)), ModelTransform.pivot(0.0f, -0.15f, -1.3935f))
 
+			// Mouth
 			val bone: ModelPartData = ye.addChild("bone", ModelPartBuilder.create().uv(67, 72).cuboid(-7.2f, -2.75f, 0.0f, 14.4f, 5.5f, 0.0f, Dilation(0.0f)), ModelTransform.pivot(0.0f, 5.0147f, -1.4564f))
 
 			val bone4: ModelPartData = ye.addChild("bone4", ModelPartBuilder.create().uv(8, 11).cuboid(-0.8f, -0.35f, -0.55f, 1.6f, 0.7f, 1.1f, Dilation(0.0f)), ModelTransform.pivot(4.1f, 8.2f, -0.9435f))
@@ -69,6 +70,7 @@ class RobotEntityModel(
 
 			val bone18: ModelPartData = ye.addChild("bone18", ModelPartBuilder.create().uv(0, 0).cuboid(-0.1f, -0.15f, -0.55f, 0.2f, 0.3f, 1.1f, Dilation(0.0f)), ModelTransform.pivot(6.5f, 4.3f, -0.9435f))
 
+			// Body
 			val bone9: ModelPartData = bone7.addChild("bone9", ModelPartBuilder.create().uv(0, 0).cuboid(-8.0f, 0.55f, -2.9344f, 16.0f, 13.0f, 15.0f, Dilation(0.0f)), ModelTransform.pivot(0.0f, -13.05f, 2.4344f))
 
 			return TexturedModelData.of(modelData, 128, 128)
