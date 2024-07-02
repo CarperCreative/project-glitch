@@ -1,6 +1,8 @@
 package com.carpercreative.preventthespread.entity
 
+import com.carpercreative.preventthespread.entity.ai.brain.task.AvoidGroundTask
 import com.carpercreative.preventthespread.entity.ai.brain.task.DiscardEntityTask
+import com.carpercreative.preventthespread.entity.ai.brain.task.HoverNearGroundTask
 import com.carpercreative.preventthespread.entity.ai.brain.task.LookAtLikedPlayerTask
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ImmutableSet
@@ -34,6 +36,8 @@ object RobotBrain {
 			0,
 			ImmutableList.of(
 				StayAboveWaterTask(1f),
+				AvoidGroundTask(0.75f, 0.8),
+				HoverNearGroundTask(0.75f, 1.5),
 				LookAroundTask(45, 90),
 				WanderAroundTask(),
 				DiscardEntityTask(15 * 20),
