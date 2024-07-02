@@ -56,7 +56,7 @@ object RobotBrain {
 					{ true },
 					8,
 					5,
-					0.5f, // TODO: where do i get this from
+					1.0f,
 				),
 			),
 		)
