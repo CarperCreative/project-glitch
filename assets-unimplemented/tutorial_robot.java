@@ -60,7 +60,7 @@ public class tutorial_robot<T extends Entity> extends EntityModel<T> {
 
 		PartDefinition bone2 = ye.addOrReplaceChild("bone2", CubeListBuilder.create().texOffs(76, 43).addBox(-7.2F, -1.9657F, -0.4101F, 14.4F, 4.8F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -0.15F, -1.3935F));
 
-		PartDefinition bone = ye.addOrReplaceChild("bone", CubeListBuilder.create().texOffs(67, 72).addBox(-7.2F, -2.75F, 0.0F, 14.4F, 5.5F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 5.0147F, -1.4564F));
+		PartDefinition bone = ye.addOrReplaceChild("bone", CubeListBuilder.create().texOffs(68, 106).addBox(-7.2F, -2.75F, 0.0F, 14.4F, 5.5F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 5.0147F, -1.4564F));
 
 		PartDefinition bone4 = ye.addOrReplaceChild("bone4", CubeListBuilder.create().texOffs(8, 11).addBox(-0.8F, -0.35F, -0.55F, 1.6F, 0.7F, 1.1F, new CubeDeformation(0.0F)), PartPose.offset(4.1F, 8.2F, -0.9435F));
 
