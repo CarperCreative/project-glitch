@@ -127,5 +127,10 @@ class RobotEntity(
 		fun RobotEntity.setLikedPlayer(playerUuid: UUID) {
 			brain.remember(MemoryModuleType.LIKED_PLAYER, playerUuid)
 		}
+
+		fun RobotEntity.resetDiscardTimer() {
+			// Sketchy, but should work. Forgetting a memory would be a better solution.
+			getBrain().stopAllTasks(world as ServerWorld, this)
+		}
 	}
 }

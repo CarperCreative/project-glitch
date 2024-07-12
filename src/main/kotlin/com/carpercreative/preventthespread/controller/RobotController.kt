@@ -4,6 +4,7 @@ import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.PreventTheSpread.ResearchAdvancement
 import com.carpercreative.preventthespread.PreventTheSpread.StoryAdvancement
 import com.carpercreative.preventthespread.entity.RobotEntity
+import com.carpercreative.preventthespread.entity.RobotEntity.Companion.resetDiscardTimer
 import com.carpercreative.preventthespread.entity.RobotEntity.Companion.setLikedPlayer
 import com.mojang.logging.LogUtils
 import kotlin.math.cos
@@ -16,6 +17,7 @@ import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.Box
 
 object RobotController {
 	private val logger = LogUtils.getLogger()
@@ -33,17 +35,24 @@ object RobotController {
 
 	private fun spawnRobot(player: ServerPlayerEntity): RobotEntity? {
 		val world = player.world as ServerWorld
-		// TODO: use existing robot if one exists nearby and is focused on our player
 
-		val robot = PreventTheSpread.ROBOT_ENTITY_TYPE.spawn(world, null, { robot ->
-			// Try to teleport the robot to a nearby location in front of the player to prevent putting it inside the player.
-			NoPenaltySolidTargeting.find(robot, 10, 2, 0, cos(player.yaw).toDouble(), sin(player.yaw).toDouble(), Math.PI * 0.4)?.also { spawnPos ->
-				// Prevent robot getting lerped out of the player.
-				robot.refreshPositionAndAngles(spawnPos.x, spawnPos.y, spawnPos.z, 0f, 0f)
-				robot.lookAtEntity(player, Float.MAX_VALUE, Float.MAX_VALUE)
-				robot.refreshPositionAndAngles(spawnPos.x, spawnPos.y + 1.0, spawnPos.z, robot.yaw, robot.pitch)
+		val robot = world
+			// Try to find an existing robot nearby instead of spawning more.
+			.getEntitiesByClass(RobotEntity::class.java, Box.of(player.pos, 32.0, 32.0, 32.0)) { true }
+			.minByOrNull { it.squaredDistanceTo(player) }
+			?.also { robot ->
+				robot.resetDiscardTimer()
 			}
-		}, player.blockPos, SpawnReason.COMMAND, false, false)
+			// No robot entity found nearby - spawn a new one.
+			?: PreventTheSpread.ROBOT_ENTITY_TYPE.spawn(world, null, { robot ->
+			// Try to teleport the robot to a nearby location in front of the player to prevent putting it inside the player.
+				NoPenaltySolidTargeting.find(robot, 10, 2, 0, cos(player.yaw).toDouble(), sin(player.yaw).toDouble(), Math.PI * 0.4)?.also { spawnPos ->
+					// Prevent robot getting lerped out of the player.
+					robot.refreshPositionAndAngles(spawnPos.x, spawnPos.y, spawnPos.z, 0f, 0f)
+					robot.lookAtEntity(player, Float.MAX_VALUE, Float.MAX_VALUE)
+					robot.refreshPositionAndAngles(spawnPos.x, spawnPos.y + 1.0, spawnPos.z, robot.yaw, robot.pitch)
+				}
+			}, player.blockPos, SpawnReason.COMMAND, false, false)
 
 		if (robot == null) {
 			logger.warn("Spawning robot returned null")
