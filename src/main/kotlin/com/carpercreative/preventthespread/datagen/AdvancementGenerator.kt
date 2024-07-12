@@ -96,9 +96,17 @@ class AdvancementGenerator(
 			rewards(AdvancementRewards.Builder.recipe(PreventTheSpread.SCANNER_ITEM_ID))
 		}
 
+		val obtainScanner = consumer.createAdvancement(
+			StoryAdvancement.OBTAIN_SCANNER_ID,
+			obtainProbe,
+			PreventTheSpread.SCANNER_ITEM.defaultStack,
+		) {
+			criterion("obtained_scanner", InventoryChangedCriterion.Conditions.items(PreventTheSpread.SCANNER_ITEM))
+		}
+
 		val getSample = consumer.createAdvancement(
 			StoryAdvancement.GET_SAMPLE_ID,
-			obtainProbe,
+			obtainScanner,
 			PreventTheSpread.GLITCH_STONE_BLOCK_ITEM.defaultStack,
 		) {
 			criterion("obtained_sample", ItemCriterion.Conditions.createItemUsedOnBlock(
