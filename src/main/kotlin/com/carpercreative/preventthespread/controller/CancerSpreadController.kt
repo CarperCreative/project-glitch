@@ -37,17 +37,17 @@ object CancerSpreadController {
 
 		if (Storage.cancerBlob.getActiveCancerBlobCount() >= spreadDifficulty.maxActiveBlobs) return
 
-		if (spreadDifficulty.nextSpawnAt == -1L) {
+		if (spreadDifficulty.nextScheduledSpawnAt == -1L) {
 			// Schedule the next cancer blob spawn in the future.
-			spreadDifficulty.nextSpawnAt = overworld.time + spreadDifficulty.blobSpawnDelayTicks
+			spreadDifficulty.nextScheduledSpawnAt = overworld.time + spreadDifficulty.blobSpawnDelayTicks
 			return
 		}
 
 		// Do nothing until we hit the scheduled time.
-		if (spreadDifficulty.nextSpawnAt.let { it >= 0 && overworld.time <= it }) return
+		if (spreadDifficulty.nextScheduledSpawnAt.let { it >= 0 && overworld.time <= it }) return
 
 		// Create the cancer blob.
-		spreadDifficulty.nextSpawnAt = -1L
+		spreadDifficulty.nextScheduledSpawnAt = -1L
 		CancerLogic.createCancerBlob(overworld)
 	}
 

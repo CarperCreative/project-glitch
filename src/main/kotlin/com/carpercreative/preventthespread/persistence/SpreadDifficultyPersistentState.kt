@@ -10,7 +10,7 @@ import net.minecraft.world.PersistentState
 
 class SpreadDifficultyPersistentState(
 	defeatedBlobs: Int,
-	nextSpawnAt: Long,
+	nextScheduledSpawnAt: Long,
 ) : PersistentState() {
 	var defeatedBlobs: Int = defeatedBlobs
 		private set(value) {
@@ -21,7 +21,10 @@ class SpreadDifficultyPersistentState(
 		defeatedBlobs++
 	}
 
-	var nextSpawnAt: Long = nextSpawnAt
+	/**
+	 * Time at which the next blob will spawn if the player is still ahead of the difficulty.
+	 */
+	var nextScheduledSpawnAt: Long = nextScheduledSpawnAt
 		set(value) {
 			field = value.coerceAtLeast(-1)
 			markDirty()
@@ -55,7 +58,7 @@ class SpreadDifficultyPersistentState(
 		nbt.putInt(KEY_VERSION, 1)
 
 		nbt.putInt(KEY_DEFEATED_BLOBS, defeatedBlobs)
-		nbt.putLong(KEY_NEXT_SPAWN_AT, nextSpawnAt)
+		nbt.putLong(KEY_NEXT_SCHEDULED_SPAWN_AT, nextScheduledSpawnAt)
 
 		return nbt
 	}
@@ -63,7 +66,7 @@ class SpreadDifficultyPersistentState(
 	companion object {
 		private const val KEY_VERSION = "version"
 		private const val KEY_DEFEATED_BLOBS = "defeatedBlobs"
-		private const val KEY_NEXT_SPAWN_AT = "nextSpawnAt"
+		private const val KEY_NEXT_SCHEDULED_SPAWN_AT = "nextScheduledSpawnAt"
 
 		private val type = Type(
 			{ SpreadDifficultyPersistentState(0, -1) },
@@ -74,7 +77,7 @@ class SpreadDifficultyPersistentState(
 		fun createFromNbt(nbt: NbtCompound): SpreadDifficultyPersistentState {
 			return SpreadDifficultyPersistentState(
 				nbt.getInt(KEY_DEFEATED_BLOBS),
-				nextSpawnAt = nbt.getLong(KEY_NEXT_SPAWN_AT),
+				nextScheduledSpawnAt = nbt.getLong(KEY_NEXT_SCHEDULED_SPAWN_AT),
 			)
 		}
 
