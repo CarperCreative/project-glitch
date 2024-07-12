@@ -54,10 +54,15 @@ class SpreadDifficultyPersistentState(
 	 * Amount of ticks players have to defeat any blob before another one is unconditionally spawned in.
 	 */
 	val blobForcedSpawnDelayTicks: Int
-		get() = when (defeatedBlobs) {
-			0 -> 15
-			else -> (11 - defeatedBlobs).coerceAtLeast(2)
-		} * 60 * 20
+		get() = when (maxActiveBlobs) {
+			// This mechanism is supposed to prevent cheesing by not defeating any blobs at the start of the game until ready.
+			1, 2, 3 -> when (defeatedBlobs) {
+				0 -> 15
+				else -> (11 - defeatedBlobs).coerceAtLeast(2)
+			}
+			// Players have played enough that the difficulty curve will take over applying pressure.
+			else -> 15
+		} * 60 * 20 // Minutes to ticks.
 
 	val blobSpawnRadius: Float
 		get() = 50f + 100f * defeatedBlobs.toFloat().pow(0.6f)
