@@ -100,7 +100,7 @@
 	"preventthespread.boss_bar_controller.text": "Glitch Progress: %s%%",
 	"preventthespread.cancer_type.advanced": "Advanced",
 	"preventthespread.cancer_type.early": "Early",
-	"preventthespread.cancer_type.pre_cancerous": "Pre-cancerous",
+	"preventthespread.cancer_type.pre_cancerous": "Pre-glitchy",
 	"preventthespread.challenge.ended": "Game over! You defeated %s glitch clusters in %s.",
 	"preventthespread.challenge.is_in_progress": "Prevent the Spread Challenge is in progress.",
 	"preventthespread.treatment_type.chemotherapy": "Chemotherapy",
