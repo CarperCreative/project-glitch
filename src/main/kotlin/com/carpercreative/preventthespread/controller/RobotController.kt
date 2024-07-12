@@ -1,6 +1,7 @@
 package com.carpercreative.preventthespread.controller
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.entity.RobotEntity
 import com.carpercreative.preventthespread.entity.RobotEntity.Companion.setLikedPlayer
 import com.mojang.logging.LogUtils
 import kotlin.math.cos
@@ -27,7 +28,7 @@ object RobotController {
 		}
 	}
 
-	private fun spawnRobot(player: ServerPlayerEntity) {
+	private fun spawnRobot(player: ServerPlayerEntity): RobotEntity? {
 		val world = player.world as ServerWorld
 		// TODO: use existing robot if one exists nearby and is focused on our player
 
@@ -40,9 +41,15 @@ object RobotController {
 				robot.refreshPositionAndAngles(spawnPos.x, spawnPos.y + 1.0, spawnPos.z, robot.yaw, robot.pitch)
 			}
 		}, player.blockPos, SpawnReason.COMMAND, false, false)
-			?: return logger.warn("Spawning robot returned null")
+
+		if (robot == null) {
+			logger.warn("Spawning robot returned null")
+			return null
+		}
 
 		robot.setLikedPlayer(player.uuid)
+
+		return robot
 	}
 
 	private fun sendRobotMessage(player: ServerPlayerEntity, message: Text) {
@@ -54,9 +61,9 @@ object RobotController {
 		player.sendMessageToClient(prefixed, false)
 	}
 
-	private fun robotMessage(player: ServerPlayerEntity, message: Text) {
-		spawnRobot(player)
+	private fun robotMessage(player: ServerPlayerEntity, message: Text): RobotEntity? {
 		sendRobotMessage(player, message)
+		return spawnRobot(player)
 	}
 
 	private val actionableAdvancements: Map<Identifier, (ServerPlayerEntity) -> Unit> = mapOf(
