@@ -35,7 +35,14 @@ object CancerSpreadController {
 
 		val spreadDifficulty = Storage.spreadDifficulty
 
-		if (Storage.cancerBlob.getActiveCancerBlobCount() >= spreadDifficulty.maxActiveBlobs) return
+		if (Storage.cancerBlob.getActiveCancerBlobCount() >= spreadDifficulty.maxActiveBlobs) {
+			if (spreadDifficulty.nextForcedSpawnAt.let { it >= 0 && overworld.time > it }) {
+				// Players haven't defeated any blobs in a while. Force a spawn to prevent cheesing.
+				CancerLogic.createCancerBlob(overworld)
+			}
+
+			return
+		}
 
 		if (spreadDifficulty.nextScheduledSpawnAt == -1L) {
 			// Schedule the next cancer blob spawn in the future.

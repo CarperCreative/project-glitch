@@ -212,6 +212,9 @@ object CancerLogic {
 
 		if (world.getBlockState(cancerSpawnPos).isGlitched() || blobMembershipPersistentState.getMembershipOrNull(cancerSpawnPos) != null) return null
 
+		// Always reset the forced spawn time when a new blob is spawned to prevent unplanned spawns.
+		Storage.spreadDifficulty.resetForcedSpawnTime(world.server.overworld)
+
 		val cancerBlob = Storage.cancerBlob.createCancerBlob { CancerBlob(it, cancerType, maxMetastaticJumpDistance) }
 
 		for (blockPos in getBlocksForBlobCreation(world, cancerSpawnPos, maxSize)) {

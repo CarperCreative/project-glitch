@@ -1,6 +1,7 @@
 package com.carpercreative.preventthespread.block
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.Storage
 import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isGlitched
 import com.carpercreative.preventthespread.cancer.TreatmentType
@@ -52,6 +53,8 @@ object CancerousBlock {
 				}
 
 				world.playSound(null, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, CANCER_BLOB_DEFEATED_SOUND, SoundCategory.BLOCKS, 1f, 1f)
+
+				Storage.spreadDifficulty.resetForcedSpawnTime(world)
 			}
 		}
 	}
