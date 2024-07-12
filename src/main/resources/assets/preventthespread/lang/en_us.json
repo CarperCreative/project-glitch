@@ -74,7 +74,7 @@
 	"dataPack.preventthespread.challenge.description": "Fight the glitch for as long as you can manage",
 	"dataPack.preventthespread.challenge.displayName": "Prevent the Spread Challenge",
 	"entity.preventthespread.chemotherapeutic_drug": "Chemotherapeutic Drug",
-	"entity.preventthespread.robot": "Datapack Zach",
+	"entity.preventthespread.robot": "Glitchy",
 	"gamerule.preventthespread:doGlitchSpawning": "Spawn new glitch clusters",
 	"gamerule.preventthespread:doGlitchSpread": "Spread existing glitch clusters",
 	"item.preventthespread.glitch_material": "Glitch Material",
