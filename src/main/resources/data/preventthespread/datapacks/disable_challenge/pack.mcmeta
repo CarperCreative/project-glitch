@@ -1,0 +1,8 @@
+{
+	"pack": {
+		"description": {
+			"translate": "dataPack.preventthespread.disable_challenge.description"
+		},
+		"pack_format": 26
+	}
+}

@@ -63,7 +63,7 @@ object ChallengeStatusController {
 
 		if (challengePersistentState.status != ChallengeStatus.UNKNOWN) return
 
-		if (server.dataPackManager.enabledProfiles.none { it.name == ChallengeConstants.DATA_PACK_ID.toString() }) {
+		if (server.dataPackManager.enabledProfiles.any { it.name == ChallengeConstants.DISABLE_DATA_PACK_ID.toString() }) {
 			challengePersistentState.status = ChallengeStatus.DISABLED
 			return
 		}

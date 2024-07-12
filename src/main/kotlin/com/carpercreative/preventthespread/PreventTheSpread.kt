@@ -366,10 +366,10 @@ object PreventTheSpread : ModInitializer {
 
 		@Suppress("UnstableApiUsage")
 		ResourceManagerHelperImpl.registerBuiltinResourcePack(
-			ChallengeConstants.DATA_PACK_ID,
-			"data/$MOD_ID/datapacks/" + ChallengeConstants.DATA_PACK_ID.path,
+			ChallengeConstants.DISABLE_DATA_PACK_ID,
+			"data/$MOD_ID/datapacks/" + ChallengeConstants.DISABLE_DATA_PACK_ID.path,
 			FabricLoader.getInstance().getModContainer(MOD_ID).get(),
-			Text.translatable("dataPack.preventthespread.challenge.displayName"),
+			Text.translatable("dataPack.preventthespread.disable_challenge.displayName"),
 			ResourcePackActivationType.NORMAL,
 		)
 
