@@ -1,6 +1,8 @@
 package com.carpercreative.preventthespread.controller
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.PreventTheSpread.ResearchAdvancement
+import com.carpercreative.preventthespread.PreventTheSpread.StoryAdvancement
 import com.carpercreative.preventthespread.entity.RobotEntity
 import com.carpercreative.preventthespread.entity.RobotEntity.Companion.setLikedPlayer
 import com.mojang.logging.LogUtils
@@ -9,6 +11,7 @@ import kotlin.math.sin
 import net.minecraft.advancement.AdvancementEntry
 import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.ai.NoPenaltySolidTargeting
+import net.minecraft.item.Items
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
@@ -61,14 +64,38 @@ object RobotController {
 		player.sendMessageToClient(prefixed, false)
 	}
 
-	private fun robotMessage(player: ServerPlayerEntity, message: Text): RobotEntity? {
-		sendRobotMessage(player, message)
+	private fun robotMessage(player: ServerPlayerEntity, advancementIdentifier: Identifier, messageCount: Int): RobotEntity? {
+		require(messageCount > 0) { "messageCount has to be greater than 0, is $messageCount" }
+
+		val translationKey = "${PreventTheSpread.MOD_ID}.tutorial.${advancementIdentifier.namespace}.${advancementIdentifier.path.replace('/', '.')}"
+
+		for (index in 0 until messageCount) {
+			sendRobotMessage(player, Text.translatable("$translationKey.$index"))
+		}
+
 		return spawnRobot(player)
 	}
 
 	private val actionableAdvancements: Map<Identifier, (ServerPlayerEntity) -> Unit> = mapOf(
-		PreventTheSpread.StoryAdvancement.ROOT_ID to ({ player ->
-			robotMessage(player, Text.translatable("preventthespread.tutorial.root"))
-		})
+		StoryAdvancement.ROOT_ID to ({ player ->
+			val robot = robotMessage(player, StoryAdvancement.ROOT_ID, 4)
+
+			// Drop kelp to avoid sending the player on a long journey to find it.
+			(robot ?: player).dropItem(Items.KELP)
+		}),
+		StoryAdvancement.OBTAIN_PROBE_ID to ({ player -> robotMessage(player, StoryAdvancement.OBTAIN_PROBE_ID, 3) }),
+		StoryAdvancement.OBTAIN_SCANNER_ID to ({ player -> robotMessage(player, StoryAdvancement.OBTAIN_SCANNER_ID, 3) }),
+		StoryAdvancement.GET_SAMPLE_ID to ({ player -> robotMessage(player, StoryAdvancement.GET_SAMPLE_ID, 1) }),
+		StoryAdvancement.CRAFT_PROCESSING_TABLE_ID to ({ player -> robotMessage(player, StoryAdvancement.CRAFT_PROCESSING_TABLE_ID, 2) }),
+		StoryAdvancement.ANALYZE_SAMPLE_ID to ({ player -> robotMessage(player, StoryAdvancement.ANALYZE_SAMPLE_ID, 5) }),
+		StoryAdvancement.DEFEAT_BLOB_ID to ({ player -> robotMessage(player, StoryAdvancement.DEFEAT_BLOB_ID, 1) }),
+		StoryAdvancement.PROCESS_GLITCH_MATERIAL_ID to ({ player -> robotMessage(player, StoryAdvancement.PROCESS_GLITCH_MATERIAL_ID, 1) }),
+		StoryAdvancement.UNLOCK_TREATMENT_ID to ({ player -> robotMessage(player, StoryAdvancement.UNLOCK_TREATMENT_ID, 1) }),
+		StoryAdvancement.GAME_OVER_ID to ({ player -> robotMessage(player, StoryAdvancement.GAME_OVER_ID, 2) }),
+		ResearchAdvancement.CHEMOTHERAPEUTIC_DRUG_ID to ({ player -> robotMessage(player, ResearchAdvancement.CHEMOTHERAPEUTIC_DRUG_ID, 1) }),
+		ResearchAdvancement.CHILLING_TOWER_ID to ({ player -> robotMessage(player, ResearchAdvancement.CHILLING_TOWER_ID, 1) }),
+		ResearchAdvancement.RADIATION_STAFF_ID to ({ player -> robotMessage(player, ResearchAdvancement.RADIATION_STAFF_ID, 1) }),
+		ResearchAdvancement.SURGERY_EFFICIENCY_1_ID to ({ player -> robotMessage(player, ResearchAdvancement.SURGERY_EFFICIENCY_1_ID, 1) }),
+		ResearchAdvancement.TARGETED_DRUG_ID to ({ player -> robotMessage(player, ResearchAdvancement.TARGETED_DRUG_ID, 1) }),
 	)
 }
