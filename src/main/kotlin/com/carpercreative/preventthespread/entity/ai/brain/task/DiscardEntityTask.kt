@@ -16,7 +16,7 @@ class DiscardEntityTask(
 	}
 
 	override fun finishRunning(world: ServerWorld?, entity: LivingEntity, time: Long) {
-		if (entity.removalReason == null) {
+		if (entity.removalReason == null && isTimeLimitExceeded(time)) {
 			entity.remove(Entity.RemovalReason.DISCARDED)
 		}
 	}
