@@ -20,6 +20,7 @@ import com.carpercreative.preventthespread.controller.CancerSpreadController
 import com.carpercreative.preventthespread.controller.CancerTouchEffectController
 import com.carpercreative.preventthespread.controller.ClientStateSynchronizationController
 import com.carpercreative.preventthespread.controller.EveryoneTeamController
+import com.carpercreative.preventthespread.controller.MessageController
 import com.carpercreative.preventthespread.controller.ResearchSynchronizationController
 import com.carpercreative.preventthespread.controller.StoryRootUnlockController
 import com.carpercreative.preventthespread.entity.ChemotherapeuticDrugEntity
@@ -361,6 +362,7 @@ object PreventTheSpread : ModInitializer {
 		ChallengeValidityController.init()
 		ClientStateSynchronizationController.init()
 		EveryoneTeamController.init()
+		MessageController.init()
 		ResearchSynchronizationController.init()
 		StoryRootUnlockController.init()
 
