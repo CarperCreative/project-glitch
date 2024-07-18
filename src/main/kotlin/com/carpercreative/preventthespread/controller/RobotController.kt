@@ -64,13 +64,12 @@ object RobotController {
 		return robot
 	}
 
-	private fun sendRobotMessage(player: ServerPlayerEntity, message: Text) {
-		val prefixed = Text.translatable(
+	private fun createRobotMessage(message: Text): Text {
+		return  Text.translatable(
 			"chat.type.text",
 			Text.translatable(PreventTheSpread.ROBOT_ENTITY_TYPE.translationKey),
 			message,
 		)
-		player.sendMessageToClient(prefixed, false)
 	}
 
 	private fun robotMessage(player: ServerPlayerEntity, advancementIdentifier: Identifier, messageCount: Int): RobotEntity? {
@@ -79,7 +78,8 @@ object RobotController {
 		val translationKey = "${PreventTheSpread.MOD_ID}.tutorial.${advancementIdentifier.namespace}.${advancementIdentifier.path.replace('/', '.')}"
 
 		for (index in 0 until messageCount) {
-			sendRobotMessage(player, Text.translatable("$translationKey.$index"))
+			val text = createRobotMessage(Text.translatable("$translationKey.$index"))
+			MessageController.queueMessage(MessageController.QueuedMessage(text, player.uuid))
 		}
 
 		return spawnRobot(player)
