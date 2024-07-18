@@ -12,8 +12,6 @@ import net.minecraft.text.Text
 object BossBarController {
 	private val DANGER_BOSS_BAR_ID = PreventTheSpread.identifier("danger")
 
-	private const val CANCEROUS_BLOCK_LIMIT = 1200
-
 	fun init() {
 		ServerTickEvents.END_SERVER_TICK.register { server ->
 			tick(server)
