@@ -40,7 +40,7 @@ object RobotBrain {
 				HoverNearGroundTask(0.75f, 1.5),
 				LookAroundTask(45, 90),
 				WanderAroundTask(),
-				DiscardEntityTask(15 * 20),
+				DiscardEntityTask(45 * 20),
 			),
 		)
 	}
