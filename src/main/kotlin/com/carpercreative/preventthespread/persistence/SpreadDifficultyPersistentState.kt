@@ -1,6 +1,7 @@
 package com.carpercreative.preventthespread.persistence
 
 import com.carpercreative.preventthespread.PreventTheSpread
+import com.carpercreative.preventthespread.Storage
 import kotlin.math.ceil
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -56,9 +57,20 @@ class SpreadDifficultyPersistentState(
 	val blobForcedSpawnDelayTicks: Int
 		get() = when (maxActiveBlobs) {
 			// This mechanism is supposed to prevent cheesing by not defeating any blobs at the start of the game until ready.
-			1, 2, 3 -> when (defeatedBlobs) {
-				0 -> 15
-				else -> (11 - defeatedBlobs).coerceAtLeast(2)
+			1, 2, 3 -> {
+				val activeBlobs = Storage.cancerBlob.getActiveCancerBlobCount()
+
+				when {
+					// A forced blob has already been spawned as punishment before - the more the players fall behind the more aggressively we punish them.
+					activeBlobs > maxActiveBlobs -> (10 - (activeBlobs - defeatedBlobs) * 4).coerceAtLeast(2)
+					// Players aren't yet getting punished, but have fallen behind.
+					else -> when (defeatedBlobs) {
+						// Larger grace period for the first blob to allow gathering resources.
+						0 -> 15
+						// Otherwise force another spawn with increasing difficulty as time progresses.
+						else -> (11 - maxActiveBlobs * 2).coerceAtLeast(2)
+					}
+				}
 			}
 			// Players have played enough that the difficulty curve will take over applying pressure.
 			else -> 15
