@@ -17,6 +17,7 @@ import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sin
+import kotlin.math.sqrt
 import net.fabricmc.fabric.api.event.Event
 import net.fabricmc.fabric.api.event.EventFactory
 import net.minecraft.block.Block
@@ -88,7 +89,7 @@ object CancerLogic {
 		val minimumY = world.dimension.minY + 8
 		val random = world.random
 
-		val cancerSpawnPos = BlockPos.Mutable()
+		val results = LinkedList<Pair<BlockPos, Int>>()
 
 		// Attempt to generate a valid position multiple times.
 		// Returns the last position if none were deemed valid.
@@ -100,6 +101,7 @@ object CancerLogic {
 			val angle = random.nextDouble() * PI * 2
 			val distance = random.nextDouble() * maxRadius
 
+			val cancerSpawnPos = BlockPos.Mutable()
 			cancerSpawnPos.set(world.spawnPos)
 			cancerSpawnPos.x += (sin(angle) * distance).roundToInt()
 			cancerSpawnPos.z += (cos(angle) * distance).roundToInt()
@@ -155,24 +157,43 @@ object CancerLogic {
 				continue@nextAttempt
 			}
 
+			var penalty = 0
+
 			// Try not to spawn cancer under fluids.
-			// If a position under a fluid is reached every attempt, the last one will be returned.
-			if (!world.getFluidState(cancerSpawnPos.offset(Direction.UP)).isEmpty) continue
+			// If a position under a fluid is reached every attempt, the one with the least fluid above it will be returned.
+			if (!world.getFluidState(cancerSpawnPos.offset(Direction.UP)).isEmpty) {
+
+				for (yOffset in 1 .. 30 step 4) {
+					if (world.getFluidState(cancerSpawnPos.offset(Direction.UP, yOffset)).isEmpty) break
+
+					penalty += 100
+				}
+			}
 
 			// Try to spawn away from any players.
-			val minimumSquaredDistanceToPlayer = 64.0.pow(2)
-			val distanceToClosestPlayer = world.players
+			val minimumDistanceToPlayer = 64.0
+			val minimumSquaredDistanceToPlayer = minimumDistanceToPlayer.pow(2)
+			val playerDistanceModifier = world.players
 				.asSequence()
 				.filter { it.interactionManager.isSurvivalLike }
 				// Distance on the XZ plane.
-				.minOfOrNull { (it.x - cancerSpawnPos.x).pow(2) + (it.z - cancerSpawnPos.z).pow(2)}
-			if (distanceToClosestPlayer?.let { it < minimumSquaredDistanceToPlayer } == true) continue@nextAttempt
+				.map { (it.x - cancerSpawnPos.x).pow(2) + (it.z - cancerSpawnPos.z).pow(2) }
+				.filter { it < minimumSquaredDistanceToPlayer }
+				.sumOf { minimumDistanceToPlayer - sqrt(it) }
+			if (playerDistanceModifier > 0) {
+				penalty += playerDistanceModifier.roundToInt()
+			}
 
-			// Position passed all checks.
-			break@nextAttempt
+			results.add(cancerSpawnPos.toImmutable() to penalty)
+
+			if (penalty <= 0) {
+				// Position passed all checks.
+				break@nextAttempt
+			}
 		}
 
-		return cancerSpawnPos
+		val bestPosition = results.minBy { it.second }
+		return bestPosition.first
 	}
 
 	/**
