@@ -92,9 +92,9 @@ object CancerLogic {
 
 		// Attempt to generate a valid position multiple times.
 		// Returns the last position if none were deemed valid.
-		var attempt = 1
+		var attempt = 0
 		var invalidAttempts = 0
-		nextAttempt@while (attempt <= 5) {
+		nextAttempt@while (attempt <= 10) {
 			attempt++
 
 			val angle = random.nextDouble() * PI * 2
