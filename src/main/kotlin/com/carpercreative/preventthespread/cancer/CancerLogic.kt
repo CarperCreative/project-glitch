@@ -106,6 +106,9 @@ object CancerLogic {
 			cancerSpawnPos.x += (sin(angle) * distance).roundToInt()
 			cancerSpawnPos.z += (cos(angle) * distance).roundToInt()
 
+			// Force chunk to generate.
+			world.getBlockState(cancerSpawnPos)
+
 			cancerSpawnPos.y = world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, cancerSpawnPos.x, cancerSpawnPos.z) - 1
 
 			// Ignore positions with an invalid heightmap.
