@@ -101,6 +101,8 @@ object CancerLogic {
 			val angle = random.nextDouble() * PI * 2
 			val distance = minRadius + (random.nextDouble() * (maxRadius - minRadius))
 
+			var penalty = 0
+
 			val cancerSpawnPos = BlockPos.Mutable()
 			cancerSpawnPos.set(world.spawnPos)
 			cancerSpawnPos.x += (sin(angle) * distance).roundToInt()
@@ -143,6 +145,12 @@ object CancerLogic {
 				if (blocksDescendedToFindSurface++ > 15) continue@nextAttempt
 			}
 
+			// Penalty for surface being significantly below sea level. [0..128]
+			val surfaceLevel = world.seaLevel - 8
+			if (cancerSpawnPos.y < surfaceLevel) {
+				penalty += (surfaceLevel - cancerSpawnPos.y) * 2
+			}
+
 			if (maxDepth > 0 && random.nextFloat() < 0.5f) {
 				// Hide below the ground, up to the max depth.
 				// While descending, check every block, and use the last one which is a valid spawn location.
@@ -166,8 +174,6 @@ object CancerLogic {
 				invalidAttempts++
 				continue@nextAttempt
 			}
-
-			var penalty = 0
 
 			// Try not to spawn cancer under fluids.
 			// If a position under a fluid is reached every attempt, the one with the least fluid above it will be returned.
