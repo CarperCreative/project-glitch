@@ -111,12 +111,6 @@ object CancerLogic {
 
 			cancerSpawnPos.y = world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, cancerSpawnPos.x, cancerSpawnPos.z) - 1
 
-			// Ignore positions with an invalid heightmap.
-			if (cancerSpawnPos.y <= world.dimension.minY) {
-				invalidAttempts++
-				continue@nextAttempt
-			}
-
 			if (invalidAttempts > 5) {
 				// Fallback in case of worlds where no blocks are valid seed locations.
 				// Go up until...
@@ -129,6 +123,13 @@ object CancerLogic {
 					cancerSpawnPos.y++
 				}
 				return cancerSpawnPos
+			}
+
+			// Ignore positions with an invalid heightmap.
+			if (cancerSpawnPos.y <= world.dimension.minY) {
+				invalidAttempts++
+				attempt--
+				continue@nextAttempt
 			}
 
 			// Find surface position, ignoring leaves, trees, and fluids.
