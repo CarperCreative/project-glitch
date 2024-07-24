@@ -85,7 +85,7 @@ object CancerLogic {
 			&& isIn(PreventTheSpread.VALID_GLITCH_SEED_BLOCK_TAG)
 	}
 
-	fun generateCancerSpawnPos(world: ServerWorld, maxRadius: Float, maxDepth: Int): BlockPos {
+	fun generateCancerSpawnPos(world: ServerWorld, minRadius: Float, maxRadius: Float, maxDepth: Int): BlockPos {
 		val minimumY = world.dimension.minY + 8
 		val random = world.random
 
@@ -99,7 +99,7 @@ object CancerLogic {
 			attempt++
 
 			val angle = random.nextDouble() * PI * 2
-			val distance = random.nextDouble() * maxRadius
+			val distance = minRadius + (random.nextDouble() * (maxRadius - minRadius))
 
 			val cancerSpawnPos = BlockPos.Mutable()
 			cancerSpawnPos.set(world.spawnPos)
@@ -201,7 +201,7 @@ object CancerLogic {
 	 */
 	fun createCancerBlob(world: ServerWorld): CancerBlob? {
 		val spreadDifficulty = Storage.spreadDifficulty
-		val cancerSpawnPos = generateCancerSpawnPos(world, spreadDifficulty.blobSpawnRadius, spreadDifficulty.maxBlobDepth)
+		val cancerSpawnPos = generateCancerSpawnPos(world, spreadDifficulty.blobSpawnMinRadius, spreadDifficulty.blobSpawnMaxRadius, spreadDifficulty.maxBlobDepth)
 
 		return createCancerBlob(world, cancerSpawnPos)
 	}

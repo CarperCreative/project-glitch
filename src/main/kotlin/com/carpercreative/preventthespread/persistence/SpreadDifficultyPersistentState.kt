@@ -76,8 +76,11 @@ class SpreadDifficultyPersistentState(
 			else -> 15
 		} * 60 * 20 // Minutes to ticks.
 
-	val blobSpawnRadius: Float
-		get() = 50f + 100f * defeatedBlobs.toFloat().pow(0.6f)
+	val blobSpawnMinRadius: Float
+		get() = 100f * defeatedBlobs.toFloat().pow(0.6f)
+
+	val blobSpawnMaxRadius: Float
+		get() = 50f + blobSpawnMinRadius
 
 	val maxBlobDepth: Int
 		get() = (20f * (defeatedBlobs - 1).coerceAtLeast(0).toFloat().pow(0.5f)).roundToInt()
