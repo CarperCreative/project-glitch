@@ -270,7 +270,7 @@ class ProcessingTableAnalyzerBlockEntity(
 					"${PreventTheSpread.MOD_ID}.analysis.results",
 					cancerBlob.type.displayName,
 					Text.empty().also { text ->
-						cancerBlob.type.treatments.forEach { treatment ->
+						cancerBlob.treatments.forEach { treatment ->
 							text.append(
 								Text.translatable(
 									"${PreventTheSpread.MOD_ID}.analysis.treatment_item",
