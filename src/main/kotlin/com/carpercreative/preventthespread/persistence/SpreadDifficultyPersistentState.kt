@@ -93,7 +93,7 @@ class SpreadDifficultyPersistentState(
 		get() = ((100f * (spawnedBlobs - 1).coerceAtLeast(0)).pow(0.5f)).roundToInt()
 
 	val blobStartingSize: Int
-		get() = (6 + spawnedBlobs * 8).coerceAtMost(126)
+		get() = (6 + spawnedBlobs * 5).coerceAtMost(36)
 
 	val metastaticChance: Float
 		get() = ((spawnedBlobs - 3).coerceAtLeast(0) * 0.1f).coerceAtMost(0.8f)
