@@ -83,7 +83,7 @@ class SpreadDifficultyPersistentState(
 		get() = 50f + 80f * defeatedBlobs.toFloat().pow(0.6f)
 
 	val maxBlobDepth: Int
-		get() = (20f * (defeatedBlobs - 1).coerceAtLeast(0).toFloat().pow(0.5f)).roundToInt()
+		get() = ((100f * (defeatedBlobs - 1).coerceAtLeast(0)).pow(0.5f)).roundToInt()
 
 	val blobStartingSize: Int
 		get() = (6 + defeatedBlobs * 8).coerceAtMost(126)
