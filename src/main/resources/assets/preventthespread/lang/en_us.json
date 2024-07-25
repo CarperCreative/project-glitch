@@ -93,6 +93,7 @@
 	"item.preventthespread.surgery_pickaxe": "Surgery Pickaxe",
 	"item.preventthespread.surgery_shovel": "Surgery Shovel",
 	"itemGroup.preventthespread.default": "Prevent the Spread",
+	"preventthespread.analysis_missing_warning": "This glitch has not been analyzed yet!",
 	"preventthespread.analysis.invalid": "[It seems this page was torn apart by the machine.]",
 	"preventthespread.analysis.is_metastatic": "Cancer appears to be metastatic and might spread unexpectedly.\n",
 	"preventthespread.analysis.results": "Sample analysis results:\n\nCancer stage: %s\nSuitable treatments:\n%s\n%s",
