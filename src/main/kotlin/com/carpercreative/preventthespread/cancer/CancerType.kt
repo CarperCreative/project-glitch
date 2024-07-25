@@ -5,6 +5,7 @@ import net.minecraft.text.Text
 
 enum class CancerType(
 	val displayName: Text,
+	@Deprecated("Use CancerBlob.treatments")
 	val treatments: Array<TreatmentType>,
 ) {
 	PRE_CANCEROUS(
@@ -20,8 +21,4 @@ enum class CancerType(
 		arrayOf(TreatmentType.SURGERY, TreatmentType.CHEMOTHERAPY),
 	),
 	;
-
-	fun isTreatmentValid(treatment: TreatmentType): Boolean {
-		return treatments.contains(treatment)
-	}
 }

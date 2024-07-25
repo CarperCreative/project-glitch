@@ -233,6 +233,17 @@ object CancerLogic {
 		return createCancerBlob(world, cancerSpawnPos)
 	}
 
+	private fun generateTreatments(random: Random, spreadDifficulty: SpreadDifficultyPersistentState): Array<TreatmentType> {
+		val reusableTreatment = when {
+			spreadDifficulty.defeatedBlobs < 5 -> TreatmentType.SURGERY
+			else -> arrayOf(TreatmentType.SURGERY, TreatmentType.RADIATION_THERAPY).let(random::nextOfArray)
+		}
+
+		val otherTreatment = random.nextOfList(TreatmentType.entries.filter { it != reusableTreatment })
+
+		return arrayOf(reusableTreatment, otherTreatment)
+	}
+
 	/**
 	 * Creates a new [CancerBlob] according to the current [spread difficulty][SpreadDifficultyPersistentState] values, using the given [world]'s randomness.
 	 */
@@ -246,16 +257,18 @@ object CancerLogic {
 			else -> random.nextOfList(CancerType.entries)
 		}
 
+		val treatments = generateTreatments(random, spreadDifficulty)
+
 		val metastaticMaxJumpDistance = when {
 			random.nextFloat() < spreadDifficulty.metastaticChance -> spreadDifficulty.metastaticMaxJumpDistance
 			else -> 0
 		}
 
 		// Create the cancer blob.
-		return createCancerBlob(world, cancerSpawnPos, spreadDifficulty.blobStartingSize, cancerType, metastaticMaxJumpDistance)
+		return createCancerBlob(world, cancerSpawnPos, spreadDifficulty.blobStartingSize, cancerType, treatments, metastaticMaxJumpDistance)
 	}
 
-	fun createCancerBlob(world: ServerWorld, cancerSpawnPos: BlockPos, maxSize: Int, cancerType: CancerType, maxMetastaticJumpDistance: Int): CancerBlob? {
+	fun createCancerBlob(world: ServerWorld, cancerSpawnPos: BlockPos, maxSize: Int, cancerType: CancerType, treatments: Array<TreatmentType>, maxMetastaticJumpDistance: Int): CancerBlob? {
 		val blobMembershipPersistentState = world.getBlobMembershipPersistentState()
 
 		if (world.getBlockState(cancerSpawnPos).isGlitched() || blobMembershipPersistentState.getMembershipOrNull(cancerSpawnPos) != null) return null
@@ -263,7 +276,7 @@ object CancerLogic {
 		// Always reset the forced spawn time when a new blob is spawned to prevent unplanned spawns.
 		Storage.spreadDifficulty.resetForcedSpawnTime(world.server.overworld)
 
-		val cancerBlob = Storage.cancerBlob.createCancerBlob { CancerBlob(it, cancerType, maxMetastaticJumpDistance) }
+		val cancerBlob = Storage.cancerBlob.createCancerBlob { CancerBlob(it, cancerType, treatments, maxMetastaticJumpDistance) }
 
 		for (blockPos in getBlocksForBlobCreation(world, cancerSpawnPos, maxSize)) {
 			convertToCancer(world, blockPos)
