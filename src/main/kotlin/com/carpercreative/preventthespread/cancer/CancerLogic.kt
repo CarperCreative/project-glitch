@@ -226,11 +226,11 @@ object CancerLogic {
 	/**
 	 * Creates a new [CancerBlob] according to the current [spread difficulty][SpreadDifficultyPersistentState] values, using the given [world]'s randomness.
 	 */
-	fun createCancerBlob(world: ServerWorld): CancerBlob? {
+	fun createCancerBlob(world: ServerWorld, incrementDifficulty: Boolean = true): CancerBlob? {
 		val spreadDifficulty = Storage.spreadDifficulty
 		val cancerSpawnPos = generateCancerSpawnPos(world, spreadDifficulty.blobSpawnMinRadius, spreadDifficulty.blobSpawnMaxRadius, spreadDifficulty.maxBlobDepth)
 
-		return createCancerBlob(world, cancerSpawnPos)
+		return createCancerBlob(world, cancerSpawnPos, incrementDifficulty = incrementDifficulty)
 	}
 
 	private fun generateTreatments(random: Random, spreadDifficulty: SpreadDifficultyPersistentState): Array<TreatmentType> {
@@ -247,7 +247,7 @@ object CancerLogic {
 	/**
 	 * Creates a new [CancerBlob] according to the current [spread difficulty][SpreadDifficultyPersistentState] values, using the given [world]'s randomness.
 	 */
-	fun createCancerBlob(world: ServerWorld, cancerSpawnPos: BlockPos): CancerBlob? {
+	fun createCancerBlob(world: ServerWorld, cancerSpawnPos: BlockPos, incrementDifficulty: Boolean = true): CancerBlob? {
 		val random = world.random
 		val spreadDifficulty = Storage.spreadDifficulty
 
@@ -265,7 +265,13 @@ object CancerLogic {
 		}
 
 		// Create the cancer blob.
-		return createCancerBlob(world, cancerSpawnPos, spreadDifficulty.blobStartingSize, cancerType, treatments, metastaticMaxJumpDistance)
+		val cancerBlob = createCancerBlob(world, cancerSpawnPos, spreadDifficulty.blobStartingSize, cancerType, treatments, metastaticMaxJumpDistance)
+
+		if (cancerBlob != null && incrementDifficulty) {
+			spreadDifficulty.incrementSpawnedBlobs()
+		}
+
+		return cancerBlob
 	}
 
 	fun createCancerBlob(world: ServerWorld, cancerSpawnPos: BlockPos, maxSize: Int, cancerType: CancerType, treatments: Array<TreatmentType>, maxMetastaticJumpDistance: Int): CancerBlob? {

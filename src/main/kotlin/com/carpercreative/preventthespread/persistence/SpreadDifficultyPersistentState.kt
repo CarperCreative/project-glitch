@@ -11,10 +11,20 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.world.PersistentState
 
 class SpreadDifficultyPersistentState(
+	spawnedBlobs: Int,
 	defeatedBlobs: Int,
 	nextScheduledSpawnAt: Long,
 	nextForcedSpawnAt: Long,
 ) : PersistentState() {
+	var spawnedBlobs: Int = spawnedBlobs
+		private set(value) {
+			field = value.coerceAtLeast(0)
+		}
+
+	fun incrementSpawnedBlobs() {
+		spawnedBlobs++
+	}
+
 	var defeatedBlobs: Int = defeatedBlobs
 		private set(value) {
 			field = value.coerceAtLeast(0)
@@ -101,6 +111,7 @@ class SpreadDifficultyPersistentState(
 	override fun writeNbt(nbt: NbtCompound): NbtCompound {
 		nbt.putInt(KEY_VERSION, 1)
 
+		nbt.putInt(KEY_SPAWNED_BLOBS, spawnedBlobs)
 		nbt.putInt(KEY_DEFEATED_BLOBS, defeatedBlobs)
 		nbt.putLong(KEY_NEXT_SCHEDULED_SPAWN_AT, nextScheduledSpawnAt)
 		nbt.putLong(KEY_NEXT_FORCED_SPAWN_AT, nextForcedSpawnAt)
@@ -110,18 +121,20 @@ class SpreadDifficultyPersistentState(
 
 	companion object {
 		private const val KEY_VERSION = "version"
+		private const val KEY_SPAWNED_BLOBS = "spawnedBlobs"
 		private const val KEY_DEFEATED_BLOBS = "defeatedBlobs"
 		private const val KEY_NEXT_SCHEDULED_SPAWN_AT = "nextScheduledSpawnAt"
 		private const val KEY_NEXT_FORCED_SPAWN_AT = "nextForcedSpawnAt"
 
 		private val type = Type(
-			{ SpreadDifficultyPersistentState(0, -1, -1) },
+			{ SpreadDifficultyPersistentState(0, 0, -1, -1) },
 			SpreadDifficultyPersistentState::createFromNbt,
 			null,
 		)
 
 		fun createFromNbt(nbt: NbtCompound): SpreadDifficultyPersistentState {
 			return SpreadDifficultyPersistentState(
+				spawnedBlobs = nbt.getInt(KEY_SPAWNED_BLOBS),
 				nbt.getInt(KEY_DEFEATED_BLOBS),
 				nextScheduledSpawnAt = nbt.getLong(KEY_NEXT_SCHEDULED_SPAWN_AT),
 				nextForcedSpawnAt = nbt.getLong(KEY_NEXT_FORCED_SPAWN_AT),
