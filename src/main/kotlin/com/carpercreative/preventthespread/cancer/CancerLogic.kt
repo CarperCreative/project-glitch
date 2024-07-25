@@ -252,8 +252,9 @@ object CancerLogic {
 		val spreadDifficulty = Storage.spreadDifficulty
 
 		// Generate cancer stats.
-		val cancerType = when {
-			spreadDifficulty.defeatedBlobs < 2 -> random.nextOfList(CancerType.entries.filter { it.treatments.contains(TreatmentType.SURGERY) })
+		val cancerType = when (spreadDifficulty.spawnedBlobs) {
+			0 -> CancerType.PRE_CANCEROUS
+			1 -> CancerType.EARLY
 			else -> random.nextOfList(CancerType.entries)
 		}
 
