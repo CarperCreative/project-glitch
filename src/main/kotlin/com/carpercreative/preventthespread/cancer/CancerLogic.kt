@@ -380,12 +380,24 @@ object CancerLogic {
 			if (chillingTowerInRange) return
 		}
 
-		// Spread to blocks which already have a bunch of cancerous neighbors with a higher likelihood.
-		val cancerousNeighborCountOfTarget = Direction.entries
-			.asSequence()
-			.map { spreadPosition.offset(it) }
-			.count { world.getBlockState(it).isGlitched() }
-		if (!bypassThrottling && random.nextFloat() <= 0.5f - (cancerousNeighborCountOfTarget / 6f * 0.5f)) return
+		if (!bypassThrottling) {
+			val cancerBlobType = world.getBlobMembershipPersistentState()
+				.getMembershipOrNull(pos)
+				?.let { Storage.cancerBlob.getCancerBlobById(it) }
+				?.type
+			val baseSpreadChance = cancerBlobType?.baseSpreadChance ?: 0.5f
+			val surroundedSpreadChance = cancerBlobType?.surroundedSpreadChance ?: 1f
+
+			// Spread to blocks which already have a bunch of cancerous neighbors with a higher likelihood.
+			val cancerousNeighborCountOfTarget = Direction.entries
+				.asSequence()
+				.map { spreadPosition.offset(it) }
+				.count { world.getBlockState(it).isGlitched() }
+
+			val spreadChance = baseSpreadChance + (cancerousNeighborCountOfTarget / 6f * (surroundedSpreadChance - baseSpreadChance))
+
+			if (random.nextFloat() <= 1f - spreadChance) return
+		}
 
 		spreadCancer(world, pos, spreadPosition)
 	}
