@@ -151,6 +151,17 @@ object CancerLogic {
 				penalty += (surfaceLevel - cancerSpawnPos.y) * 2
 			}
 
+			// Penalty for surface being covered in a fluid.
+			for (yOffset in 1..32 step 2) {
+				if (world.getFluidState(cancerSpawnPos.offset(Direction.UP, yOffset)).isEmpty) {
+					break
+				}
+
+				// Checks are twice as dense as fluid checks above the candidate position - penalty should be half of it.
+				// 50 -> 40 to make fluids above the candidate spawn position have a higher penalty.
+				penalty += 40
+			}
+
 			if (maxDepth > 0 && random.nextFloat() < 0.5f) {
 				// Hide below the ground, up to the max depth.
 				// While descending, check every block, and use the last one which is a valid spawn location.
