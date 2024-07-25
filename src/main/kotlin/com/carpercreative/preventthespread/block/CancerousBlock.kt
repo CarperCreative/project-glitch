@@ -66,7 +66,7 @@ object CancerousBlock {
 
 		if (
 			!(
-				cancerBlob.type.isTreatmentValid(TreatmentType.SURGERY)
+				cancerBlob.isTreatmentValid(TreatmentType.SURGERY)
 				&& player.mainHandStack.isIn(PreventTheSpread.SURGERY_TOOL_ITEM_TAG)
 			)
 		) {
@@ -90,7 +90,7 @@ object CancerousBlock {
 		if (explodingEntity is LivingEntity) return
 
 		if (
-			!cancerBlob.type.isTreatmentValid(TreatmentType.CHEMOTHERAPY)
+			!cancerBlob.isTreatmentValid(TreatmentType.CHEMOTHERAPY)
 			|| explodingEntity.let { it == null || it.type != PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE }
 		) {
 			CancerLogic.hastenSpread(world, pos, world.random)

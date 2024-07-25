@@ -80,7 +80,7 @@ class TargetedDrugInjectorBlock(
 		for (cancerousBlockPos in cancerousBlockPositions) {
 			val cancerBlob = world.getCancerBlobOrNull(cancerousBlockPos)
 			if (cancerBlob != null) {
-				if (!cancerBlob.type.isTreatmentValid(TreatmentType.TARGETED_DRUG)) {
+				if (!cancerBlob.isTreatmentValid(TreatmentType.TARGETED_DRUG)) {
 					CancerLogic.hastenSpread(world, pos, random, distance = 2)
 
 					// Skip breaking some of the cancerous blocks when the treatment isn't valid to ensure spread.

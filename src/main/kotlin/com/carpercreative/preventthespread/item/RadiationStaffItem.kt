@@ -244,7 +244,7 @@ class RadiationStaffItem(
 
 	private fun breakBlock(world: ServerWorld, pos: BlockPos, user: LivingEntity) {
 		world.getCancerBlobOrNull(pos)?.also { cancerBlob ->
-			if (!cancerBlob.type.isTreatmentValid(TreatmentType.RADIATION_THERAPY)) {
+			if (!cancerBlob.isTreatmentValid(TreatmentType.RADIATION_THERAPY)) {
 				CancerLogic.hastenSpread(world, pos, world.random)
 			}
 		}

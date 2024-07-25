@@ -24,6 +24,10 @@ class CancerBlob(
 	val isActive: Boolean
 		get() = cancerousBlockCount > 0
 
+	fun isTreatmentValid(treatment: TreatmentType): Boolean {
+		return type.isTreatmentValid(treatment)
+	}
+
 	fun toNbt() = NbtCompound().apply {
 		putInt(KEY_VERSION, 1)
 		putInt(KEY_ID, id)
