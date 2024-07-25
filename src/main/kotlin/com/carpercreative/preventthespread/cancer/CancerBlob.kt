@@ -54,10 +54,12 @@ class CancerBlob(
 		fun NbtCompound.toCancerBlob() = CancerBlob(
 			getInt(KEY_ID),
 			CancerType.valueOf(getString(KEY_TYPE)),
-			getList(KEY_TREATMENTS, NbtElement.STRING_TYPE.toInt())
-				?.map { TreatmentType.valueOf(it.asString()) }
-				?.toTypedArray()
-				?: CancerType.valueOf(getString(KEY_TYPE)).treatments,
+			when {
+				!contains(KEY_TREATMENTS) -> CancerType.valueOf(getString(KEY_TYPE)).treatments
+				else -> getList(KEY_TREATMENTS, NbtElement.STRING_TYPE.toInt())
+					.map { TreatmentType.valueOf(it.asString()) }
+					.toTypedArray()
+			},
 			getInt(KEY_MAX_METASTATIC_JUMP_DISTANCE),
 			getInt(KEY_CANCEROUS_BLOCK_COUNT),
 			getBoolean(KEY_IS_ANALYZED),
