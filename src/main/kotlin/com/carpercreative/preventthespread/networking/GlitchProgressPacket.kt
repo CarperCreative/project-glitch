@@ -30,10 +30,12 @@ class GlitchProgressPacket(
 			val previousProgress = ClientStorage.glitchProgress
 			val packet = GlitchProgressPacket(buf)
 
-			ClientStorage.glitchProgress = packet.progress
+			client.submit {
+				ClientStorage.glitchProgress = packet.progress
 
-			if (previousProgress > 0f && (packet.progress * 100f).roundToInt() > (previousProgress * 100f).roundToInt()) {
-				client.player?.playSound(GLITCH_SPREADS_SOUND_EVENT, SoundCategory.AMBIENT, 1f, 0.3f)
+				if (previousProgress > 0f && (packet.progress * 100f).roundToInt() > (previousProgress * 100f).roundToInt()) {
+					client.player?.playSound(GLITCH_SPREADS_SOUND_EVENT, SoundCategory.AMBIENT, 1f, 0.3f)
+				}
 			}
 		}
 	}
