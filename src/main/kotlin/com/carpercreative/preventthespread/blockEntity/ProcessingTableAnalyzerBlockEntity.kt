@@ -362,7 +362,7 @@ class ProcessingTableAnalyzerBlockEntity(
 					analyzedStack
 				}
 				analyzedStack.isOf(PreventTheSpread.GLITCH_MATERIAL_ITEM) -> {
-					analyzedStack.count = 0
+					analyzedStack.decrement(1)
 					PreventTheSpread.RESEARCH_ITEM.defaultStack
 				}
 				// If we somehow analyzed an item we don't recognize, output it as is.
