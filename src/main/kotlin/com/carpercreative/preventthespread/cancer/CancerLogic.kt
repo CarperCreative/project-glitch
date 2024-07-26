@@ -351,7 +351,7 @@ object CancerLogic {
 					candidatePos.y = fromPos.y + random.nextBetweenExclusive(-maxJumpDistance / 2, maxJumpDistance / 3)
 					candidatePos.z = fromPos.z + random.nextBetweenExclusive(-maxJumpDistance, maxJumpDistance)
 
-					if (world.getBlockState(candidatePos).isGlitchable()) {
+					if (world.getBlockState(candidatePos).isValidGlitchSeed()) {
 						return candidatePos.toImmutable()
 					}
 				}
