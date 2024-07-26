@@ -34,8 +34,6 @@ class ProcessingTableResearchScreenHandler(
 		SimpleInventory(ProcessingTableAnalyzerBlockEntity.SLOT_COUNT),
 	)
 
-	private var selectedResearchId: Identifier? = null
-
 	val researchItemCount: Int
 		get() = inventory.getStack(ProcessingTableResearchBlockEntity.RESEARCH_SLOT_INDEX).count
 
@@ -88,46 +86,7 @@ class ProcessingTableResearchScreenHandler(
 		return slot.canInsert(stack)
 	}
 
-	override fun onButtonClick(player: PlayerEntity, id: Int): Boolean {
-		var sendContentUpdates = false
-
-		when (id) {
-			RESEARCH_BUTTON_ID -> {
-				// Nothing to research.
-				val selectedResearchId = selectedResearchId
-					?: return false
-
-				val researchStack = inventory.getStack(ProcessingTableResearchBlockEntity.RESEARCH_SLOT_INDEX)
-				// Not enough research items to perform this action.
-				if (researchStack.isEmpty) return false
-
-				player as ServerPlayerEntity
-				if (!player.grantAdvancement(selectedResearchId)) return false
-
-				inventory.removeStack(ProcessingTableResearchBlockEntity.RESEARCH_SLOT_INDEX, 1)
-
-				for (team in Storage.teamManager.getTeams()) {
-					if (!team.players.contains(player)) continue
-
-					for (teamPlayer in team.players) {
-						(teamPlayer as ServerPlayerEntity).grantAdvancement(selectedResearchId)
-					}
-				}
-
-				this.selectedResearchId = null
-				sendContentUpdates = true
-			}
-		}
-
-		return sendContentUpdates
-	}
-
-	fun onResearchSelected(researchAdvancementId: Identifier?) {
-		if (researchAdvancementId == null) {
-			selectedResearchId = null
-			return
-		}
-
+	fun onResearchPerformRequest(researchAdvancementId: Identifier) {
 		val player = playerInventory.player as ServerPlayerEntity
 		val advancementLoader = player.server.advancementLoader
 		val advancementTracker = player.advancementTracker
@@ -142,10 +101,21 @@ class ProcessingTableResearchScreenHandler(
 		val parentAdvancement = advancementLoader.get(researchAdvancement.value.parent.getOrNull())
 		if (parentAdvancement != null && !advancementTracker.getProgress(parentAdvancement).isDone) return
 
-		selectedResearchId = researchAdvancementId
-	}
+		// Not enough research items to perform this action.
+		if (researchItemCount <= 0) return
 
-	companion object {
-		const val RESEARCH_BUTTON_ID = 0
+		if (!player.grantAdvancement(researchAdvancement)) return
+
+		inventory.removeStack(ProcessingTableResearchBlockEntity.RESEARCH_SLOT_INDEX, 1)
+
+		for (team in Storage.teamManager.getTeams()) {
+			if (!team.players.contains(player)) continue
+
+			for (teamPlayer in team.players) {
+				(teamPlayer as ServerPlayerEntity).grantAdvancement(researchAdvancement)
+			}
+		}
+
+		sendContentUpdates()
 	}
 }

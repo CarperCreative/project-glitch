@@ -1,7 +1,7 @@
 package com.carpercreative.preventthespread.client.gui.screen
 
 import com.carpercreative.preventthespread.PreventTheSpread
-import com.carpercreative.preventthespread.networking.SelectResearchPacket
+import com.carpercreative.preventthespread.networking.PerformResearchPacket
 import com.carpercreative.preventthespread.screen.ProcessingTableResearchScreenHandler
 import com.mojang.blaze3d.systems.RenderSystem
 import kotlin.math.roundToInt
@@ -41,14 +41,6 @@ class ProcessingTableResearchScreen(
 	private var movingTab = false
 
 	private var selectedAdvancement: SelectedAdvancement? = null
-		set(value) {
-			field = value
-
-			ClientPlayNetworking.send(
-				PreventTheSpread.SELECT_RESEARCH_PACKET_ID,
-				PacketByteBufs.create().also { SelectResearchPacket(value?.identifier).write(it) },
-			)
-		}
 
 	override fun init() {
 		backgroundWidth = 252
@@ -65,7 +57,12 @@ class ProcessingTableResearchScreen(
 
 		researchButton = ButtonWidget
 			.builder(Text.translatable("container.${PreventTheSpread.MOD_ID}.processing_table_research.research_button")) {
-				client!!.interactionManager!!.clickButton(handler.syncId, ProcessingTableResearchScreenHandler.RESEARCH_BUTTON_ID)
+				selectedAdvancement?.also { selectedAdvancement ->
+					ClientPlayNetworking.send(
+						PreventTheSpread.PERFORM_RESEARCH_PACKET_ID,
+						PacketByteBufs.create().also { PerformResearchPacket(selectedAdvancement.identifier).write(it) },
+					)
+				}
 
 				selectedAdvancement = null
 			}

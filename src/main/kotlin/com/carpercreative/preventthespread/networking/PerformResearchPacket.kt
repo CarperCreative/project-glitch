@@ -8,37 +8,25 @@ import net.minecraft.server.network.ServerPlayNetworkHandler
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
 
-class SelectResearchPacket(
-	val researchAdvancementId: Identifier?,
+class PerformResearchPacket(
+	val researchAdvancementId: Identifier,
 ) {
 	constructor(buf: PacketByteBuf) : this(
-		when (val action = buf.readByte()) {
-			ACTION_SET -> buf.readIdentifier()
-			ACTION_UNSET -> null
-			else -> throw IllegalArgumentException("Invalid action received: $action")
-		}
+		buf.readIdentifier(),
 	)
 
 	fun write(buf: PacketByteBuf) {
-		if (researchAdvancementId == null) {
-			buf.writeByte(ACTION_UNSET.toInt())
-		} else {
-			buf.writeByte(ACTION_SET.toInt())
-			buf.writeIdentifier(researchAdvancementId)
-		}
+		buf.writeIdentifier(researchAdvancementId)
 	}
 
 	companion object {
-		private const val ACTION_SET: Byte = 0
-		private const val ACTION_UNSET: Byte = 1
-
 		fun handle(server: MinecraftServer, player: ServerPlayerEntity, handler: ServerPlayNetworkHandler, buf: PacketByteBuf, responseSender: PacketSender) {
 			val screenHandler = player.currentScreenHandler as? ProcessingTableResearchScreenHandler
 				?: return
 
-			val packet = SelectResearchPacket(buf)
+			val packet = PerformResearchPacket(buf)
 
-			screenHandler.onResearchSelected(packet.researchAdvancementId)
+			screenHandler.onResearchPerformRequest(packet.researchAdvancementId)
 		}
 	}
 }

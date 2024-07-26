@@ -33,7 +33,7 @@ import com.carpercreative.preventthespread.item.SurgeryAxeItem
 import com.carpercreative.preventthespread.item.SurgeryHoeItem
 import com.carpercreative.preventthespread.item.SurgeryPickaxeItem
 import com.carpercreative.preventthespread.item.SurgeryShovelItem
-import com.carpercreative.preventthespread.networking.SelectResearchPacket
+import com.carpercreative.preventthespread.networking.PerformResearchPacket
 import com.carpercreative.preventthespread.screen.ProcessingTableAnalyzerScreenHandler
 import com.carpercreative.preventthespread.screen.ProcessingTableResearchScreenHandler
 import net.fabricmc.api.ModInitializer
@@ -207,7 +207,7 @@ object PreventTheSpread : ModInitializer {
 		private set
 
 	val GLITCH_PROGRESS_PACKET_ID = identifier("glitch_progress")
-	val SELECT_RESEARCH_PACKET_ID = identifier("select_research")
+	val PERFORM_RESEARCH_PACKET_ID = identifier("perform_research")
 
 	val DO_GLITCH_SPAWNING_GAME_RULE: GameRules.Key<GameRules.BooleanRule> = GameRuleRegistry.register("$MOD_ID:doGlitchSpawning", GameRules.Category.UPDATES, GameRuleFactory.createBooleanRule(false))
 	val DO_GLITCH_SPREAD_GAME_RULE: GameRules.Key<GameRules.BooleanRule> = GameRuleRegistry.register("$MOD_ID:doGlitchSpread", GameRules.Category.UPDATES, GameRuleFactory.createBooleanRule(true))
@@ -351,7 +351,7 @@ object PreventTheSpread : ModInitializer {
 
 		CHILLING_TOWER_POI = PointOfInterestTypes.register(Registries.POINT_OF_INTEREST_TYPE, CHILLING_TOWER_POI_TYPE, CHILLING_TOWER_BLOCK.stateManager.states.filter { it.get(TowerBlock.PART) == TowerBlock.TowerPart.MIDDLE }.toSet(), 0, 1)
 
-		ServerPlayNetworking.registerGlobalReceiver(SELECT_RESEARCH_PACKET_ID, SelectResearchPacket::handle)
+		ServerPlayNetworking.registerGlobalReceiver(PERFORM_RESEARCH_PACKET_ID, PerformResearchPacket::handle)
 
 		Storage.init()
 
