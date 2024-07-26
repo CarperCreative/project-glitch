@@ -1,7 +1,6 @@
 package com.carpercreative.preventthespread.datagen
 
 import com.carpercreative.preventthespread.PreventTheSpread
-import com.carpercreative.preventthespread.block.ProcessingTableBlock
 import com.carpercreative.preventthespread.block.TowerBlock
 import java.util.function.BiConsumer
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput
@@ -34,12 +33,7 @@ class BlockLootTableGenerator(
 				TowerBlock.PART,
 				TowerBlock.TowerPart.BOTTOM,
 			)
-			addBlockDropWithPropertyCondition(
-				PreventTheSpread.PROCESSING_TABLE_ID,
-				PreventTheSpread.PROCESSING_TABLE_BLOCK_ITEM,
-				ProcessingTableBlock.PROCESSING_TABLE_PART,
-				ProcessingTableBlock.ProcessingTablePart.LEFT,
-			)
+			// Processing table item drops are handled in code.
 			addBlockDrop(
 				PreventTheSpread.TARGETED_DRUG_INJECTOR_ID,
 				PreventTheSpread.TARGETED_DRUG_INJECTOR_BLOCK_ITEM,

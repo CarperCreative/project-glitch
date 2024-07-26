@@ -156,16 +156,24 @@ class ProcessingTableAnalyzerBlockEntity(
 	}
 
 	override fun readNbt(nbt: NbtCompound) {
-		super.readNbt(nbt)
+		val subNbt = nbt.getCompound(PreventTheSpread.PROCESSING_TABLE_ANALYZER_ID.toString())
+
+		super.readNbt(subNbt)
 
 		inventory = DefaultedList.ofSize(size(), ItemStack.EMPTY)
-		Inventories.readNbt(nbt, inventory)
+		Inventories.readNbt(subNbt, inventory)
+
+		startAnalyzingNextSlot()
 	}
 
 	override fun writeNbt(nbt: NbtCompound) {
-		super.writeNbt(nbt)
+		val subNbt = NbtCompound()
 
-		Inventories.writeNbt(nbt, inventory)
+		super.writeNbt(subNbt)
+
+		Inventories.writeNbt(subNbt, inventory)
+
+		nbt.put(PreventTheSpread.PROCESSING_TABLE_ANALYZER_ID.toString(), subNbt)
 	}
 
 	val performingAnalysis
