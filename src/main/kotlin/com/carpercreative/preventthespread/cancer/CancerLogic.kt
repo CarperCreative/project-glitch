@@ -142,7 +142,11 @@ object CancerLogic {
 				cancerSpawnPos.y--
 
 				// Prevent descending too far below the surface to avoid compounding depth with the max depth from spread difficulty.
-				if (blocksDescendedToFindSurface++ > 15) continue@nextAttempt
+				if (blocksDescendedToFindSurface++ > 15) {
+					invalidAttempts++
+					attempt--
+					continue@nextAttempt
+				}
 			}
 
 			// Penalty for surface being significantly below sea level. [0..128]
