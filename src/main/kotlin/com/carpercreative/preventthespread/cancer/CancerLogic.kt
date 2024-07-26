@@ -89,7 +89,8 @@ object CancerLogic {
 		val minimumY = world.dimension.minY + 8
 		val random = world.random
 
-		val results = LinkedList<Pair<BlockPos, Int>>()
+		val bestCancerSpawnPos = BlockPos.Mutable()
+		var bestPenalty = Int.MAX_VALUE
 
 		// Attempt to generate a valid position multiple times.
 		// Returns the last position if none were deemed valid.
@@ -215,7 +216,11 @@ object CancerLogic {
 				penalty += playerDistanceModifier.roundToInt()
 			}
 
-			results.add(cancerSpawnPos.toImmutable() to penalty)
+
+			if (penalty < bestPenalty) {
+				bestPenalty = penalty
+				bestCancerSpawnPos.set(cancerSpawnPos)
+			}
 
 			if (penalty <= 0) {
 				// Position passed all checks.
@@ -223,8 +228,7 @@ object CancerLogic {
 			}
 		}
 
-		val bestPosition = results.minBy { it.second }
-		return bestPosition.first
+		return bestCancerSpawnPos
 	}
 
 	/**
