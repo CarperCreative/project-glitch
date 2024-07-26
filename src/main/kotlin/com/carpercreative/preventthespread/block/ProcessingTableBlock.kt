@@ -213,6 +213,18 @@ class ProcessingTableBlock(
 			return pos.offset(getCounterpartDirection(facing))
 		}
 
+		/**
+		 * @param facing Facing direction of the block.
+		 * @param pos Position of the block.
+		 * @param targetPart Part the position of which is desired.
+		 * @return Position of the desired part.
+		 */
+		fun getPartPosition(facing: Direction, pos: BlockPos, targetPart: ProcessingTablePart): BlockPos {
+			if (targetPart == this) return pos
+
+			return getCounterpartBlockPos(facing, pos)
+		}
+
 		override fun toString(): String {
 			return partName
 		}
