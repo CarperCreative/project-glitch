@@ -113,7 +113,7 @@ object CancerLogic {
 
 			cancerSpawnPos.y = world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, cancerSpawnPos.x, cancerSpawnPos.z) - 1
 
-			if (invalidAttempts > 5) {
+			if (invalidAttempts > 20) {
 				// Fallback in case of worlds where no blocks are valid seed locations.
 				// Go up until...
 				while (
