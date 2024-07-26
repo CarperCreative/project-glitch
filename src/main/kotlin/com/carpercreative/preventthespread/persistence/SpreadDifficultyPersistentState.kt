@@ -99,7 +99,7 @@ class SpreadDifficultyPersistentState(
 		get() = ((spawnedBlobs - 3).coerceAtLeast(0) * 0.1f).coerceAtMost(0.8f)
 
 	val metastaticMaxJumpDistance: Int
-		get() = (spawnedBlobs - 3).coerceAtLeast(0) * 3
+		get() = ((spawnedBlobs - 3).coerceAtLeast(0) * 3).coerceAtMost(32)
 
 	fun resetForcedSpawnTime(overworld: ServerWorld) {
 		nextForcedSpawnAt = overworld.time + blobForcedSpawnDelayTicks
