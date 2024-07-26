@@ -336,7 +336,7 @@ object CancerLogic {
 
 	private fun getSpreadTargetPosition(world: ServerWorld, fromPos: BlockPos, random: Random): BlockPos {
 		// Chance for a metastatic jump.
-		if (random.nextFloat() < (1f / 1000)) {
+		if (random.nextFloat() < (1f / 500)) {
 			val cancerBlob = world.getBlobMembershipPersistentState()
 				.getMembershipOrNull(fromPos)
 				?.let(Storage.cancerBlob::getCancerBlobById)
