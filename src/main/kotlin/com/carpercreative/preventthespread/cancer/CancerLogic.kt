@@ -255,7 +255,9 @@ object CancerLogic {
 		val cancerType = when (spreadDifficulty.spawnedBlobs) {
 			0 -> CancerType.PRE_CANCEROUS
 			1 -> CancerType.EARLY
-			else -> random.nextOfList(CancerType.entries)
+			in 2..8 -> random.nextOfList(CancerType.entries)
+			in 9..15 -> random.nextOfArray(arrayOf(CancerType.EARLY, CancerType.ADVANCED))
+			else -> CancerType.ADVANCED
 		}
 
 		val treatments = generateTreatments(random, spreadDifficulty)
