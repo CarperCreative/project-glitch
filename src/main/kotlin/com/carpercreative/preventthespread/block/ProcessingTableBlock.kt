@@ -113,8 +113,7 @@ class ProcessingTableBlock(
 
 	override fun onBreak(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity): BlockState {
 		if (!world.isClient && player.isCreative) {
-			val counterpart = state.get(PROCESSING_TABLE_PART).counterpart
-			val counterpartPos = counterpart.getCounterpartBlockPos(state.get(FACING), pos)
+			val counterpartPos = state.get(PROCESSING_TABLE_PART).getCounterpartBlockPos(state.get(FACING), pos)
 			val counterpartState = world.getBlockState(counterpartPos)
 
 			if (counterpartState.isOf(this)) {
