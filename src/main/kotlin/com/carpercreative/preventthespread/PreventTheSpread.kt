@@ -199,7 +199,9 @@ object PreventTheSpread : ModInitializer {
 	val ROBOT_ENTITY_ID = identifier("robot")
 	val ROBOT_ENTITY_TYPE: EntityType<RobotEntity> = EntityType.Builder.create({ entityType, world -> RobotEntity(entityType, world) }, SpawnGroup.MISC).makeFireImmune().setDimensions(0.8f, 0.8f).maxTrackingRange(2).trackingTickInterval(2).build()
 
+	val PROCESSING_TABLE_ANALYZER_ID = identifier("processing_table_analyzer")
 	val PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER = ScreenHandlerType(::ProcessingTableAnalyzerScreenHandler, FeatureFlags.VANILLA_FEATURES)
+	val PROCESSING_TABLE_RESEARCH_ID = identifier("processing_table_research")
 	val PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER = ScreenHandlerType(::ProcessingTableResearchScreenHandler, FeatureFlags.VANILLA_FEATURES)
 
 	val CHILLING_TOWER_POI_TYPE: RegistryKey<PointOfInterestType> = RegistryKey.of(RegistryKeys.POINT_OF_INTEREST_TYPE, CHILLING_TOWER_ID)
@@ -346,8 +348,8 @@ object PreventTheSpread : ModInitializer {
 		Registry.register(Registries.ENTITY_TYPE, ROBOT_ENTITY_ID, ROBOT_ENTITY_TYPE)
 		FabricDefaultAttributeRegistry.register(ROBOT_ENTITY_TYPE, RobotEntity.createRobotAttributes())
 
-		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_analyzer"), PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER)
-		Registry.register(Registries.SCREEN_HANDLER, identifier("processing_table_research"), PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER)
+		Registry.register(Registries.SCREEN_HANDLER, PROCESSING_TABLE_ANALYZER_ID, PROCESSING_TABLE_ANALYZER_SCREEN_HANDLER)
+		Registry.register(Registries.SCREEN_HANDLER, PROCESSING_TABLE_RESEARCH_ID, PROCESSING_TABLE_RESEARCH_SCREEN_HANDLER)
 
 		CHILLING_TOWER_POI = PointOfInterestTypes.register(Registries.POINT_OF_INTEREST_TYPE, CHILLING_TOWER_POI_TYPE, CHILLING_TOWER_BLOCK.stateManager.states.filter { it.get(TowerBlock.PART) == TowerBlock.TowerPart.MIDDLE }.toSet(), 0, 1)
 
