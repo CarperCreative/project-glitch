@@ -96,7 +96,7 @@ class ProcessingTableBlock(
 		world.setBlockState(counterpartPos, counterpartState)
 
 		// Let the counterpart read state from the item stack.
-		world.getBlockEntity(counterpartPos)?.readNbt(BlockItem.getBlockEntityNbt(itemStack))
+		BlockItem.getBlockEntityNbt(itemStack)?.also { world.getBlockEntity(counterpartPos)?.readNbt(it) }
 	}
 
 	override fun getStateForNeighborUpdate(state: BlockState, direction: Direction, neighborState: BlockState, world: WorldAccess, pos: BlockPos, neighborPos: BlockPos): BlockState {
