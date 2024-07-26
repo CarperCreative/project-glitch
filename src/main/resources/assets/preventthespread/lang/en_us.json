@@ -39,6 +39,8 @@
 	"advancement.preventthespread.story.craft_processing_table.title": "Obtain a Processing Table",
 	"advancement.preventthespread.story.defeat_blob.description": "Use suitable treatments to eradicate the blob.",
 	"advancement.preventthespread.story.defeat_blob.title": "Defeat a Glitch Blob",
+	"advancement.preventthespread.story.game_over.description": "The glitch spread out of control.",
+	"advancement.preventthespread.story.game_over.title": "Simulation Collapsed",
 	"advancement.preventthespread.story.get_sample.description": "Use the probe on a glitched block.",
 	"advancement.preventthespread.story.get_sample.title": "Probe the Glitch",
 	"advancement.preventthespread.story.obtain_probe.description": "Use the crafting recipe book to make one.",
