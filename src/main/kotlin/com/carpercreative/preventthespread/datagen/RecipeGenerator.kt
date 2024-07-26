@@ -146,12 +146,12 @@ class RecipeGenerator(
 				RawShapedRecipe.create(
 					mutableMapOf(
 						'b' to Ingredient.ofItems(Items.GLASS_BOTTLE),
-						'B' to Ingredient.ofItems(Items.BOOK),
 						'f' to Ingredient.fromTag(ItemTags.WOODEN_FENCES),
+						'g' to Ingredient.ofItems(Items.GLASS_PANE),
 						'i' to Ingredient.ofItems(Items.IRON_INGOT),
 						's' to Ingredient.fromTag(ItemTags.WOODEN_SLABS),
 					),
-					"ibB",
+					"gbi",
 					"sss",
 					"f f",
 				),
