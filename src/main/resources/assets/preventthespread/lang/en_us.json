@@ -69,6 +69,7 @@
 	"block.preventthespread.processing_table": "Processing Table",
 	"block.preventthespread.targeted_drug_injector": "Targeted Drug Injector",
 	"container.preventthespread.processing_table_analyzer": "Processing Table",
+	"container.preventthespread.processing_table_analyzer.book_preview.title": "Front page preview",
 	"container.preventthespread.processing_table_analyzer.empty_book_tooltip.0": "To start analysis, insert a writable book",
 	"container.preventthespread.processing_table_analyzer.empty_book_tooltip.1": "or a book containing previous analysis results.",
 	"container.preventthespread.processing_table_research": "Research Table",
