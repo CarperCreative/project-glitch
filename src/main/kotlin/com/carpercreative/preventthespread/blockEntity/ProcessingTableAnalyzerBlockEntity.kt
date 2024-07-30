@@ -27,6 +27,7 @@ import net.minecraft.screen.PropertyDelegate
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
+import net.minecraft.util.Formatting
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -276,13 +277,13 @@ class ProcessingTableAnalyzerBlockEntity(
 				blockEntity,
 				Text.translatable(
 					"${PreventTheSpread.MOD_ID}.analysis.results",
-					cancerBlob.type.displayName,
+					Text.empty().append(cancerBlob.type.displayName).formatted(Formatting.BOLD),
 					Text.empty().also { text ->
 						cancerBlob.treatments.forEach { treatment ->
 							text.append(
 								Text.translatable(
 									"${PreventTheSpread.MOD_ID}.analysis.treatment_item",
-									treatment.displayName,
+									Text.empty().append(treatment.displayName).formatted(Formatting.BOLD),
 								)
 							)
 						}
