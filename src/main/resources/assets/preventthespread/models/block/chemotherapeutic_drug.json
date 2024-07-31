@@ -500,7 +500,7 @@
 		"ground": {
 			"rotation": [17, 0, 0],
 			"translation": [0, 5.25, 0],
-			"scale": [0.61, 0.61, 0.61]
+			"scale": [0.52, 0.52, 0.52]
 		},
 		"gui": {
 			"rotation": [30, 146, 0],
@@ -513,8 +513,8 @@
 		},
 		"fixed": {
 			"rotation": [-90, 0, 0],
-			"translation": [0, 0, -17.5],
-			"scale": [1.95, 1.95, 1.95]
+			"translation": [0, 0, -7],
+			"scale": [0.97, 0.97, 0.97]
 		}
 	},
 	"groups": [
@@ -526,32 +526,24 @@
 			"name": "group",
 			"origin": [7, 0.11111, 7],
 			"color": 0,
-			"nbt": "{}",
-			"armAnimationEnabled": false,
 			"children": [4, 5, 6]
 		},
 		{
 			"name": "group",
 			"origin": [7, 0.11111, 14],
 			"color": 0,
-			"nbt": "{}",
-			"armAnimationEnabled": false,
 			"children": [7, 8, 9]
 		},
 		{
 			"name": "group",
 			"origin": [7, 0.11111, 21.25],
 			"color": 0,
-			"nbt": "{}",
-			"armAnimationEnabled": false,
 			"children": [10, 11, 12]
 		},
 		{
 			"name": "group",
 			"origin": [7, 0.11111, 28.5],
 			"color": 0,
-			"nbt": "{}",
-			"armAnimationEnabled": false,
 			"children": [13, 14, 15]
 		},
 		16,

@@ -159,13 +159,13 @@
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [90, 180, -3],
-			"translation": [-0.25, 4, 0.75],
-			"scale": [0.63, 0.63, 0.63]
+			"translation": [-0.25, 2.75, 0.75],
+			"scale": [0.52, 0.52, 0.52]
 		},
 		"thirdperson_lefthand": {
 			"rotation": [90, 180, 180],
-			"translation": [-0.25, 4, 0.75],
-			"scale": [0.63, 0.63, 0.63]
+			"translation": [-0.25, 2.25, 0.75],
+			"scale": [0.52, 0.52, 0.52]
 		},
 		"firstperson_righthand": {
 			"rotation": [62, 180, 180],
@@ -179,8 +179,8 @@
 		},
 		"ground": {
 			"rotation": [-79, 0, 0],
-			"translation": [0, 10, 0],
-			"scale": [0.72, 0.72, 0.72]
+			"translation": [0, 5.5, 0],
+			"scale": [0.4, 0.4, 0.4]
 		},
 		"gui": {
 			"rotation": [-90, 45, 180],
@@ -194,7 +194,7 @@
 		"fixed": {
 			"rotation": [-90, -45, 0],
 			"translation": [1.5, -1.75, 0],
-			"scale": [0.68, 0.68, 0.68]
+			"scale": [0.53, 0.53, 0.53]
 		}
 	},
 	"groups": [
@@ -202,8 +202,6 @@
 			"name": "spade1",
 			"origin": [-24, 1.0067, 1.62843],
 			"color": 0,
-			"nbt": "{}",
-			"armAnimationEnabled": false,
 			"children": [
 				0,
 				1,
@@ -213,8 +211,6 @@
 					"name": "group",
 					"origin": [8, 8.25092, -12.75],
 					"color": 0,
-					"nbt": "{}",
-					"armAnimationEnabled": false,
 					"children": [4, 5, 6, 7]
 				},
 				8,

@@ -1,6 +1,33 @@
 {
+	"credit": "Made with Blockbench",
 	"parent": "item/generated",
 	"textures": {
 		"layer0": "preventthespread:item/research"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"scale": [0.27, 0.27, 0.27]
+		},
+		"thirdperson_lefthand": {
+			"scale": [0.27, 0.27, 0.27]
+		},
+		"firstperson_righthand": {
+			"translation": [2.75, 0, -0.75],
+			"scale": [0.45, 0.45, 0.45]
+		},
+		"firstperson_lefthand": {
+			"translation": [2.75, 0, -0.75],
+			"scale": [0.45, 0.45, 0.45]
+		},
+		"ground": {
+			"translation": [0, 1, 0],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"gui": {
+			"scale": [0.84, 0.84, 0.84]
+		},
+		"fixed": {
+			"scale": [0.8, 0.8, 0.8]
+		}
 	}
 }

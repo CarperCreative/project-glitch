@@ -134,6 +134,11 @@
 	],
 	"gui_light": "front",
 	"display": {
+		"ground": {
+			"rotation": [40, 0, -10],
+			"translation": [0, 1.25, 0],
+			"scale": [0.43, 0.43, 0.43]
+		},
 		"gui": {
 			"rotation": [31, 41, -35],
 			"translation": [-0.25, -0.75, 0],

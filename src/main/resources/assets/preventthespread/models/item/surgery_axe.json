@@ -173,28 +173,28 @@
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [90, 180, 90],
-			"translation": [-0.25, 4.5, 0.75],
-			"scale": [0.63, 0.63, 0.63]
+			"translation": [-0.25, 2.25, 0.75],
+			"scale": [0.48, 0.48, 0.48]
 		},
 		"thirdperson_lefthand": {
 			"rotation": [90, 180, -90],
-			"translation": [-0.25, 4.5, 0.75],
-			"scale": [0.63, 0.63, 0.63]
+			"translation": [-0.25, 2, 0.75],
+			"scale": [0.48, 0.48, 0.48]
 		},
 		"firstperson_righthand": {
 			"rotation": [90, 180, 76],
 			"translation": [2.25, 4.5, 0.75],
-			"scale": [0.63, 0.63, 0.63]
+			"scale": [0.42, 0.42, 0.42]
 		},
 		"firstperson_lefthand": {
 			"rotation": [90, 180, -106],
 			"translation": [2.75, 4.5, 0.75],
-			"scale": [0.63, 0.63, 0.63]
+			"scale": [0.42, 0.42, 0.42]
 		},
 		"ground": {
 			"rotation": [-79, 0, 0],
-			"translation": [0, 10, 0],
-			"scale": [0.72, 0.72, 0.72]
+			"translation": [0, 6.25, 0],
+			"scale": [0.47, 0.47, 0.47]
 		},
 		"gui": {
 			"rotation": [-90, 45, 180],
@@ -216,16 +216,12 @@
 			"name": "axe1",
 			"origin": [30, 1.0067, 2.02671],
 			"color": 0,
-			"nbt": "{}",
-			"armAnimationEnabled": false,
 			"children": [0]
 		},
 		{
 			"name": "spade1",
 			"origin": [-24, 1.0067, 1.62843],
 			"color": 0,
-			"nbt": "{}",
-			"armAnimationEnabled": false,
 			"children": [
 				1,
 				2,
@@ -237,8 +233,6 @@
 					"name": "group",
 					"origin": [8, 8.25092, -12.75],
 					"color": 0,
-					"nbt": "{}",
-					"armAnimationEnabled": false,
 					"children": [7, 8, 9, 10]
 				},
 				11,

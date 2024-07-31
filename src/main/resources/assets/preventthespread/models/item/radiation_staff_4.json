@@ -3,7 +3,7 @@
 	"texture_size": [32, 32],
 	"textures": {
 		"1": "preventthespread:item/sparks_eff2",
-		"2": "preventthespread:item/radiation_staff_heat_0",
+		"2": "preventthespread:item/radiation_staff_heat_4",
 		"3": "preventthespread:item/radiation_staff",
 		"particle": "preventthespread:item/sparks_eff2"
 	},
