@@ -498,9 +498,9 @@
 			"scale": [0.45, 0.45, 0.45]
 		},
 		"ground": {
-			"rotation": [17, 0, 0],
-			"translation": [0, 5.25, 0],
-			"scale": [0.52, 0.52, 0.52]
+			"rotation": [0, 0, 0],
+			"translation": [0, 3, 0],
+			"scale": [0.25, 0.25, 0.25]
 		},
 		"gui": {
 			"rotation": [30, 146, 0],
@@ -508,8 +508,9 @@
 			"scale": [0.72, 0.72, 0.72]
 		},
 		"head": {
-			"translation": [0, -26, 0],
-			"scale": [2.18, 2.18, 2.18]
+			"rotation": [0, 180, 0],
+			"translation": [0, 16, 0],
+			"scale": [1, 1, 1]
 		},
 		"fixed": {
 			"rotation": [-90, 0, 0],
