@@ -24,8 +24,11 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.SlabBlock
 import net.minecraft.block.StairsBlock
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.registry.tag.BlockTags
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.text.Text
+import net.minecraft.util.Formatting
 import net.minecraft.util.math.BlockBox
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -429,6 +432,20 @@ object CancerLogic {
 		}
 
 		cancerSpreadEvent.invoker().onCancerSpread(world, fromPos, toPos)
+	}
+
+	fun checkMissingAnalysis(world: ServerWorld, pos: BlockPos, player: PlayerEntity?, cancerBlob: CancerBlob) {
+		if (cancerBlob.isAnalyzed) return
+
+		// Always warn player if the blob hasn't been analyzed yet.
+		if (player != null && player.inventory.containsAny { it.item == PreventTheSpread.SCANNER_ITEM }) {
+			player.sendMessage(Text.translatable("${PreventTheSpread.MOD_ID}.analysis_missing_warning").formatted(Formatting.RED), true)
+		}
+
+		// Punish skipping analysis, even if the applied treatment is correct.
+		if (world.random.nextFloat() < 0.2f) {
+			hastenSpread(world, pos, world.random)
+		}
 	}
 
 	fun hastenSpread(world: ServerWorld, pos: BlockPos, random: Random, distance: Int = 3) {

@@ -18,8 +18,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvent
-import net.minecraft.text.Text
-import net.minecraft.util.Formatting
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.random.Random
 import net.minecraft.world.World
@@ -73,9 +71,7 @@ object CancerousBlock {
 			CancerLogic.hastenSpread(world, pos, world.random)
 		}
 
-		if (!cancerBlob.isAnalyzed && player.inventory.containsAny { it.item == PreventTheSpread.SCANNER_ITEM }) {
-			player.sendMessage(Text.translatable("${PreventTheSpread.MOD_ID}.analysis_missing_warning").formatted(Formatting.RED), true)
-		}
+		CancerLogic.checkMissingAnalysis(world, pos, player, cancerBlob)
 	}
 
 	fun onExploded(state: BlockState, world: World, pos: BlockPos, explosion: Explosion, stackMerger: BiConsumer<ItemStack, BlockPos>) {
