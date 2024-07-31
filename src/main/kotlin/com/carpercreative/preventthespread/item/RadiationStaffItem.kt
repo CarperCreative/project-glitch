@@ -247,6 +247,8 @@ class RadiationStaffItem(
 			if (!cancerBlob.isTreatmentValid(TreatmentType.RADIATION_THERAPY)) {
 				CancerLogic.hastenSpread(world, pos, world.random)
 			}
+
+			CancerLogic.checkMissingAnalysis(world, pos, user as? PlayerEntity, cancerBlob)
 		}
 
 		world.breakBlock(pos, true, user)
