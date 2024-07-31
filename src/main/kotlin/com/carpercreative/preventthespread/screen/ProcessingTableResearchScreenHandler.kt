@@ -15,6 +15,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.slot.Slot
 import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.sound.SoundCategory
+import net.minecraft.sound.SoundEvent
 import net.minecraft.util.Identifier
 
 class ProcessingTableResearchScreenHandler(
@@ -117,5 +119,17 @@ class ProcessingTableResearchScreenHandler(
 		}
 
 		sendContentUpdates()
+
+		player.world.playSound(
+			null,
+			player.x, player.y, player.z,
+			RESEARCH_UNLOCKED_SOUND,
+			SoundCategory.BLOCKS,
+			1f, 1f,
+		)
+	}
+
+	companion object {
+		private val RESEARCH_UNLOCKED_SOUND = SoundEvent.of(PreventTheSpread.identifier("block.processing_table.research_unlocked"), 32f)
 	}
 }

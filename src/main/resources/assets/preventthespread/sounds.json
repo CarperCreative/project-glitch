@@ -11,6 +11,12 @@
 			"preventthespread:block/processing_table/processing_done"
 		]
 	},
+	"block.processing_table.research_unlocked": {
+		"subtitle": "subtitles.block.preventthespread.processing_table.research_unlocked",
+		"sounds": [
+			"preventthespread:block/processing_table/research_unlocked"
+		]
+	},
 	"glitch_spreads": {
 		"subtitle": "subtitles.sound.glitch_spreads",
 		"sounds": [
