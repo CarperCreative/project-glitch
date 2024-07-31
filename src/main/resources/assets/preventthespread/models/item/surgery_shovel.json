@@ -178,9 +178,9 @@
 			"scale": [0.44, 0.44, 0.44]
 		},
 		"ground": {
-			"rotation": [-79, 0, 0],
-			"translation": [0, 5.5, 0],
-			"scale": [0.4, 0.4, 0.4]
+			"rotation": [-90, -45, 0],
+			"translation": [0, 6.25, 0],
+			"scale": [0.25, 0.25, 0.25]
 		},
 		"gui": {
 			"rotation": [-90, 45, 180],
