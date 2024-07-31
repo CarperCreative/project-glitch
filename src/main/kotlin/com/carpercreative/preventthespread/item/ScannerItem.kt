@@ -18,6 +18,8 @@ import net.minecraft.nbt.NbtOps
 import net.minecraft.registry.RegistryKey
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.sound.SoundCategory
+import net.minecraft.sound.SoundEvent
 import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
@@ -84,7 +86,7 @@ class ScannerItem(
 			}
 		}
 
-		fun cycleTrackedCancerBlob(stack: ItemStack, backwards: Boolean) {
+		fun cycleTrackedCancerBlob(stack: ItemStack, backwards: Boolean): Boolean {
 			val currentBlobId = getTrackedCancerBlob(stack)
 			val predicate: (cancerBlob: CancerBlob) -> Boolean = when (currentBlobId) {
 				null -> ({ it.isAnalyzed && it.isActive })
@@ -97,12 +99,18 @@ class ScannerItem(
 			val values = Storage.cancerBlob.getCancerBlobs().values
 			val nextBlobId = (if (!backwards) values.firstOrNull(predicate) else values.lastOrNull(predicate))?.id
 			setTrackedCancerBlob(stack, nextBlobId)
+
+			return currentBlobId != nextBlobId
 		}
 
 		fun cycleTrackedCancerBlob(stack: ItemStack, player: PlayerEntity) {
-			cycleTrackedCancerBlob(stack, player.isSneaking)
+			val trackedBlobChanged = cycleTrackedCancerBlob(stack, player.isSneaking)
 
 			trackNearestCancerousBlock(stack, player)
+
+			if (trackedBlobChanged) {
+				playModeChangedSound(player)
+			}
 		}
 
 		fun isTracking(stack: ItemStack): Boolean {
@@ -166,6 +174,8 @@ class ScannerItem(
 					// Stop tracking a blob once it's been defeated.
 					setTrackedCancerBlob(stack, null)
 				}
+
+				playModeChangedSound(entity)
 			}
 
 			if (entity is ServerPlayerEntity && entity.isHolding { it == stack }) {
@@ -180,6 +190,18 @@ class ScannerItem(
 					true,
 				)
 			}
+		}
+
+		private val MODE_CHANGED_SOUND = SoundEvent.of(PreventTheSpread.identifier("item.scanner.mode_changed"))
+
+		private fun playModeChangedSound(entity: Entity) {
+			entity.world.playSound(
+				null,
+				entity.x, entity.y, entity.z,
+				MODE_CHANGED_SOUND,
+				if (entity is PlayerEntity) SoundCategory.PLAYERS else SoundCategory.HOSTILE,
+				1f, 1f,
+			)
 		}
 	}
 }

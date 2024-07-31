@@ -34,5 +34,11 @@
 		"sounds": [
 			"preventthespread:item/radiation_staff/ray"
 		]
+	},
+	"item.scanner.mode_changed": {
+		"subtitle": "subtitles.item.preventthespread.scanner.mode_changed",
+		"sounds": [
+			"preventthespread:item/scanner/mode_changed"
+		]
 	}
 }
