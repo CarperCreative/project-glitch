@@ -26,6 +26,8 @@ import net.minecraft.nbt.NbtString
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.sound.SoundCategory
+import net.minecraft.sound.SoundEvent
 import net.minecraft.text.Text
 import net.minecraft.util.Formatting
 import net.minecraft.util.collection.DefaultedList
@@ -247,6 +249,14 @@ class ProcessingTableAnalyzerBlockEntity(
 				// Ignore failures, as failure to move the item will result in it remaining in the inputs.
 				moveStackToOutputSlot(analysisOutputStack, blockEntity, analyzedSlot)
 
+				world.playSound(
+					null,
+					pos.x + 0.5, pos.y + 0.5, pos.z + 0.5,
+					PROCESSING_DONE_SOUND,
+					SoundCategory.BLOCKS,
+					1f, 1f,
+				)
+
 				blockEntity.startAnalyzingNextSlot()
 			}
 		}
@@ -382,5 +392,7 @@ class ProcessingTableAnalyzerBlockEntity(
 		fun analysisRequiresBook(itemStack: ItemStack): Boolean {
 			return itemStack.isOf(PreventTheSpread.PROBE_ITEM)
 		}
+
+		private val PROCESSING_DONE_SOUND = SoundEvent.of(PreventTheSpread.identifier("block.processing_table.processing_done"), 32f)
 	}
 }

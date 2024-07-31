@@ -5,6 +5,12 @@
 			"preventthespread:random/cancer_blob_defeated"
 		]
 	},
+	"block.processing_table.processing_done": {
+		"subtitle": "subtitles.block.preventthespread.processing_table.processing_done",
+		"sounds": [
+			"preventthespread:block/processing_table/processing_done"
+		]
+	},
 	"glitch_spreads": {
 		"subtitle": "subtitles.sound.glitch_spreads",
 		"sounds": [

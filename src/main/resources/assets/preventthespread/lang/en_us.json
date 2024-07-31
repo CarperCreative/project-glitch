@@ -143,6 +143,7 @@
 	"subtitles.cancer_blob.defeated": "Cluster defeated",
 	"subtitles.item.preventthespread.radiation_staff.overheated": "Radiation Staff overheats",
 	"subtitles.item.preventthespread.radiation_staff.ray": "Radiation Staff shoots",
+	"subtitles.block.preventthespread.processing_table.processing_done": "Sample processed",
 	"subtitles.sound.glitch_spreads": "Glitch Spreads",
 	"dummy.endOfFile": ""
 }
