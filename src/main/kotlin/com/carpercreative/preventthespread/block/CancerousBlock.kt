@@ -4,6 +4,7 @@ import com.carpercreative.preventthespread.PreventTheSpread
 import com.carpercreative.preventthespread.cancer.CancerLogic
 import com.carpercreative.preventthespread.cancer.CancerLogic.isGlitched
 import com.carpercreative.preventthespread.cancer.TreatmentType
+import com.carpercreative.preventthespread.entity.ChemotherapeuticDrugEntity
 import com.carpercreative.preventthespread.persistence.BlobMembershipPersistentState.Companion.getBlobMembershipPersistentState
 import com.carpercreative.preventthespread.persistence.CancerBlobPersistentState.Companion.getCancerBlobOrNull
 import java.util.function.BiConsumer
@@ -85,11 +86,17 @@ object CancerousBlock {
 		// Don't hasten spread when using entities like creepers.
 		if (explodingEntity is LivingEntity) return
 
+		val explodedByChemotherapeuticDrug = explodingEntity?.type == PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE
+
 		if (
 			!cancerBlob.isTreatmentValid(TreatmentType.CHEMOTHERAPY)
-			|| explodingEntity.let { it == null || it.type != PreventTheSpread.CHEMOTHERAPEUTIC_DRUG_ENTITY_TYPE }
+			|| !explodedByChemotherapeuticDrug
 		) {
 			CancerLogic.hastenSpread(world, pos, world.random)
+		}
+
+		if (explodedByChemotherapeuticDrug) {
+			CancerLogic.checkMissingAnalysis(world, pos, (explodingEntity as? ChemotherapeuticDrugEntity)?.owner as? PlayerEntity, cancerBlob)
 		}
 	}
 
