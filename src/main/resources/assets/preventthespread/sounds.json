@@ -2,7 +2,7 @@
 	"cancer_blob.defeated": {
 		"subtitle": "subtitles.cancer_blob.defeated",
 		"sounds": [
-			"minecraft:random/levelup"
+			"preventthespread:random/cancer_blob_defeated"
 		]
 	},
 	"glitch_spreads": {
