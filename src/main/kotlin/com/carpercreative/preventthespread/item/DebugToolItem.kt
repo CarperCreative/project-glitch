@@ -59,7 +59,7 @@ class DebugToolItem(
 				val cancerBlobId = blobMembershipPersistentState.getMembershipOrNull(context.blockPos)
 				val cancerBlob = cancerBlobId?.let { Storage.cancerBlob.getCancerBlobById(it) }
 
-				context.player?.sendMessage(Text.literal("Identifier of blob by membership: $cancerBlobId\nBlob from store: ${cancerBlob?.let { "type = ${it.type}, isAnalyzed = ${it.isAnalyzed}, isMetastatic = ${it.isMetastatic}, blockCount = ${it.cancerousBlockCount}" }}"))
+				context.player?.sendMessage(Text.literal("Identifier of blob by membership: $cancerBlobId\nBlob from store: ${cancerBlob?.let { "type = ${it.type}, treatments = [${it.treatments.joinToString()}], isAnalyzed = ${it.isAnalyzed}, isMetastatic = ${it.isMetastatic}, blockCount = ${it.cancerousBlockCount}" }}"))
 
 				ActionResult.SUCCESS
 			}
