@@ -114,6 +114,14 @@ class ProcessingTableAnalyzerBlockEntity(
 				// Book was inserted and we're not analyzing anything - attempt to start analysis.
 				startAnalyzingNextSlot()
 			}
+		} else if (slot in OUTPUT_SLOTS_RANGE) {
+			if (!stack.isEmpty && performingAnalysis && !canAnalyze(analyzingSlot)) {
+				// Something was inserted into output slots and the analysis can no longer move its item to outputs.
+				startAnalyzingNextSlot()
+			} else if (stack.isEmpty && !performingAnalysis) {
+				// Try to start analyzing in case an output was just made available.
+				startAnalyzingNextSlot()
+			}
 		}
 
 		markDirty()

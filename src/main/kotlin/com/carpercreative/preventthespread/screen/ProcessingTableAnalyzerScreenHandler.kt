@@ -79,6 +79,7 @@ class ProcessingTableAnalyzerScreenHandler(
 			if (
 				!slotStack.isEmpty
 				&& !insertItem(slotStack, ProcessingTableAnalyzerBlockEntity.getQueueInputSlotIndex(0), ProcessingTableAnalyzerBlockEntity.getQueueInputSlotIndex(ProcessingTableAnalyzerBlockEntity.QUEUE_SLOT_COUNT), false)
+				&& !insertItem(slotStack, ProcessingTableAnalyzerBlockEntity.getQueueOutputSlotIndex(0), ProcessingTableAnalyzerBlockEntity.getQueueOutputSlotIndex(ProcessingTableAnalyzerBlockEntity.QUEUE_SLOT_COUNT), false)
 			) {
 				return ItemStack.EMPTY
 			}
@@ -103,9 +104,5 @@ class ProcessingTableAnalyzerScreenHandler(
 
 	override fun canInsertIntoSlot(stack: ItemStack, slot: Slot): Boolean {
 		return slot.canInsert(stack)
-	}
-
-	override fun canInsertIntoSlot(slot: Slot): Boolean {
-		return slot.index !in ProcessingTableAnalyzerBlockEntity.OUTPUT_SLOTS
 	}
 }
