@@ -201,19 +201,25 @@ class ProcessingTableAnalyzerBlockEntity(
 		}
 	}
 
+	private fun canAnalyze(inputSlot: Int): Boolean {
+		val inputStack = getStack(inputSlot)
+		if (inputStack.isEmpty) return false
+
+		// Analyze probes only if there's a book to output to.
+		if (analysisRequiresBook(inputStack) && !containsBook()) return false
+
+		// Ignore items which we can't insert into the outputs.
+		val analysisOutput = getAnalysisOutput(inputStack.copy())
+		if (!InventoryHelper.canInsert(analysisOutput, this, getQueueOutputSlotIndex(0), getQueueOutputSlotIndex(QUEUE_SLOT_COUNT - 1))) return false
+
+		return true
+	}
+
 	private fun startAnalyzingNextSlot() {
 		startAnalyzingSlot(-1)
 
 		for (inputSlot in INPUT_SLOTS_RANGE) {
-			val inputStack = getStack(inputSlot)
-			if (inputStack.isEmpty) continue
-
-			// Analyze probes only if there's a book to output to.
-			if (analysisRequiresBook(inputStack) && !containsBook()) continue
-
-			// Ignore items which we can't insert into the outputs.
-			val analysisOutput = getAnalysisOutput(inputStack.copy())
-			if (!InventoryHelper.canInsert(analysisOutput, this, getQueueOutputSlotIndex(0), getQueueOutputSlotIndex(QUEUE_SLOT_COUNT - 1))) continue
+			if (!canAnalyze(inputSlot)) continue
 
 			startAnalyzingSlot(inputSlot)
 			break
