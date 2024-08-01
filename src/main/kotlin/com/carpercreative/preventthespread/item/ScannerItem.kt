@@ -170,7 +170,7 @@ class ScannerItem(
 			} else {
 				clearTrackedPosition(stack)
 
-				if (blobId != null && Storage.cancerBlob.getCancerBlobById(blobId).cancerousBlockCount == 0) {
+				if (blobId != null && !Storage.cancerBlob.getCancerBlobById(blobId).isActive) {
 					// Stop tracking a blob once it's been defeated.
 					setTrackedCancerBlob(stack, null)
 				}
