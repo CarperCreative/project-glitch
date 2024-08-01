@@ -173,9 +173,9 @@ class ScannerItem(
 				if (blobId != null && !Storage.cancerBlob.getCancerBlobById(blobId).isActive) {
 					// Stop tracking a blob once it's been defeated.
 					setTrackedCancerBlob(stack, null)
-				}
 
-				playModeChangedSound(entity)
+					playModeChangedSound(entity)
+				}
 			}
 
 			if (entity is ServerPlayerEntity && entity.isHolding { it == stack }) {
