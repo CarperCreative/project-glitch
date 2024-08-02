@@ -5,7 +5,10 @@
 	"name": "Prevent the Spread",
 	"description": "Locate, identify, and treat corrupted clusters.",
 	"authors": [
-		"opl"
+		"opl (Development)",
+		"Teodor Cimpeanu (Producer)",
+		"Sean (Art)",
+		"Marshal Carper (Writing)"
 	],
 	"contact": {
 		"homepage": "https://carpercreative.com/"
