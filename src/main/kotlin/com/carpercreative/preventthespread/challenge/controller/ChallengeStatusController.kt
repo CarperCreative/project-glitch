@@ -35,7 +35,7 @@ object ChallengeStatusController {
 		if (playerEntity !is ServerPlayerEntity) return
 		if (!playerEntity.server.getChallengePersistentState().isInProgress) return
 
-		playerEntity.sendMessage(Text.translatable("preventthespread.challenge.is_in_progress"))
+		playerEntity.sendMessage(Text.translatable("${PreventTheSpread.MOD_ID}.challenge.is_in_progress"))
 	}
 
 	private fun onEndWorldTick(world: ServerWorld) {

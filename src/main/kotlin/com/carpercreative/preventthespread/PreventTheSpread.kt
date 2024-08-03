@@ -373,7 +373,7 @@ object PreventTheSpread : ModInitializer {
 			ChallengeConstants.DISABLE_DATA_PACK_ID,
 			"data/$MOD_ID/datapacks/" + ChallengeConstants.DISABLE_DATA_PACK_ID.path,
 			FabricLoader.getInstance().getModContainer(MOD_ID).get(),
-			Text.translatable("dataPack.preventthespread.disable_challenge.displayName"),
+			Text.translatable("dataPack.$MOD_ID.disable_challenge.displayName"),
 			ResourcePackActivationType.NORMAL,
 		)
 
