@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"": { "model": "preventthespread:block/chemotherapeutic_drug" }
+		"": { "model": "projectglitch:block/chemotherapeutic_drug" }
 	}
 }

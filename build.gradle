@@ -20,7 +20,7 @@ repositories {
 }
 
 loom {
-	accessWidenerPath = file("src/main/resources/preventthespread.accesswidener")
+	accessWidenerPath = file("src/main/resources/projectglitch.accesswidener")
 }
 
 fabricApi {

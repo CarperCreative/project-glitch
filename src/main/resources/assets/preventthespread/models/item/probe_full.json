@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "preventthespread:item/probe",
-		"1": "preventthespread:item/glitch_material",
-		"particle": "preventthespread:item/probe"
+		"0": "projectglitch:item/probe",
+		"1": "projectglitch:item/glitch_material",
+		"particle": "projectglitch:item/probe"
 	},
 	"elements": [
 		{

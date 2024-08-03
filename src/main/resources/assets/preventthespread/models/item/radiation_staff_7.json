@@ -1,6 +1,6 @@
 {
-	"parent": "preventthespread:item/radiation_staff_0",
+	"parent": "projectglitch:item/radiation_staff_0",
 	"textures": {
-		"2": "preventthespread:item/radiation_staff_heat_7"
+		"2": "projectglitch:item/radiation_staff_heat_7"
 	}
 }

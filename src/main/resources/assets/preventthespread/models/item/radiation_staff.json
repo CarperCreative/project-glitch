@@ -1,15 +1,15 @@
 {
-    "parent": "preventthespread:item/radiation_staff_0",
+    "parent": "projectglitch:item/radiation_staff_0",
     "overrides": [
-        { "predicate": { "heat": 0.1 }, "model": "preventthespread:item/radiation_staff_1" },
-        { "predicate": { "heat": 0.2 }, "model": "preventthespread:item/radiation_staff_2" },
-        { "predicate": { "heat": 0.3 }, "model": "preventthespread:item/radiation_staff_3" },
-        { "predicate": { "heat": 0.4 }, "model": "preventthespread:item/radiation_staff_4" },
-        { "predicate": { "heat": 0.5 }, "model": "preventthespread:item/radiation_staff_5" },
-        { "predicate": { "heat": 0.6 }, "model": "preventthespread:item/radiation_staff_6" },
-        { "predicate": { "heat": 0.7 }, "model": "preventthespread:item/radiation_staff_7" },
-        { "predicate": { "heat": 0.8 }, "model": "preventthespread:item/radiation_staff_8" },
-        { "predicate": { "heat": 0.9 }, "model": "preventthespread:item/radiation_staff_9" },
-        { "predicate": { "overheated": 1 }, "model": "preventthespread:item/radiation_staff_overheated" }
+        { "predicate": { "heat": 0.1 }, "model": "projectglitch:item/radiation_staff_1" },
+        { "predicate": { "heat": 0.2 }, "model": "projectglitch:item/radiation_staff_2" },
+        { "predicate": { "heat": 0.3 }, "model": "projectglitch:item/radiation_staff_3" },
+        { "predicate": { "heat": 0.4 }, "model": "projectglitch:item/radiation_staff_4" },
+        { "predicate": { "heat": 0.5 }, "model": "projectglitch:item/radiation_staff_5" },
+        { "predicate": { "heat": 0.6 }, "model": "projectglitch:item/radiation_staff_6" },
+        { "predicate": { "heat": 0.7 }, "model": "projectglitch:item/radiation_staff_7" },
+        { "predicate": { "heat": 0.8 }, "model": "projectglitch:item/radiation_staff_8" },
+        { "predicate": { "heat": 0.9 }, "model": "projectglitch:item/radiation_staff_9" },
+        { "predicate": { "overheated": 1 }, "model": "projectglitch:item/radiation_staff_overheated" }
     ]
 }

@@ -1,13 +1,13 @@
 {
 	"variants": {
 		"type=bottom": {
-			"model": "preventthespread:block/glitch_planks_slab"
+			"model": "projectglitch:block/glitch_planks_slab"
 		},
 		"type=double": {
-			"model": "preventthespread:block/glitch_planks"
+			"model": "projectglitch:block/glitch_planks"
 		},
 		"type=top": {
-			"model": "preventthespread:block/glitch_planks_slab_top"
+			"model": "projectglitch:block/glitch_planks_slab_top"
 		}
 	}
 }

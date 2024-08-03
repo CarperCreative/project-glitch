@@ -1,7 +1,7 @@
 {
 	"textures": {
-		"1": "preventthespread:block/chilling_tower",
-		"particle": "preventthespread:block/chilling_tower"
+		"1": "projectglitch:block/chilling_tower",
+		"particle": "projectglitch:block/chilling_tower"
 	},
 	"elements": [
 		{

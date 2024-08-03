@@ -1,0 +1,9 @@
+{
+	"required": false,
+	"package": "com.carpercreative.projectglitch.mixin.client",
+	"compatibilityLevel": "JAVA_17",
+	"client": [
+		"ClientWorldMixin",
+		"GameRendererMixin"
+	]
+}

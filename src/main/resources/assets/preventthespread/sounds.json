@@ -2,19 +2,19 @@
 	"cancer_blob.defeated": {
 		"subtitle": "subtitles.cancer_blob.defeated",
 		"sounds": [
-			"preventthespread:random/cancer_blob_defeated"
+			"projectglitch:random/cancer_blob_defeated"
 		]
 	},
 	"block.processing_table.processing_done": {
-		"subtitle": "subtitles.block.preventthespread.processing_table.processing_done",
+		"subtitle": "subtitles.block.projectglitch.processing_table.processing_done",
 		"sounds": [
-			"preventthespread:block/processing_table/processing_done"
+			"projectglitch:block/processing_table/processing_done"
 		]
 	},
 	"block.processing_table.research_unlocked": {
-		"subtitle": "subtitles.block.preventthespread.processing_table.research_unlocked",
+		"subtitle": "subtitles.block.projectglitch.processing_table.research_unlocked",
 		"sounds": [
-			"preventthespread:block/processing_table/research_unlocked"
+			"projectglitch:block/processing_table/research_unlocked"
 		]
 	},
 	"glitch_spreads": {
@@ -24,21 +24,21 @@
 		]
 	},
 	"item.radiation_staff.overheated": {
-		"subtitle": "subtitles.item.preventthespread.radiation_staff.overheated",
+		"subtitle": "subtitles.item.projectglitch.radiation_staff.overheated",
 		"sounds": [
-			"preventthespread:item/radiation_staff/overheated"
+			"projectglitch:item/radiation_staff/overheated"
 		]
 	},
 	"item.radiation_staff.ray": {
-		"subtitle": "subtitles.item.preventthespread.radiation_staff.ray",
+		"subtitle": "subtitles.item.projectglitch.radiation_staff.ray",
 		"sounds": [
-			"preventthespread:item/radiation_staff/ray"
+			"projectglitch:item/radiation_staff/ray"
 		]
 	},
 	"item.scanner.mode_changed": {
-		"subtitle": "subtitles.item.preventthespread.scanner.mode_changed",
+		"subtitle": "subtitles.item.projectglitch.scanner.mode_changed",
 		"sounds": [
-			"preventthespread:item/scanner/mode_changed"
+			"projectglitch:item/scanner/mode_changed"
 		]
 	}
 }

@@ -2,10 +2,10 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "preventthespread:item/scanner_background",
-		"2": "preventthespread:item/scanner_frame",
-		"3": "preventthespread:item/scanner_compass_00",
-		"particle": "preventthespread:item/scanner_background"
+		"0": "projectglitch:item/scanner_background",
+		"2": "projectglitch:item/scanner_frame",
+		"3": "projectglitch:item/scanner_compass_00",
+		"particle": "projectglitch:item/scanner_background"
 	},
 	"elements": [
 		{

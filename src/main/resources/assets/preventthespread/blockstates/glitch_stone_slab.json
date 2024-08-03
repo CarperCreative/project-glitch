@@ -1,13 +1,13 @@
 {
 	"variants": {
 		"type=bottom": {
-			"model": "preventthespread:block/glitch_stone_slab"
+			"model": "projectglitch:block/glitch_stone_slab"
 		},
 		"type=double": {
-			"model": "preventthespread:block/glitch_stone"
+			"model": "projectglitch:block/glitch_stone"
 		},
 		"type=top": {
-			"model": "preventthespread:block/glitch_stone_slab_top"
+			"model": "projectglitch:block/glitch_stone_slab_top"
 		}
 	}
 }

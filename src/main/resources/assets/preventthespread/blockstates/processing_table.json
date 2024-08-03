@@ -1,48 +1,48 @@
 {
 	"variants": {
 		"facing=north,part=left,processing=false": {
-			"model": "preventthespread:block/processing_table_left"
+			"model": "projectglitch:block/processing_table_left"
 		},
 		"facing=north,part=left,processing=true": {
-			"model": "preventthespread:block/processing_table_left_processing"
+			"model": "projectglitch:block/processing_table_left_processing"
 		},
 		"facing=north,part=right": {
-			"model": "preventthespread:block/processing_table_right"
+			"model": "projectglitch:block/processing_table_right"
 		},
 		"facing=east,part=left,processing=false": {
-			"model": "preventthespread:block/processing_table_left",
+			"model": "projectglitch:block/processing_table_left",
 			"y": 90
 		},
 		"facing=east,part=left,processing=true": {
-			"model": "preventthespread:block/processing_table_left_processing",
+			"model": "projectglitch:block/processing_table_left_processing",
 			"y": 90
 		},
 		"facing=east,part=right": {
-			"model": "preventthespread:block/processing_table_right",
+			"model": "projectglitch:block/processing_table_right",
 			"y": 90
 		},
 		"facing=south,part=left,processing=false": {
-			"model": "preventthespread:block/processing_table_left",
+			"model": "projectglitch:block/processing_table_left",
 			"y": 180
 		},
 		"facing=south,part=left,processing=true": {
-			"model": "preventthespread:block/processing_table_left_processing",
+			"model": "projectglitch:block/processing_table_left_processing",
 			"y": 180
 		},
 		"facing=south,part=right": {
-			"model": "preventthespread:block/processing_table_right",
+			"model": "projectglitch:block/processing_table_right",
 			"y": 180
 		},
 		"facing=west,part=left,processing=false": {
-			"model": "preventthespread:block/processing_table_left",
+			"model": "projectglitch:block/processing_table_left",
 			"y": 270
 		},
 		"facing=west,part=left,processing=true": {
-			"model": "preventthespread:block/processing_table_left_processing",
+			"model": "projectglitch:block/processing_table_left_processing",
 			"y": 270
 		},
 		"facing=west,part=right": {
-			"model": "preventthespread:block/processing_table_right",
+			"model": "projectglitch:block/processing_table_right",
 			"y": 270
 		}
 	}

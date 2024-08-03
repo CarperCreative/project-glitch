@@ -2,7 +2,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "preventthespread:item/research"
+		"layer0": "projectglitch:item/research"
 	},
 	"display": {
 		"thirdperson_righthand": {

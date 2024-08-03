@@ -1,6 +1,6 @@
 {
-	"parent": "preventthespread:item/probe_empty",
+	"parent": "projectglitch:item/probe_empty",
 	"overrides": [
-		{ "predicate": { "sample": 1 }, "model": "preventthespread:item/probe_full" }
+		{ "predicate": { "sample": 1 }, "model": "projectglitch:item/probe_full" }
 	]
 }

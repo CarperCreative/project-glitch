@@ -1,0 +1,8 @@
+{
+	"pack": {
+		"description": {
+			"translate": "dataPack.projectglitch.disable_challenge.description"
+		},
+		"pack_format": 26
+	}
+}

@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "preventthespread:item/surgery_shovel",
-		"2": "preventthespread:item/surgery_pickaxe",
-		"particle": "preventthespread:item/surgery_shovel"
+		"1": "projectglitch:item/surgery_shovel",
+		"2": "projectglitch:item/surgery_pickaxe",
+		"particle": "projectglitch:item/surgery_shovel"
 	},
 	"elements": [
 		{

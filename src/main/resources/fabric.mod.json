@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "preventthespread",
+	"id": "projectglitch",
 	"version": "${version}",
-	"name": "Prevent the Spread",
+	"name": "Project Glitch",
 	"description": "Locate, identify, and treat corrupted clusters.",
 	"authors": [
 		"opl (Development)",
@@ -14,40 +14,40 @@
 		"homepage": "https://carpercreative.com/"
 	},
 	"license": "UNLICENSED",
-	"icon": "assets/preventthespread/icon.png",
+	"icon": "assets/projectglitch/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
 			{
-				"value": "com.carpercreative.preventthespread.PreventTheSpread",
+				"value": "com.carpercreative.projectglitch.ProjectGlitch",
 				"adapter": "kotlin"
 			}
 		],
 		"client": [
 			{
-				"value": "com.carpercreative.preventthespread.client.PreventTheSpreadClient",
+				"value": "com.carpercreative.projectglitch.client.ProjectGlitchClient",
 				"adapter": "kotlin"
 			}
 		],
 		"fabric-datagen": [
 			{
-				"value": "com.carpercreative.preventthespread.datagen.PreventTheSpreadDataGenerator",
+				"value": "com.carpercreative.projectglitch.datagen.ProjectGlitchDataGenerator",
 				"adapter": "kotlin"
 			}
 		]
 	},
 	"mixins": [
-		"preventthespread.mixins.json",
+		"projectglitch.mixins.json",
 		{
-			"config": "preventthespread.client.mixins.json",
+			"config": "projectglitch.client.mixins.json",
 			"environment": "client"
 		},
 		{
-			"config": "preventthespread.client.optional.mixins.json",
+			"config": "projectglitch.client.optional.mixins.json",
 			"environment": "client"
 		}
 	],
-	"accessWidener": "preventthespread.accesswidener",
+	"accessWidener": "projectglitch.accesswidener",
 	"depends": {
 		"fabricloader": ">=0.15.10",
 		"minecraft": "~1.20.4",

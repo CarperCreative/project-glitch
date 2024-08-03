@@ -1,6 +1,6 @@
 {
-	"parent": "preventthespread:item/scanner_00",
+	"parent": "projectglitch:item/scanner_00",
 	"textures": {
-		"3": "preventthespread:item/scanner_compass_15"
+		"3": "projectglitch:item/scanner_compass_15"
 	}
 }

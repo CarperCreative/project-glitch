@@ -1,6 +1,6 @@
 {
 	"parent": "minecraft:block/leaves",
 	"textures": {
-		"all": "preventthespread:block/glitch_leaves_3"
+		"all": "projectglitch:block/glitch_leaves_3"
 	}
 }

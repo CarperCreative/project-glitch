@@ -1,7 +1,7 @@
 {
 	"parent": "minecraft:block/cube_column",
 	"textures": {
-		"end": "preventthespread:block/glitch_log_top_3",
-		"side": "preventthespread:block/glitch_log_3"
+		"end": "projectglitch:block/glitch_log_top_3",
+		"side": "projectglitch:block/glitch_log_3"
 	}
 }

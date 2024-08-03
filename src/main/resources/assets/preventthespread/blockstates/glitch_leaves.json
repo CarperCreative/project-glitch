@@ -2,19 +2,19 @@
 	"variants": {
 		"": [
 			{
-				"model": "preventthespread:block/glitch_leaves"
+				"model": "projectglitch:block/glitch_leaves"
 			},
 			{
-				"model": "preventthespread:block/glitch_leaves_1"
+				"model": "projectglitch:block/glitch_leaves_1"
 			},
 			{
-				"model": "preventthespread:block/glitch_leaves_2"
+				"model": "projectglitch:block/glitch_leaves_2"
 			},
 			{
-				"model": "preventthespread:block/glitch_leaves_3"
+				"model": "projectglitch:block/glitch_leaves_3"
 			},
 			{
-				"model": "preventthespread:block/glitch_leaves_4"
+				"model": "projectglitch:block/glitch_leaves_4"
 			}
 		]
 	}

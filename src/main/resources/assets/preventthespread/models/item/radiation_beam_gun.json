@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "preventthespread:item/sparks_eff2",
-		"4": "preventthespread:item/radiation_beam_gun"
+		"1": "projectglitch:item/sparks_eff2",
+		"4": "projectglitch:item/radiation_beam_gun"
 	},
 	"elements": [
 		{

@@ -2,67 +2,67 @@
 	"variants": {
 		"axis=x": [
 			{
-				"model": "preventthespread:block/glitch_log_horizontal",
+				"model": "projectglitch:block/glitch_log_horizontal",
 				"x": 90,
 				"y": 90
 			},
 			{
-				"model": "preventthespread:block/glitch_log_horizontal_1",
+				"model": "projectglitch:block/glitch_log_horizontal_1",
 				"x": 90,
 				"y": 90
 			},
 			{
-				"model": "preventthespread:block/glitch_log_horizontal_2",
+				"model": "projectglitch:block/glitch_log_horizontal_2",
 				"x": 90,
 				"y": 90
 			},
 			{
-				"model": "preventthespread:block/glitch_log_horizontal_3",
+				"model": "projectglitch:block/glitch_log_horizontal_3",
 				"x": 90,
 				"y": 90
 			},
 			{
-				"model": "preventthespread:block/glitch_log_horizontal_4",
+				"model": "projectglitch:block/glitch_log_horizontal_4",
 				"x": 90,
 				"y": 90
 			}
 		],
 		"axis=y": [
 			{
-				"model": "preventthespread:block/glitch_log"
+				"model": "projectglitch:block/glitch_log"
 			},
 			{
-				"model": "preventthespread:block/glitch_log_1"
+				"model": "projectglitch:block/glitch_log_1"
 			},
 			{
-				"model": "preventthespread:block/glitch_log_2"
+				"model": "projectglitch:block/glitch_log_2"
 			},
 			{
-				"model": "preventthespread:block/glitch_log_3"
+				"model": "projectglitch:block/glitch_log_3"
 			},
 			{
-				"model": "preventthespread:block/glitch_log_4"
+				"model": "projectglitch:block/glitch_log_4"
 			}
 		],
 		"axis=z": [
 			{
-				"model": "preventthespread:block/glitch_log_horizontal",
+				"model": "projectglitch:block/glitch_log_horizontal",
 				"x": 90
 			},
 			{
-				"model": "preventthespread:block/glitch_log_horizontal_1",
+				"model": "projectglitch:block/glitch_log_horizontal_1",
 				"x": 90
 			},
 			{
-				"model": "preventthespread:block/glitch_log_horizontal_2",
+				"model": "projectglitch:block/glitch_log_horizontal_2",
 				"x": 90
 			},
 			{
-				"model": "preventthespread:block/glitch_log_horizontal_3",
+				"model": "projectglitch:block/glitch_log_horizontal_3",
 				"x": 90
 			},
 			{
-				"model": "preventthespread:block/glitch_log_horizontal_4",
+				"model": "projectglitch:block/glitch_log_horizontal_4",
 				"x": 90
 			}
 		]

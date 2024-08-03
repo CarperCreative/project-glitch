@@ -1,236 +1,236 @@
 {
 	"variants": {
 		"facing=down,progress=0": {
-			"model": "preventthespread:block/targeted_drug_injector",
+			"model": "projectglitch:block/targeted_drug_injector",
 			"x": 180
 		},
 		"facing=east,progress=0": {
-			"model": "preventthespread:block/targeted_drug_injector",
+			"model": "projectglitch:block/targeted_drug_injector",
 			"x": 90,
 			"y": 90
 		},
 		"facing=north,progress=0": {
-			"model": "preventthespread:block/targeted_drug_injector",
+			"model": "projectglitch:block/targeted_drug_injector",
 			"x": 90
 		},
 		"facing=south,progress=0": {
-			"model": "preventthespread:block/targeted_drug_injector",
+			"model": "projectglitch:block/targeted_drug_injector",
 			"x": 90,
 			"y": 180
 		},
 		"facing=up,progress=0": {
-			"model": "preventthespread:block/targeted_drug_injector"
+			"model": "projectglitch:block/targeted_drug_injector"
 		},
 		"facing=west,progress=0": {
-			"model": "preventthespread:block/targeted_drug_injector",
+			"model": "projectglitch:block/targeted_drug_injector",
 			"x": 90,
 			"y": 270
 		},
 		"facing=down,progress=1": {
-			"model": "preventthespread:block/targeted_drug_injector_1",
+			"model": "projectglitch:block/targeted_drug_injector_1",
 			"x": 180
 		},
 		"facing=east,progress=1": {
-			"model": "preventthespread:block/targeted_drug_injector_1",
+			"model": "projectglitch:block/targeted_drug_injector_1",
 			"x": 90,
 			"y": 90
 		},
 		"facing=north,progress=1": {
-			"model": "preventthespread:block/targeted_drug_injector_1",
+			"model": "projectglitch:block/targeted_drug_injector_1",
 			"x": 90
 		},
 		"facing=south,progress=1": {
-			"model": "preventthespread:block/targeted_drug_injector_1",
+			"model": "projectglitch:block/targeted_drug_injector_1",
 			"x": 90,
 			"y": 180
 		},
 		"facing=up,progress=1": {
-			"model": "preventthespread:block/targeted_drug_injector_1"
+			"model": "projectglitch:block/targeted_drug_injector_1"
 		},
 		"facing=west,progress=1": {
-			"model": "preventthespread:block/targeted_drug_injector_1",
+			"model": "projectglitch:block/targeted_drug_injector_1",
 			"x": 90,
 			"y": 270
 		},
 		"facing=down,progress=2": {
-			"model": "preventthespread:block/targeted_drug_injector_1",
+			"model": "projectglitch:block/targeted_drug_injector_1",
 			"x": 180
 		},
 		"facing=east,progress=2": {
-			"model": "preventthespread:block/targeted_drug_injector_1",
+			"model": "projectglitch:block/targeted_drug_injector_1",
 			"x": 90,
 			"y": 90
 		},
 		"facing=north,progress=2": {
-			"model": "preventthespread:block/targeted_drug_injector_1",
+			"model": "projectglitch:block/targeted_drug_injector_1",
 			"x": 90
 		},
 		"facing=south,progress=2": {
-			"model": "preventthespread:block/targeted_drug_injector_1",
+			"model": "projectglitch:block/targeted_drug_injector_1",
 			"x": 90,
 			"y": 180
 		},
 		"facing=up,progress=2": {
-			"model": "preventthespread:block/targeted_drug_injector_1"
+			"model": "projectglitch:block/targeted_drug_injector_1"
 		},
 		"facing=west,progress=2": {
-			"model": "preventthespread:block/targeted_drug_injector_1",
+			"model": "projectglitch:block/targeted_drug_injector_1",
 			"x": 90,
 			"y": 270
 		},
 		"facing=down,progress=3": {
-			"model": "preventthespread:block/targeted_drug_injector_3",
+			"model": "projectglitch:block/targeted_drug_injector_3",
 			"x": 180
 		},
 		"facing=east,progress=3": {
-			"model": "preventthespread:block/targeted_drug_injector_3",
+			"model": "projectglitch:block/targeted_drug_injector_3",
 			"x": 90,
 			"y": 90
 		},
 		"facing=north,progress=3": {
-			"model": "preventthespread:block/targeted_drug_injector_3",
+			"model": "projectglitch:block/targeted_drug_injector_3",
 			"x": 90
 		},
 		"facing=south,progress=3": {
-			"model": "preventthespread:block/targeted_drug_injector_3",
+			"model": "projectglitch:block/targeted_drug_injector_3",
 			"x": 90,
 			"y": 180
 		},
 		"facing=up,progress=3": {
-			"model": "preventthespread:block/targeted_drug_injector_3"
+			"model": "projectglitch:block/targeted_drug_injector_3"
 		},
 		"facing=west,progress=3": {
-			"model": "preventthespread:block/targeted_drug_injector_3",
+			"model": "projectglitch:block/targeted_drug_injector_3",
 			"x": 90,
 			"y": 270
 		},
 		"facing=down,progress=4": {
-			"model": "preventthespread:block/targeted_drug_injector_3",
+			"model": "projectglitch:block/targeted_drug_injector_3",
 			"x": 180
 		},
 		"facing=east,progress=4": {
-			"model": "preventthespread:block/targeted_drug_injector_3",
+			"model": "projectglitch:block/targeted_drug_injector_3",
 			"x": 90,
 			"y": 90
 		},
 		"facing=north,progress=4": {
-			"model": "preventthespread:block/targeted_drug_injector_3",
+			"model": "projectglitch:block/targeted_drug_injector_3",
 			"x": 90
 		},
 		"facing=south,progress=4": {
-			"model": "preventthespread:block/targeted_drug_injector_3",
+			"model": "projectglitch:block/targeted_drug_injector_3",
 			"x": 90,
 			"y": 180
 		},
 		"facing=up,progress=4": {
-			"model": "preventthespread:block/targeted_drug_injector_3"
+			"model": "projectglitch:block/targeted_drug_injector_3"
 		},
 		"facing=west,progress=4": {
-			"model": "preventthespread:block/targeted_drug_injector_3",
+			"model": "projectglitch:block/targeted_drug_injector_3",
 			"x": 90,
 			"y": 270
 		},
 		"facing=down,progress=5": {
-			"model": "preventthespread:block/targeted_drug_injector_5",
+			"model": "projectglitch:block/targeted_drug_injector_5",
 			"x": 180
 		},
 		"facing=east,progress=5": {
-			"model": "preventthespread:block/targeted_drug_injector_5",
+			"model": "projectglitch:block/targeted_drug_injector_5",
 			"x": 90,
 			"y": 90
 		},
 		"facing=north,progress=5": {
-			"model": "preventthespread:block/targeted_drug_injector_5",
+			"model": "projectglitch:block/targeted_drug_injector_5",
 			"x": 90
 		},
 		"facing=south,progress=5": {
-			"model": "preventthespread:block/targeted_drug_injector_5",
+			"model": "projectglitch:block/targeted_drug_injector_5",
 			"x": 90,
 			"y": 180
 		},
 		"facing=up,progress=5": {
-			"model": "preventthespread:block/targeted_drug_injector_5"
+			"model": "projectglitch:block/targeted_drug_injector_5"
 		},
 		"facing=west,progress=5": {
-			"model": "preventthespread:block/targeted_drug_injector_5",
+			"model": "projectglitch:block/targeted_drug_injector_5",
 			"x": 90,
 			"y": 270
 		},
 		"facing=down,progress=6": {
-			"model": "preventthespread:block/targeted_drug_injector_5",
+			"model": "projectglitch:block/targeted_drug_injector_5",
 			"x": 180
 		},
 		"facing=east,progress=6": {
-			"model": "preventthespread:block/targeted_drug_injector_5",
+			"model": "projectglitch:block/targeted_drug_injector_5",
 			"x": 90,
 			"y": 90
 		},
 		"facing=north,progress=6": {
-			"model": "preventthespread:block/targeted_drug_injector_5",
+			"model": "projectglitch:block/targeted_drug_injector_5",
 			"x": 90
 		},
 		"facing=south,progress=6": {
-			"model": "preventthespread:block/targeted_drug_injector_5",
+			"model": "projectglitch:block/targeted_drug_injector_5",
 			"x": 90,
 			"y": 180
 		},
 		"facing=up,progress=6": {
-			"model": "preventthespread:block/targeted_drug_injector_5"
+			"model": "projectglitch:block/targeted_drug_injector_5"
 		},
 		"facing=west,progress=6": {
-			"model": "preventthespread:block/targeted_drug_injector_5",
+			"model": "projectglitch:block/targeted_drug_injector_5",
 			"x": 90,
 			"y": 270
 		},
 		"facing=down,progress=7": {
-			"model": "preventthespread:block/targeted_drug_injector_7",
+			"model": "projectglitch:block/targeted_drug_injector_7",
 			"x": 180
 		},
 		"facing=east,progress=7": {
-			"model": "preventthespread:block/targeted_drug_injector_7",
+			"model": "projectglitch:block/targeted_drug_injector_7",
 			"x": 90,
 			"y": 90
 		},
 		"facing=north,progress=7": {
-			"model": "preventthespread:block/targeted_drug_injector_7",
+			"model": "projectglitch:block/targeted_drug_injector_7",
 			"x": 90
 		},
 		"facing=south,progress=7": {
-			"model": "preventthespread:block/targeted_drug_injector_7",
+			"model": "projectglitch:block/targeted_drug_injector_7",
 			"x": 90,
 			"y": 180
 		},
 		"facing=up,progress=7": {
-			"model": "preventthespread:block/targeted_drug_injector_7"
+			"model": "projectglitch:block/targeted_drug_injector_7"
 		},
 		"facing=west,progress=7": {
-			"model": "preventthespread:block/targeted_drug_injector_7",
+			"model": "projectglitch:block/targeted_drug_injector_7",
 			"x": 90,
 			"y": 270
 		},
 		"facing=down,progress=8": {
-			"model": "preventthespread:block/targeted_drug_injector_7",
+			"model": "projectglitch:block/targeted_drug_injector_7",
 			"x": 180
 		},
 		"facing=east,progress=8": {
-			"model": "preventthespread:block/targeted_drug_injector_7",
+			"model": "projectglitch:block/targeted_drug_injector_7",
 			"x": 90,
 			"y": 90
 		},
 		"facing=north,progress=8": {
-			"model": "preventthespread:block/targeted_drug_injector_7",
+			"model": "projectglitch:block/targeted_drug_injector_7",
 			"x": 90
 		},
 		"facing=south,progress=8": {
-			"model": "preventthespread:block/targeted_drug_injector_7",
+			"model": "projectglitch:block/targeted_drug_injector_7",
 			"x": 90,
 			"y": 180
 		},
 		"facing=up,progress=8": {
-			"model": "preventthespread:block/targeted_drug_injector_7"
+			"model": "projectglitch:block/targeted_drug_injector_7"
 		},
 		"facing=west,progress=8": {
-			"model": "preventthespread:block/targeted_drug_injector_7",
+			"model": "projectglitch:block/targeted_drug_injector_7",
 			"x": 90,
 			"y": 270
 		}
