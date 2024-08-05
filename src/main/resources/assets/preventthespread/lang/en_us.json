@@ -133,7 +133,7 @@
 	"projectglitch.tutorial.projectglitch.story.defeat_blob.0": "Congratulations, you managed to clear your first glitch cluster. Make sure to bring the glitch material back to the processing table and analyze it. More glitch clusters might be in the area. Hurry!",
 	"projectglitch.tutorial.projectglitch.story.process_glitch_material.0": "Great! You now have a research cartridge! Use it in the research area of your processing table to unlock new treatments.",
 	"projectglitch.tutorial.projectglitch.story.unlock_treatment.0": "Great choice! Make sure to also have the new treatments you unlock on hand from now on, as they may be your only option. Erm… Beep boop. I have to go now, I’ll see you on the other side!",
-	"projectglitch.tutorial.projectglitch.story.game_over.0": "Oh no! It seems the simulation may be collapsing. Great work researcher! Your findings may one day lead to a cure for the glitch in the real world and your efforts will be remembered eternally. Make sure to submit your time to the global leaderboard at: www.glitchmaster.com (TODO: placeholder).",
+	"projectglitch.tutorial.projectglitch.story.game_over.0": "Oh no! It seems the simulation may be collapsing. Great work researcher! Your findings may one day lead to a cure for the glitch in the real world and your efforts will be remembered eternally.",
 	"projectglitch.tutorial.projectglitch.story.game_over.1": "See you again soon!",
 	"projectglitch.tutorial.projectglitch.research.chemotherapeutic_drug.0": "This treatment will cause a bit of an explosion and affect all glitched blocks around it. Take cover!",
 	"projectglitch.tutorial.projectglitch.research.chilling_tower.0": "This new technology will allow you to slow down the rate at which a glitch cluster spreads.",
