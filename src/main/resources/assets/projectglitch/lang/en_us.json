@@ -87,7 +87,7 @@
 	"item.projectglitch.probe.tooltip.full": "Put in the Analyzer, or use while sneaking to empty.",
 	"item.projectglitch.probe.tooltip.blobIdentifier": "Blob identifier: %s",
 	"item.projectglitch.radiation_staff": "Radiation Staff",
-	"item.projectglitch.research": "Research",
+	"item.projectglitch.research": "Research Cartridge",
 	"item.projectglitch.scanner": "Scanner",
 	"item.projectglitch.scanner.tracking_known": "Tracking known blob [%sm]",
 	"item.projectglitch.scanner.tracking_nearest_unknown": "Tracking nearest unknown blob",
