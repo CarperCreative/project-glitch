@@ -50,6 +50,8 @@ class ProcessingTableResearchScreenHandler(
 		for (x in 0..8) {
 			addSlot(Slot(playerInventory, x, 8 + x * 18, 198))
 		}
+
+		inventory.onOpen(playerInventory.player)
 	}
 
 	override fun quickMove(player: PlayerEntity, slotIndex: Int): ItemStack {
@@ -127,6 +129,10 @@ class ProcessingTableResearchScreenHandler(
 			SoundCategory.BLOCKS,
 			1f, 1f,
 		)
+	}
+
+	override fun onClosed(player: PlayerEntity) {
+		inventory.onClose(player)
 	}
 
 	companion object {

@@ -59,6 +59,8 @@ class ProcessingTableAnalyzerScreenHandler(
 		for (x in 0..8) {
 			addSlot(Slot(playerInventory, x, 8 + x * 18, 142))
 		}
+
+		inventory.onOpen(playerInventory.player)
 	}
 
 	override fun quickMove(player: PlayerEntity, slotIndex: Int): ItemStack {
@@ -104,5 +106,9 @@ class ProcessingTableAnalyzerScreenHandler(
 
 	override fun canInsertIntoSlot(stack: ItemStack, slot: Slot): Boolean {
 		return slot.canInsert(stack)
+	}
+
+	override fun onClosed(player: PlayerEntity) {
+		inventory.onClose(player)
 	}
 }
