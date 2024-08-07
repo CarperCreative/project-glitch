@@ -25,6 +25,7 @@ import net.minecraft.nbt.NbtList
 import net.minecraft.nbt.NbtString
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.screen.ScreenHandler
+import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvent
@@ -64,6 +65,8 @@ class ProcessingTableAnalyzerBlockEntity(
 
 		override fun size(): Int = PROPERTY_COUNT
 	}
+
+	private val viewers = arrayListOf<ServerPlayerEntity>()
 
 	override fun clear() {
 		inventory.clear()
@@ -137,6 +140,22 @@ class ProcessingTableAnalyzerBlockEntity(
 
 	override fun canPlayerUse(player: PlayerEntity): Boolean {
 		return Inventory.canPlayerUse(this, player)
+	}
+
+	override fun onOpen(player: PlayerEntity) {
+		super<LockableContainerBlockEntity>.onOpen(player)
+
+		if (player is ServerPlayerEntity) {
+			viewers.add(player)
+		}
+	}
+
+	override fun onClose(player: PlayerEntity) {
+		super<LockableContainerBlockEntity>.onClose(player)
+
+		if (player is ServerPlayerEntity) {
+			viewers.remove(player)
+		}
 	}
 
 	override fun getAvailableSlots(side: Direction): IntArray {
