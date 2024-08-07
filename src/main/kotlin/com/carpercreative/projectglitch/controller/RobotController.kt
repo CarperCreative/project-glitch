@@ -3,19 +3,25 @@ package com.carpercreative.projectglitch.controller
 import com.carpercreative.projectglitch.ProjectGlitch
 import com.carpercreative.projectglitch.ProjectGlitch.ResearchAdvancement
 import com.carpercreative.projectglitch.ProjectGlitch.StoryAdvancement
+import com.carpercreative.projectglitch.cancer.CancerType
 import com.carpercreative.projectglitch.entity.RobotEntity
 import com.carpercreative.projectglitch.entity.RobotEntity.Companion.resetDiscardTimer
 import com.carpercreative.projectglitch.entity.RobotEntity.Companion.setLikedPlayer
+import com.carpercreative.projectglitch.item.ProbeItem
 import com.mojang.logging.LogUtils
 import kotlin.math.cos
 import kotlin.math.sin
 import net.minecraft.advancement.AdvancementEntry
 import net.minecraft.entity.SpawnReason
 import net.minecraft.entity.ai.NoPenaltySolidTargeting
+import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.text.HoverEvent
 import net.minecraft.text.Text
+import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Box
 
@@ -64,8 +70,64 @@ object RobotController {
 		return robot
 	}
 
-	private fun createRobotMessage(message: Text): Text {
-		return  Text.translatable(
+	private fun itemToText(item: Item): Text {
+		return itemToText(item.defaultStack)
+	}
+
+	private fun itemToText(stack: ItemStack): Text {
+		return Text.empty()
+			.formatted(Formatting.YELLOW)
+			.styled { it.withHoverEvent(HoverEvent(HoverEvent.Action.SHOW_ITEM, HoverEvent.ItemStackContent(stack))) }
+			.append(stack.name)
+	}
+
+	private fun createRobotMessage(advancementIdentifier: Identifier, index: Int): Text {
+		val translationKey = "${ProjectGlitch.MOD_ID}.tutorial.${advancementIdentifier.namespace}.${advancementIdentifier.path.replace('/', '.')}.$index"
+
+		val extra = when (advancementIdentifier) {
+			StoryAdvancement.ROOT_ID -> arrayOf(
+				itemToText(ProjectGlitch.PROBE_ITEM),
+				itemToText(Items.KELP),
+			)
+			StoryAdvancement.OBTAIN_PROBE_ID -> arrayOf(
+				itemToText(ProjectGlitch.PROBE_ITEM),
+				itemToText(ProjectGlitch.PROBE_ITEM.defaultStack.also { ProbeItem.setSampleCancerBlobId(it, 0) }),
+				itemToText(ProjectGlitch.SCANNER_ITEM),
+			)
+			StoryAdvancement.OBTAIN_SCANNER_ID -> arrayOf(
+				itemToText(ProjectGlitch.SCANNER_ITEM),
+				itemToText(ProjectGlitch.PROBE_ITEM),
+			)
+			StoryAdvancement.GET_SAMPLE_ID -> arrayOf(
+				itemToText(ProjectGlitch.PROCESSING_TABLE_BLOCK_ITEM),
+			)
+			StoryAdvancement.CRAFT_PROCESSING_TABLE_ID -> arrayOf(
+				itemToText(ProjectGlitch.PROCESSING_TABLE_BLOCK_ITEM),
+				itemToText(ProjectGlitch.PROBE_ITEM.defaultStack.also { ProbeItem.setSampleCancerBlobId(it, 0) }),
+				itemToText(Items.BOOK),
+			)
+			StoryAdvancement.ANALYZE_SAMPLE_ID -> arrayOf(
+				CancerType.PRE_CANCEROUS.displayName,
+				CancerType.EARLY.displayName,
+				CancerType.ADVANCED.displayName,
+				itemToText(ProjectGlitch.PROCESSING_TABLE_BLOCK_ITEM),
+			)
+			StoryAdvancement.DEFEAT_BLOB_ID -> arrayOf(
+				itemToText(ProjectGlitch.GLITCH_MATERIAL_ITEM),
+				itemToText(ProjectGlitch.PROCESSING_TABLE_BLOCK_ITEM),
+			)
+			StoryAdvancement.PROCESS_GLITCH_MATERIAL_ID -> arrayOf(
+				itemToText(ProjectGlitch.RESEARCH_ITEM),
+				itemToText(ProjectGlitch.PROCESSING_TABLE_BLOCK_ITEM),
+			)
+			else -> emptyArray<Text>()
+		}
+
+		return Text.translatable(translationKey, *extra)
+	}
+
+	private fun wrapRobotMessage(message: Text): Text {
+		return Text.translatable(
 			"chat.type.text",
 			Text.translatable(ProjectGlitch.ROBOT_ENTITY_TYPE.translationKey),
 			message,
@@ -75,10 +137,9 @@ object RobotController {
 	private fun robotMessage(player: ServerPlayerEntity, advancementIdentifier: Identifier, messageCount: Int): RobotEntity? {
 		require(messageCount > 0) { "messageCount has to be greater than 0, is $messageCount" }
 
-		val translationKey = "${ProjectGlitch.MOD_ID}.tutorial.${advancementIdentifier.namespace}.${advancementIdentifier.path.replace('/', '.')}"
-
 		for (index in 0 until messageCount) {
-			val text = createRobotMessage(Text.translatable("$translationKey.$index"))
+			val message = createRobotMessage(advancementIdentifier, index)
+			val text = wrapRobotMessage(message)
 			MessageController.queueMessage(MessageController.QueuedMessage(text, player.uuid))
 		}
 
