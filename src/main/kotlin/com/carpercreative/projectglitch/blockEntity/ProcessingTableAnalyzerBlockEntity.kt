@@ -8,6 +8,7 @@ import com.carpercreative.projectglitch.screen.ProcessingTableAnalyzerScreenHand
 import com.carpercreative.projectglitch.screen.slot.AnalyzerBookSlot
 import com.carpercreative.projectglitch.screen.slot.AnalyzerInputSlot
 import com.carpercreative.projectglitch.util.InventoryHelper
+import com.carpercreative.projectglitch.util.grantAdvancement
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntityTicker
 import net.minecraft.block.entity.LockableContainerBlockEntity
@@ -147,6 +148,10 @@ class ProcessingTableAnalyzerBlockEntity(
 
 		if (player is ServerPlayerEntity) {
 			viewers.add(player)
+
+			if (containsBookWithResults()) {
+				player.grantAdvancement(ProjectGlitch.StoryAdvancement.ANALYZE_SAMPLE_ID)
+			}
 		}
 	}
 
@@ -214,6 +219,13 @@ class ProcessingTableAnalyzerBlockEntity(
 
 		return !bookStack.isEmpty
 			&& (bookStack.nbt?.getList(WrittenBookItem.PAGES_KEY, NbtElement.STRING_TYPE.toInt())?.size ?: 0) < WrittenBookItem.MAX_PAGES
+	}
+
+	fun containsBookWithResults(): Boolean {
+		val bookStack = getStack(BOOK_SLOT_INDEX)
+
+		return containsBook()
+			&& bookStack.nbt?.run { getString(WrittenBookItem.AUTHOR_KEY) == BOOK_AUTHOR && getString(WrittenBookItem.TITLE_KEY) == BOOK_TITLE } == true
 	}
 
 	private fun startAnalyzingSlot(slot: Int) {
@@ -289,6 +301,10 @@ class ProcessingTableAnalyzerBlockEntity(
 					SoundCategory.BLOCKS,
 					1f, 1f,
 				)
+
+				for (player in blockEntity.viewers) {
+					player.grantAdvancement(ProjectGlitch.StoryAdvancement.ANALYZE_SAMPLE_ID)
+				}
 
 				blockEntity.startAnalyzingNextSlot()
 			}
